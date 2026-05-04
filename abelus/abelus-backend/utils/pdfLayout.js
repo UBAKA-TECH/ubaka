@@ -77,7 +77,7 @@ export const createabelusPDF = ({ title, companyName, subtitle, contentBuilder }
       const textHeight = doc.heightOfString(labelStr + text, { width: innerWidth - (padding * 2) - 10 });
       const boxHeight = textHeight + (padding * 2);
 
-      if (doc.y + boxHeight > doc.page.height - 70) doc.addPage();
+      if (doc.y + boxHeight > doc.page.height - 100) doc.addPage();
 
       const currentY = doc.y;
       doc.save();
@@ -103,7 +103,7 @@ export const createabelusPDF = ({ title, companyName, subtitle, contentBuilder }
       const cardWidth = (innerWidth - (spacing * (metrics.length - 1))) / metrics.length;
       const cardHeight = 75;
       
-      if (doc.y + cardHeight > doc.page.height - 70) doc.addPage();
+      if (doc.y + cardHeight > doc.page.height - 100) doc.addPage();
       
       const startX = left;
       const startY = doc.y;
@@ -142,7 +142,7 @@ export const createabelusPDF = ({ title, companyName, subtitle, contentBuilder }
       const textHeight = doc.heightOfString(label + text, { width: alertWidth - (padding * 2) });
       const boxHeight = textHeight + (padding * 2);
 
-      if (doc.y + boxHeight > doc.page.height - 70) doc.addPage();
+      if (doc.y + boxHeight > doc.page.height - 100) doc.addPage();
 
       const currentY = doc.y;
       doc.save();
@@ -167,7 +167,7 @@ export const createabelusPDF = ({ title, companyName, subtitle, contentBuilder }
       const rowHeight = 22;
 
       // Header
-      if (doc.y + headerHeight + rowHeight > doc.page.height - 70) doc.addPage();
+      if (doc.y + headerHeight + rowHeight > doc.page.height - 100) doc.addPage();
       
       let y = doc.y;
       doc.save().rect(startX, y, totalWidth, headerHeight).fill("#1E3A8A").restore();
@@ -181,7 +181,7 @@ export const createabelusPDF = ({ title, companyName, subtitle, contentBuilder }
 
       // Rows
       rows.forEach((row, idx) => {
-        if (y + rowHeight > doc.page.height - 70) {
+        if (y + rowHeight > doc.page.height - 100) {
           doc.addPage();
           y = doc.y; // Starts at top + 80 because of auto header
           doc.save().rect(startX, y, totalWidth, headerHeight).fill("#1E3A8A").restore();

@@ -103,21 +103,26 @@ export const generateReport = async (req, res) => {
         // Export as PDF
         const logoBuffer = await getLogoBuffer(user.storeLogo || settings?.logo || "assets/logo.png");
 
-        // Better title formatting including dates
+        // Better title formatting including dates with safety checks
         let reportDateTitle = "";
-        if (type === "daily" && filters.date) {
-            reportDateTitle = ` – ${new Date(filters.date).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' })}`;
-        } else if (type === "monthly" && filters.month && filters.year) {
-            reportDateTitle = ` – ${new Date(parseInt(filters.year), parseInt(filters.month) - 1, 1).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}`;
+        try {
+            if (type === "daily" && filters.date) {
+                reportDateTitle = ` – ${new Date(filters.date).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' })}`;
+            } else if (type === "monthly" && filters.month && filters.year) {
+                reportDateTitle = ` – ${new Date(parseInt(filters.year), parseInt(filters.month) - 1, 1).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}`;
+            }
+        } catch (e) {
+            reportDateTitle = "";
         }
 
         const performanceTitle = (filters.month && filters.year)
             ? `Monthly Performance Statement${reportDateTitle}`
             : `Daily Performance Statement${reportDateTitle}`;
 
-        // Drawer Logic: Following formula (Opening Cash + Total Cash Transactions - Expenses)
-        const verificationAmount = req.query.verificationAmount ? Number(req.query.verificationAmount) : summary.expectedDrawerAmount;
-        const cashDiscrepancy = (verificationAmount - summary.expectedDrawerAmount);
+        // Drawer Logic Safety: Ensure we don't crash if summary values are missing
+        const expectedAmt = summary?.expectedDrawerAmount ?? 0;
+        const verificationAmount = req.query.verificationAmount ? Number(req.query.verificationAmount) : expectedAmt;
+        const cashDiscrepancy = (verificationAmount - expectedAmt);
         
         const diffSign = cashDiscrepancy > 0 ? "+" : (cashDiscrepancy < 0 ? "-" : "");
         const diffValue = `${diffSign}RWF ${Math.abs(cashDiscrepancy).toLocaleString()}`;
@@ -134,9 +139,9 @@ export const generateReport = async (req, res) => {
 
                 // 2. Financial Summary (4 Metric Cards)
                 helpers.metricCards([
-                    { label: "Total Revenue", value: `RWF ${summary.totalRevenue?.toLocaleString()}`, color: "#1E3A8A" },
-                    { label: "Total Expenses", value: `RWF ${summary.totalExpenses?.toLocaleString()}`, color: "#1F2937" },
-                    { label: "Drawer Amount", value: `RWF ${verificationAmount.toLocaleString()}`, color: "#3B82F6" },
+                    { label: "Total Revenue", value: `RWF ${(summary?.totalRevenue ?? 0).toLocaleString()}`, color: "#1E3A8A" },
+                    { label: "Total Expenses", value: `RWF ${(summary?.totalExpenses ?? 0).toLocaleString()}`, color: "#1F2937" },
+                    { label: "Drawer Amount", value: `RWF ${(verificationAmount ?? 0).toLocaleString()}`, color: "#3B82F6" },
                     { label: "Difference", value: diffValue, color: cashDiscrepancy === 0 ? "#059669" : (cashDiscrepancy > 0 ? "#059669" : "#B91C1C") }
                 ]);
 
@@ -181,18 +186,18 @@ export const generateReport = async (req, res) => {
                         { header: "Momo (RWF)", key: "momoTotal", width: 80, align: "right" }
                     ],
                     rows: flattenedItems.map(i => {
-                        const isCash = i.paymentMethod.includes("cash");
+                        const isCash = String(i.paymentMethod || "cash").toLowerCase().includes("cash");
                         return {
                             ...i,
-                            price: i.price.toLocaleString(),
-                            cashTotal: isCash ? i.subtotal.toLocaleString() : "0",
-                            momoTotal: !isCash ? i.subtotal.toLocaleString() : "0"
+                            price: (i.price ?? 0).toLocaleString(),
+                            cashTotal: isCash ? (i.subtotal ?? 0).toLocaleString() : "0",
+                            momoTotal: !isCash ? (i.subtotal ?? 0).toLocaleString() : "0"
                         }
                     }),
                     totals: {
                         price: "TOTALS",
-                        cashTotal: `RWF ${summary.cashRevenue.toLocaleString()}`,
-                        momoTotal: `RWF ${summary.momoRevenue.toLocaleString()}`
+                        cashTotal: `RWF ${(summary?.cashRevenue ?? 0).toLocaleString()}`,
+                        momoTotal: `RWF ${(summary?.momoRevenue ?? 0).toLocaleString()}`
                     }
                 });
 

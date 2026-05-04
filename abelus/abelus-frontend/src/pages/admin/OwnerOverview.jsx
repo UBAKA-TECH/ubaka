@@ -2,8 +2,8 @@ import React, { useState, useEffect, useCallback } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { 
   FaChartLine, FaWallet, FaBox, FaShoppingCart, FaUserTie, 
-  FaArrowUp, FaArrowDown, FaSync, FaDownload, FaHistory,
-  FaExclamationTriangle, FaCheckCircle, FaSearch, FaFilter
+  FaArrowDown, FaSync, FaDownload, FaHistory,
+  FaExclamationTriangle, FaCheckCircle, FaSearch
 } from "react-icons/fa";
 import api from "../../utils/axiosInstance";
 import toast from "react-hot-toast";

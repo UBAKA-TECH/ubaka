@@ -1,4 +1,4 @@
-import prisma from "../prisma.js";
+import prisma, { supabase } from "../prisma.js";
 import { processSellerAutoApproval } from "../utils/autoApproval.js";
 import { notifyUserRegistered } from "./notificationController.js";
 

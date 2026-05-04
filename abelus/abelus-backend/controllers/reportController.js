@@ -249,6 +249,4 @@ export const generateReport = async (req, res) => {
             });
         }
     }
-};}
-    }
 };

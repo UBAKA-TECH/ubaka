@@ -106,6 +106,21 @@ const getRangeReport = async (start, end, sellerId) => {
   const topProduct = Object.entries(productCount).sort((a, b) => b[1] - a[1])[0]?.[0] || "N/A";
   const topCustomization = Object.entries(customizationCount).sort((a, b) => b[1] - a[1])[0]?.[0] || "N/A";
 
+  let totalStartingCash = 0;
+  let totalClosingCash = 0;
+  shifts.forEach(s => {
+    totalStartingCash += (s.startingDrawerAmount || 0);
+    totalClosingCash += (s.actualEndingDrawerAmount || s.expectedEndingDrawerAmount || 0);
+  });
+
+  // Calculate specifically CASH expenses for the drawer formula
+  const cashExpenses = expenses
+    .filter(e => (e.paymentMethod || "cash").toLowerCase() === "cash" || (e.paymentMethod || "").toLowerCase() === "drawer")
+    .reduce((sum, e) => sum + (e.amount || 0), 0);
+
+  // User's Formula: Opening Cash + Total Cash from Transactions - Expenses
+  const expectedDrawerAmount = totalStartingCash + cashRevenue - cashExpenses;
+
   const summary = {
     total: orders.length,
     totalRevenue,
@@ -113,6 +128,10 @@ const getRangeReport = async (start, end, sellerId) => {
     momoRevenue,
     totalDebtCollected,
     totalExpenses,
+    totalStartingCash,
+    totalClosingCash,
+    cashExpenses,
+    expectedDrawerAmount,
     netProfit: totalRevenue - totalExpenses,
     delivered: orders.filter(o => o.status === "delivered").length,
     pending: orders.filter(o => o.status === "pending").length,

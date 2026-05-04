@@ -244,7 +244,7 @@ export const createOrder = async (req, res) => {
       const revenueAccId = await ensureAccount("Commission Revenue", "Revenue", "4001");
 
       const settings = await getCommissionSettings();
-      const commissionRate = (settings.defaultRate || 10) / 100;
+      const commissionRate = (settings.defaultRate ?? 10) / 100;
       const subtotal = Number(totals.subtotal || 0);
       const commissionAmount = subtotal * commissionRate;
       const sellerAmount = subtotal - commissionAmount;
@@ -272,7 +272,7 @@ export const createOrder = async (req, res) => {
     // 💰 Seller Earnings
     try {
       const settings = await getCommissionSettings();
-      const rate = (settings.defaultRate || 10);
+      const rate = (settings.defaultRate ?? 10);
 
       for (const item of order.items) {
         if (!item.sellerId) continue;
@@ -541,7 +541,7 @@ export const updateOrderStatus = async (req, res) => {
         const revenueAccId = await ensureAccount("Commission Revenue", "Revenue", "4001");
 
         const settings = await getCommissionSettings();
-        const rate = (order.orderType === 'pos' ? (settings.posRate || 10) : (settings.defaultRate || 10)) / 100;
+        const rate = (order.orderType === 'pos' ? (settings.posRate ?? 10) : (settings.defaultRate ?? 10)) / 100;
         const commissionAmount = (order.subtotal || 0) * rate;
         const sellerAmount = (order.subtotal || 0) - commissionAmount;
 
@@ -609,7 +609,7 @@ export const createPOSOrder = async (req, res) => {
     }
 
     const settings = await getCommissionSettings();
-    const appliedRate = settings.posRate || settings.defaultRate || 10;
+    const appliedRate = settings.posRate ?? settings.defaultRate ?? 10;
 
     // 🔒 Atomic transaction: stock validation + decrement + order creation
     const { order, orderItemsData, subtotal } = await prisma.$transaction(async (tx) => {

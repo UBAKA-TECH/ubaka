@@ -40,8 +40,8 @@ export const createabelusPDF = ({ title, companyName, subtitle, contentBuilder }
     const pageHeight = doc.page.height;
     const innerWidth = pageWidth - (doc.page.margins.left + doc.page.margins.right);
     
-    // Move up slightly to stay inside safe area and avoid extra pages
-    const absoluteFooterY = pageHeight - 60;
+    // Move up to avoid triggering auto-pagination at the page bottom
+    const absoluteFooterY = pageHeight - 80;
 
     doc.save();
     doc.moveTo(left, absoluteFooterY).lineTo(left + innerWidth, absoluteFooterY)

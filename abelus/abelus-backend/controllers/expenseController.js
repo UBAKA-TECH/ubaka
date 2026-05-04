@@ -9,6 +9,15 @@ export const createExpense = async (req, res, next) => {
     const userId = req.user.id;
 
     const expense = await prisma.$transaction(async (tx) => {
+      // Auto-detect active shift if not provided
+      let effectiveShiftId = shiftId;
+      if (!effectiveShiftId) {
+        const activeShift = await tx.shift.findFirst({
+          where: { userId: userId, status: "open" }
+        });
+        if (activeShift) effectiveShiftId = activeShift.id;
+      }
+
       const newExpense = await tx.expense.create({
         data: {
           description,
@@ -17,7 +26,7 @@ export const createExpense = async (req, res, next) => {
           paymentMethod: paymentMethod || "cash",
           date: date ? new Date(date) : new Date(),
           userId,
-          shiftId: shiftId || null,
+          shiftId: effectiveShiftId || null,
         },
         include: {
           user: { select: { name: true } },
@@ -26,9 +35,9 @@ export const createExpense = async (req, res, next) => {
       });
 
       // 🕒 If linked to a shift and paid by cash/drawer, update the shift's expected drawer amount
-      if (shiftId && (paymentMethod === "cash" || paymentMethod === "drawer")) {
+      if (effectiveShiftId && (paymentMethod === "cash" || paymentMethod === "drawer")) {
         await tx.shift.update({
-          where: { id: shiftId },
+          where: { id: effectiveShiftId },
           data: {
             expectedEndingDrawerAmount: { decrement: parseFloat(amount) }
           }

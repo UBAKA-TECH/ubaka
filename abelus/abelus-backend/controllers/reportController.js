@@ -103,16 +103,24 @@ export const generateReport = async (req, res) => {
         // Export as PDF
         const logoBuffer = await getLogoBuffer(user.storeLogo || settings?.logo || "assets/logo.png");
 
-        const monthTitle = (filters.month && filters.year)
-            ? `Monthly Business Report – ${new Date(parseInt(filters.year), parseInt(filters.month) - 1, 1).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}`
-            : `${type.charAt(0).toUpperCase() + type.slice(1)} Report`;
-
-        const verificationAmount = Number(req.query.verificationAmount) || 0;
-        const cashDiscrepancy = verificationAmount > 0 ? (verificationAmount - summary.cashRevenue) : 0;
+        // Better title formatting including dates
+        let reportDateTitle = "";
+        if (type === "daily" && filters.date) {
+            reportDateTitle = ` – ${new Date(filters.date).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' })}`;
+        } else if (type === "monthly" && filters.month && filters.year) {
+            reportDateTitle = ` – ${new Date(parseInt(filters.year), parseInt(filters.month) - 1, 1).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}`;
+        }
 
         const performanceTitle = (filters.month && filters.year)
-            ? `Monthly Performance Statement`
-            : `Daily Performance Statement`;
+            ? `Monthly Performance Statement${reportDateTitle}`
+            : `Daily Performance Statement${reportDateTitle}`;
+
+        // Drawer Logic: Following formula (Opening Cash + Total Cash Transactions - Expenses)
+        const verificationAmount = req.query.verificationAmount ? Number(req.query.verificationAmount) : summary.expectedDrawerAmount;
+        const cashDiscrepancy = (verificationAmount - summary.expectedDrawerAmount);
+        
+        const diffSign = cashDiscrepancy > 0 ? "+" : (cashDiscrepancy < 0 ? "-" : "");
+        const diffValue = `${diffSign}RWF ${Math.abs(cashDiscrepancy).toLocaleString()}`;
 
         const doc = createabelusPDF({
             title: performanceTitle,
@@ -129,7 +137,7 @@ export const generateReport = async (req, res) => {
                     { label: "Total Revenue", value: `RWF ${summary.totalRevenue?.toLocaleString()}`, color: "#1E3A8A" },
                     { label: "Total Expenses", value: `RWF ${summary.totalExpenses?.toLocaleString()}`, color: "#1F2937" },
                     { label: "Drawer Amount", value: `RWF ${verificationAmount.toLocaleString()}`, color: "#3B82F6" },
-                    { label: "Difference", value: `RWF ${Math.abs(cashDiscrepancy).toLocaleString()}`, color: cashDiscrepancy === 0 ? "#059669" : "#B91C1C" }
+                    { label: "Difference", value: diffValue, color: cashDiscrepancy === 0 ? "#059669" : (cashDiscrepancy > 0 ? "#059669" : "#B91C1C") }
                 ]);
 
                 // 3. (Alert box removed as requested)

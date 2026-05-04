@@ -11,8 +11,8 @@ export const requestPayout = async (req, res, next) => {
         const { paymentMethod, paymentDetails } = req.body;
 
         // Get commission settings
-        const settings = await prisma.commissionSettings.findFirst() || { defaultRate: 10, minimumPayoutAmount: 10000 };
-        const minPayout = settings.minimumPayoutAmount || 10000;
+        const settings = await prisma.commissionSettings.findFirst() ?? { defaultRate: 10, minimumPayoutAmount: 10000 };
+        const minPayout = settings.minimumPayoutAmount ?? 10000;
 
         // Calculate available balance
         const availableEarnings = await prisma.sellerEarning.findMany({

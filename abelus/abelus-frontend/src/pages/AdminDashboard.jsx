@@ -14,7 +14,6 @@ import OrderStatusChart from "../components/OrderStatusChart";
 function AdminDashboard() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [refreshKey, setRefreshKey] = useState(0);
 
   const fetchDashboardData = async () => {
     try {

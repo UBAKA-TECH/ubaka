@@ -613,6 +613,17 @@ export const createPOSOrder = async (req, res) => {
 
     console.log(`[POS] Starting order for user ${userId} (${userRole}). Applied rate: ${appliedRate}%`);
 
+    // 🛡️ Data Validation
+    for (const [index, item] of items.entries()) {
+      if (!item.product) throw new Error(`Item ${index + 1}: Product ID is missing`);
+      if (isNaN(Number(item.quantity)) || Number(item.quantity) <= 0) {
+        throw new Error(`Item ${index + 1}: Invalid quantity (${item.quantity})`);
+      }
+      if (item.price !== undefined && isNaN(Number(item.price))) {
+        throw new Error(`Item ${index + 1}: Invalid price (${item.price})`);
+      }
+    }
+
     // 🔒 Atomic transaction: stock validation + decrement + order creation
     const { order, orderItemsData, subtotal } = await prisma.$transaction(async (tx) => {
       let txSubtotal = 0;

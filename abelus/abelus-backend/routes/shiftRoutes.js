@@ -1,5 +1,5 @@
 import express from "express";
-import { startShift, getCurrentShift, closeShift, getShiftReport, getActiveShiftStats, getMyShifts } from "../controllers/shiftController.js";
+import { startShift, getCurrentShift, closeShift, getShiftReport, getActiveShiftStats, getMyShifts, getActiveShiftForOwner } from "../controllers/shiftController.js";
 import { authMiddleware } from "../middleware/authMiddleware.js";
 
 const router = express.Router();

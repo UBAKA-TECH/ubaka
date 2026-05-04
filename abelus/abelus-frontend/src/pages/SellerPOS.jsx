@@ -436,8 +436,9 @@ export default function SellerPOS() {
     const handleCheckout = async (method, phone = null, receivedAmount = null) => {
         if (cart.length === 0) return;
         setProcessing(true);
+        let res;
         try {
-            const res = await api.post("/orders/pos", {
+            res = await api.post("/orders/pos", {
                 items: cart.map((item) => ({
                     product: item.id,
                     quantity: item.quantity,
@@ -478,7 +479,9 @@ export default function SellerPOS() {
         } catch (err) {
             alert(err.response?.data?.message || "Failed to process sale");
         } finally {
-            if (method !== "mtn_momo") setProcessing(false);
+            if (method !== "mtn_momo" || (res && res.data && res.data.status !== "pending")) {
+                setProcessing(false);
+            }
         }
     };
 

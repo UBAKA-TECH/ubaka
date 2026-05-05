@@ -3,7 +3,7 @@ import { useAuth } from "../../context/AuthContext";
 import { 
   FaChartLine, FaWallet, FaBox, FaShoppingCart, FaUserTie, 
   FaArrowDown, FaSync, FaDownload, FaHistory,
-  FaExclamationTriangle, FaCheckCircle, FaSearch
+  FaExclamationTriangle, FaCheckCircle, FaSearch, FaArrowRight
 } from "react-icons/fa";
 import api from "../../utils/axiosInstance";
 import toast from "react-hot-toast";
@@ -37,7 +37,7 @@ const OwnerOverview = () => {
             
         } catch (error) {
             console.error("Failed to fetch owner data:", error);
-            toast.error("Failed to load some dashboard data");
+            toast.error("Failed to load dashboard data");
         } finally {
             setLoading(false);
         }
@@ -45,11 +45,18 @@ const OwnerOverview = () => {
 
     useEffect(() => {
         fetchData();
-        const interval = setInterval(fetchData, 60000); // Refresh every minute
+        const interval = setInterval(fetchData, 60000);
         return () => clearInterval(interval);
     }, [fetchData]);
 
     const formatCurrency = (amount) => `RWF ${(amount || 0).toLocaleString()}`;
+    
+    const getGreeting = () => {
+        const hour = new Date().getHours();
+        if (hour < 12) return "Good Morning";
+        if (hour < 17) return "Good Afternoon";
+        return "Good Evening";
+    };
 
     const filteredInventory = inventory.filter(p => 
         p.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -57,97 +64,88 @@ const OwnerOverview = () => {
     );
 
     return (
-        <div className="min-h-screen bg-cream-50 dark:bg-charcoal-950 transition-colors duration-300">
-            <main className="p-4 lg:p-8 max-w-[1600px] mx-auto space-y-8">
+        <div className="min-h-screen bg-[#FDFCFB] dark:bg-[#0D0D0D] transition-colors duration-500 pb-20 md:pb-8">
+            <main className="p-4 md:p-8 max-w-[1400px] mx-auto space-y-6 md:space-y-10">
                 
-                {/* Header Section */}
-                <header className="flex flex-col md:flex-row md:items-end justify-between gap-6">
-                    <div>
-                        <div className="inline-flex items-center gap-2 px-3 py-1 bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 rounded-full text-[10px] font-black uppercase tracking-[0.2em] mb-3">
-                            <span className="relative flex h-2 w-2">
-                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
-                                <span className="relative inline-flex rounded-full h-2 w-2 bg-indigo-500"></span>
-                            </span>
-                            Live Management Center
-                        </div>
-                        <h1 className="text-4xl font-black text-charcoal-900 dark:text-white tracking-tight">
-                            {user?.role === 'owner' ? `Welcome back, ${user.name.split(' ')[0]}` : "Shop Overview"}
-                        </h1>
-                        <p className="text-charcoal-500 dark:text-charcoal-400 mt-2 font-medium">
-                            {user?.role === 'owner' ? "Here is the current pulse of your business." : "Real-time tracking of orders, inventory, and financial health."}
+                {/* Humanized Header */}
+                <header className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                    <div className="space-y-1">
+                        <p className="text-indigo-600 dark:text-indigo-400 text-xs font-black uppercase tracking-[0.3em]">
+                           {getGreeting()}, {user?.name?.split(' ')[0] || 'Owner'}
                         </p>
+                        <h1 className="text-3xl md:text-5xl font-black text-charcoal-900 dark:text-white tracking-tight">
+                            Shop Pulse
+                        </h1>
                     </div>
                     
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-2">
                         <button 
                             onClick={fetchData}
-                            className="p-3 bg-white dark:bg-charcoal-800 text-charcoal-600 dark:text-charcoal-300 rounded-2xl border border-cream-200 dark:border-charcoal-700 hover:text-indigo-500 transition-all shadow-sm group"
+                            className="p-3 bg-white dark:bg-charcoal-900 text-charcoal-600 dark:text-charcoal-400 rounded-2xl border border-cream-200 dark:border-charcoal-800 shadow-sm active:scale-95 transition-all"
                         >
-                            <FaSync className={`${loading ? "animate-spin" : "group-hover:rotate-180 transition-transform duration-500"}`} />
+                            <FaSync className={`${loading ? "animate-spin" : ""}`} />
                         </button>
-                        <button className="flex items-center gap-2 px-6 py-3 bg-indigo-600 text-white rounded-2xl font-bold hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-500/20">
+                        <button className="flex-1 md:flex-none flex items-center justify-center gap-2 px-6 py-3 bg-charcoal-900 dark:bg-white text-white dark:text-black rounded-2xl font-bold text-sm shadow-xl active:scale-95 transition-all">
                             <FaDownload /> Monthly Audit
                         </button>
                     </div>
                 </header>
 
-                {/* Main Metrics Grid */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-                    <MetricCard 
-                        title="Today's Revenue" 
-                        value={formatCurrency(analytics?.dailyStats?.revenue)} 
-                        icon={<FaChartLine />} 
-                        color="indigo"
-                        trend="+12%"
-                    />
-                    <MetricCard 
-                        title="Daily Expenses" 
-                        value={formatCurrency(analytics?.dailyStats?.expenses)} 
-                        icon={<FaArrowDown />} 
-                        color="red"
-                        trend="-5%"
-                    />
-                    <MetricCard 
-                        title="Net Cash Today" 
-                        value={formatCurrency((analytics?.dailyStats?.revenue || 0) - (analytics?.dailyStats?.expenses || 0))} 
-                        icon={<FaWallet />} 
-                        color="sage"
-                        subtext="Revenue - Expenses"
-                    />
-                    <MetricCard 
-                        title="Live Drawer" 
-                        value={formatCurrency(activeShift?.currentBalance || 0)} 
-                        icon={<FaWallet />} 
-                        color="indigo"
-                        subtext={activeShift ? `Shift by ${activeShift.staff?.name}` : "No active shift"}
-                    />
-                    <MetricCard 
-                        title="Stock Value" 
-                        value={formatCurrency(analytics?.totalInventoryValue)} 
-                        icon={<FaBox />} 
-                        color="sand"
-                        subtext={`${analytics?.totalProducts || 0} Items`}
-                    />
+                {/* Metrics: Horizontal Scroll on Mobile, Grid on Desktop */}
+                <div className="flex overflow-x-auto md:grid md:grid-cols-2 lg:grid-cols-4 gap-4 pb-4 md:pb-0 scrollbar-hide -mx-4 px-4 md:mx-0 md:px-0">
+                    <div className="min-w-[280px] md:min-w-0">
+                        <MetricCard 
+                            title="Net Cash Today" 
+                            value={formatCurrency((analytics?.dailyStats?.revenue || 0) - (analytics?.dailyStats?.expenses || 0))} 
+                            icon={<FaWallet />} 
+                            color="indigo"
+                            trend={analytics?.dailyStats?.revenue > 0 ? "+Live" : "No Activity"}
+                        />
+                    </div>
+                    <div className="min-w-[280px] md:min-w-0">
+                        <MetricCard 
+                            title="Live Drawer" 
+                            value={formatCurrency(activeShift?.currentBalance || 0)} 
+                            icon={<FaUserTie />} 
+                            color="sage"
+                            subtext={activeShift ? `Operated by ${activeShift.staff?.name}` : "No Active Shift"}
+                        />
+                    </div>
+                    <div className="min-w-[280px] md:min-w-0">
+                        <MetricCard 
+                            title="Today's Revenue" 
+                            value={formatCurrency(analytics?.dailyStats?.revenue)} 
+                            icon={<FaChartLine />} 
+                            color="indigo"
+                            subtext={`${analytics?.dailyStats?.orderCount || 0} Orders placed`}
+                        />
+                    </div>
+                    <div className="min-w-[280px] md:min-w-0">
+                        <MetricCard 
+                            title="Today's Expenses" 
+                            value={formatCurrency(analytics?.dailyStats?.expenses)} 
+                            icon={<FaArrowDown />} 
+                            color="red"
+                            subtext="Paid out from cash"
+                        />
+                    </div>
                 </div>
 
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-8">
                     
-                    {/* Left Column: Orders & Expenses Feed */}
-                    <div className="lg:col-span-2 space-y-8">
+                    {/* Activity Feed & Inventory */}
+                    <div className="lg:col-span-8 space-y-6 md:space-y-8">
                         
                         {/* Live Activity Feed */}
-                        <div className="bg-white dark:bg-charcoal-800 rounded-[2rem] shadow-sm border border-cream-200 dark:border-charcoal-700 overflow-hidden">
-                            <div className="p-6 border-b border-cream-100 dark:border-charcoal-700 flex justify-between items-center bg-cream-50/50 dark:bg-charcoal-900/50">
-                                <h3 className="font-black text-charcoal-900 dark:text-white uppercase tracking-wider text-xs flex items-center gap-2">
-                                    <FaHistory className="text-indigo-500" /> Recent Activity
+                        <div className="bg-white dark:bg-charcoal-900 rounded-[2.5rem] shadow-sm border border-cream-100 dark:border-charcoal-800 overflow-hidden">
+                            <div className="p-6 border-b border-cream-50 dark:border-charcoal-800 flex justify-between items-center">
+                                <h3 className="font-black text-charcoal-900 dark:text-white uppercase tracking-widest text-[10px] flex items-center gap-2">
+                                    <FaHistory className="text-indigo-500" /> Recent Transactions
                                 </h3>
-                                <div className="flex gap-2">
-                                    <span className="px-3 py-1 bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400 rounded-full text-[10px] font-black uppercase">Orders</span>
-                                    <span className="px-3 py-1 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 rounded-full text-[10px] font-black uppercase">Expenses</span>
-                                </div>
+                                <button className="text-[10px] font-black text-indigo-600 dark:text-indigo-400 uppercase tracking-widest">View All</button>
                             </div>
-                            <div className="divide-y divide-cream-100 dark:divide-charcoal-700">
-                                {recentOrders.slice(0, 5).map(order => (
+                            <div className="divide-y divide-cream-50 dark:divide-charcoal-800">
+                                {recentOrders.slice(0, 4).map(order => (
                                     <ActivityItem 
                                         key={order.id}
                                         type="order"
@@ -155,10 +153,9 @@ const OwnerOverview = () => {
                                         subtitle={`${order.items?.length || 0} items • ${order.paymentStatus}`}
                                         amount={formatCurrency(order.total)}
                                         time={new Date(order.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                                        status={order.status}
                                     />
                                 ))}
-                                {recentExpenses.slice(0, 3).map(expense => (
+                                {recentExpenses.slice(0, 2).map(expense => (
                                     <ActivityItem 
                                         key={expense.id}
                                         type="expense"
@@ -166,131 +163,151 @@ const OwnerOverview = () => {
                                         subtitle={expense.category}
                                         amount={`-${formatCurrency(expense.amount)}`}
                                         time={new Date(expense.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                                        status="expense"
                                     />
                                 ))}
                             </div>
                         </div>
 
-                        {/* Inventory Tracking Table */}
-                        <div className="bg-white dark:bg-charcoal-800 rounded-[2rem] shadow-sm border border-cream-200 dark:border-charcoal-700 overflow-hidden">
-                            <div className="p-6 border-b border-cream-100 dark:border-charcoal-700 flex flex-col sm:flex-row justify-between sm:items-center gap-4">
-                                <h3 className="font-black text-charcoal-900 dark:text-white uppercase tracking-wider text-xs flex items-center gap-2">
-                                    <FaBox className="text-sand-500" /> Stock Inventory List
+                        {/* Inventory Section */}
+                        <div className="bg-white dark:bg-charcoal-900 rounded-[2.5rem] shadow-sm border border-cream-100 dark:border-charcoal-800 overflow-hidden">
+                            <div className="p-6 flex flex-col md:flex-row justify-between md:items-center gap-4">
+                                <h3 className="font-black text-charcoal-900 dark:text-white uppercase tracking-widest text-[10px] flex items-center gap-2">
+                                    <FaBox className="text-sand-500" /> Stock Oversight
                                 </h3>
-                                <div className="relative max-w-xs w-full">
+                                <div className="relative flex-1 md:max-w-xs">
                                     <FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-charcoal-400 text-xs" />
                                     <input 
                                         type="text" 
-                                        placeholder="Search stock..."
+                                        placeholder="Search products..."
                                         value={searchQuery}
                                         onChange={(e) => setSearchQuery(e.target.value)}
-                                        className="w-full pl-9 pr-4 py-2 bg-cream-50 dark:bg-charcoal-900 border border-transparent focus:border-indigo-500 rounded-xl text-xs outline-none transition-all"
+                                        className="w-full pl-9 pr-4 py-2 bg-cream-50 dark:bg-charcoal-800/50 border-none rounded-xl text-xs outline-none focus:ring-1 ring-indigo-500/30 transition-all dark:text-white"
                                     />
                                 </div>
                             </div>
-                            <div className="overflow-x-auto">
+                            
+                            {/* Table for Desktop, Grid for Mobile */}
+                            <div className="hidden md:block overflow-x-auto px-2">
                                 <table className="w-full text-left text-xs">
-                                    <thead className="bg-cream-50/50 dark:bg-charcoal-900/50">
-                                        <tr>
-                                            <th className="px-6 py-4 font-black text-charcoal-500 uppercase tracking-widest">Product / Variation</th>
-                                            <th className="px-6 py-4 font-black text-charcoal-500 uppercase tracking-widest">In Stock</th>
-                                            <th className="px-6 py-4 font-black text-charcoal-500 uppercase tracking-widest">Unit Price</th>
-                                            <th className="px-6 py-4 font-black text-charcoal-500 uppercase tracking-widest text-right">Status</th>
+                                    <thead>
+                                        <tr className="text-charcoal-400 uppercase tracking-widest text-[9px] font-black">
+                                            <th className="px-6 py-4">Product Name</th>
+                                            <th className="px-6 py-4">Stock Level</th>
+                                            <th className="px-6 py-4">Unit Price</th>
+                                            <th className="px-6 py-4 text-right">Health</th>
                                         </tr>
                                     </thead>
-                                    <tbody className="divide-y divide-cream-100 dark:divide-charcoal-700">
-                                        {filteredInventory.slice(0, 10).map(product => (
+                                    <tbody className="divide-y divide-cream-50 dark:divide-charcoal-800">
+                                        {filteredInventory.slice(0, 6).map(product => (
                                             <InventoryRow key={product.id} product={product} formatCurrency={formatCurrency} />
                                         ))}
                                     </tbody>
                                 </table>
                             </div>
+                            
+                            <div className="md:hidden divide-y divide-cream-50 dark:divide-charcoal-800 px-4">
+                                {filteredInventory.slice(0, 6).map(product => (
+                                    <InventoryCard key={product.id} product={product} formatCurrency={formatCurrency} />
+                                ))}
+                            </div>
+                            
+                            <div className="p-4 border-t border-cream-50 dark:border-charcoal-800 text-center">
+                                <button className="text-[10px] font-black text-charcoal-400 uppercase tracking-widest hover:text-indigo-600 transition-colors">See Complete Inventory</button>
+                            </div>
                         </div>
                     </div>
 
-                    {/* Right Column: Shift & Health Insights */}
-                    <div className="space-y-8">
+                    {/* Right Column: High Priority Insights */}
+                    <div className="lg:col-span-4 space-y-6 md:space-y-8">
                         
-                        {/* Active Shift Card */}
-                        <div className="bg-indigo-600 rounded-[2rem] p-8 text-white shadow-xl shadow-indigo-500/20 relative overflow-hidden group">
-                            <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:scale-125 transition-transform duration-700">
-                                <FaUserTie size={120} />
-                            </div>
-                            <h4 className="text-indigo-100 font-black uppercase tracking-[0.2em] text-[10px] mb-6">Current Operations</h4>
-                            {activeShift ? (
-                                <div className="space-y-6">
-                                    <div>
-                                        <p className="text-indigo-200 text-sm mb-1">Active Cashier</p>
-                                        <h5 className="text-2xl font-black">{activeShift.staff?.name}</h5>
-                                    </div>
-                                    <div className="grid grid-cols-2 gap-4">
-                                        <div>
-                                            <p className="text-indigo-200 text-[10px] uppercase font-bold mb-1">Started At</p>
-                                            <p className="font-bold">{new Date(activeShift.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
-                                        </div>
-                                        <div>
-                                            <p className="text-indigo-200 text-[10px] uppercase font-bold mb-1">Opening Cash</p>
-                                            <p className="font-bold">{formatCurrency(activeShift.openingBalance)}</p>
-                                        </div>
-                                    </div>
-                                    <div className="pt-6 border-t border-indigo-500/50">
-                                        <div className="flex justify-between items-end">
-                                            <div>
-                                                <p className="text-indigo-200 text-[10px] uppercase font-bold mb-1">Live Drawer Balance</p>
-                                                <p className="text-3xl font-black">{formatCurrency(activeShift.currentBalance)}</p>
-                                            </div>
-                                            <span className="px-3 py-1 bg-white/20 rounded-full text-[10px] font-black uppercase backdrop-blur-md">Active</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            ) : (
-                                <div className="py-12 text-center space-y-4">
-                                    <div className="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                                        <FaExclamationTriangle className="text-indigo-200 text-2xl" />
-                                    </div>
-                                    <h5 className="text-xl font-black">No Active Shift</h5>
-                                    <p className="text-indigo-200 text-sm">All terminals are currently closed.</p>
-                                </div>
-                            )}
-                        </div>
-
-                        {/* Health Check / Alerts */}
-                        <div className="bg-white dark:bg-charcoal-800 rounded-[2rem] p-8 border border-cream-200 dark:border-charcoal-700 shadow-sm">
-                            <h4 className="text-charcoal-400 dark:text-charcoal-500 font-black uppercase tracking-[0.2em] text-[10px] mb-6 flex items-center gap-2">
-                                <FaExclamationTriangle className="text-red-500" /> Management Alerts
+                        {/* Management Alerts */}
+                        <div className="bg-white dark:bg-charcoal-900 rounded-[2.5rem] p-6 md:p-8 border border-cream-100 dark:border-charcoal-800 shadow-sm relative overflow-hidden">
+                             <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-500/5 rounded-full -mr-16 -mt-16 blur-2xl"></div>
+                             
+                             <h4 className="text-charcoal-900 dark:text-white font-black uppercase tracking-[0.2em] text-[10px] mb-6 flex items-center gap-2">
+                                <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></span> Critical Alerts
                             </h4>
-                            <div className="space-y-4">
+                            
+                            <div className="space-y-3">
                                 {analytics?.lowStockProducts?.length > 0 ? (
-                                    <div className="p-4 bg-red-50 dark:bg-red-900/20 border border-red-100 dark:border-red-800/50 rounded-2xl flex items-start gap-3">
-                                        <FaBox className="text-red-500 mt-1" />
-                                        <div>
-                                            <p className="text-xs font-bold text-red-900 dark:text-red-300">{analytics.lowStockProducts.length} Items Low in Stock</p>
-                                            <p className="text-[10px] text-red-600 dark:text-red-400 mt-0.5">Inventory levels are critical. Restock recommended.</p>
+                                    <div className="p-4 bg-red-50/50 dark:bg-red-900/10 border border-red-100/50 dark:border-red-900/20 rounded-2xl flex items-center gap-4 group cursor-pointer hover:bg-red-50 transition-colors">
+                                        <div className="w-10 h-10 bg-red-100 dark:bg-red-900/30 rounded-xl flex items-center justify-center text-red-600 dark:text-red-400 shrink-0">
+                                            <FaBox size={14} />
                                         </div>
+                                        <div className="flex-1 min-w-0">
+                                            <p className="text-xs font-black text-red-900 dark:text-red-200 uppercase truncate">{analytics.lowStockProducts.length} Items Low</p>
+                                            <p className="text-[10px] text-red-600/70 dark:text-red-400/70 font-bold truncate">Restock required immediately</p>
+                                        </div>
+                                        <FaArrowRight className="text-red-300 dark:text-red-800 group-hover:translate-x-1 transition-transform" />
                                     </div>
                                 ) : (
-                                    <div className="p-4 bg-sage-50 dark:bg-sage-900/20 border border-sage-100 dark:border-sage-800/50 rounded-2xl flex items-start gap-3">
-                                        <FaCheckCircle className="text-sage-500 mt-1" />
+                                    <div className="p-4 bg-sage-50/50 dark:bg-sage-900/10 border border-sage-100/50 dark:border-sage-900/20 rounded-2xl flex items-center gap-4">
+                                        <div className="w-10 h-10 bg-sage-100 dark:bg-sage-900/30 rounded-xl flex items-center justify-center text-sage-600 dark:text-sage-400 shrink-0">
+                                            <FaCheckCircle size={14} />
+                                        </div>
                                         <div>
-                                            <p className="text-xs font-bold text-sage-900 dark:text-sage-300">Stock Levels Healthy</p>
-                                            <p className="text-[10px] text-sage-600 dark:text-sage-400 mt-0.5">All variations are above minimum thresholds.</p>
+                                            <p className="text-xs font-black text-sage-900 dark:text-sage-200 uppercase">Stock Healthy</p>
+                                            <p className="text-[10px] text-sage-600/70 dark:text-sage-400/70 font-bold">All items above thresholds</p>
                                         </div>
                                     </div>
                                 )}
                                 
                                 {analytics?.pendingOrders > 0 && (
-                                    <div className="p-4 bg-indigo-50 dark:bg-indigo-900/20 border border-indigo-100 dark:border-indigo-800/50 rounded-2xl flex items-start gap-3">
-                                        <FaShoppingCart className="text-indigo-500 mt-1" />
-                                        <div>
-                                            <p className="text-xs font-bold text-indigo-900 dark:text-indigo-300">{analytics.pendingOrders} Orders Pending</p>
-                                            <p className="text-[10px] text-indigo-600 dark:text-indigo-400 mt-0.5">Requires immediate processing.</p>
+                                    <div className="p-4 bg-indigo-50/50 dark:bg-indigo-900/10 border border-indigo-100/50 dark:border-indigo-900/20 rounded-2xl flex items-center gap-4 group cursor-pointer hover:bg-indigo-50 transition-colors">
+                                        <div className="w-10 h-10 bg-indigo-100 dark:bg-indigo-900/30 rounded-xl flex items-center justify-center text-indigo-600 dark:text-indigo-400 shrink-0">
+                                            <FaShoppingCart size={14} />
                                         </div>
+                                        <div className="flex-1 min-w-0">
+                                            <p className="text-xs font-black text-indigo-900 dark:text-indigo-200 uppercase truncate">{analytics.pendingOrders} Orders</p>
+                                            <p className="text-[10px] text-indigo-600/70 dark:text-indigo-400/70 font-bold truncate">Awaiting processing</p>
+                                        </div>
+                                        <FaArrowRight className="text-indigo-300 dark:text-indigo-800 group-hover:translate-x-1 transition-transform" />
                                     </div>
                                 )}
                             </div>
                         </div>
 
+                        {/* Active Shift Brief */}
+                        <div className="bg-[#1A1A1A] dark:bg-[#151515] rounded-[2.5rem] p-8 text-white relative overflow-hidden group shadow-2xl">
+                            <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:scale-110 transition-transform duration-700">
+                                <FaUserTie size={140} />
+                            </div>
+                            
+                            <div className="relative z-10 space-y-6">
+                                <div className="flex justify-between items-center">
+                                    <span className="px-3 py-1 bg-white/10 rounded-full text-[9px] font-black uppercase tracking-widest backdrop-blur-md border border-white/10">Active Session</span>
+                                    <div className="flex gap-1">
+                                        <div className="w-1 h-1 bg-sage-400 rounded-full animate-ping"></div>
+                                        <div className="w-1 h-1 bg-sage-400 rounded-full"></div>
+                                    </div>
+                                </div>
+                                
+                                {activeShift ? (
+                                    <div className="space-y-6">
+                                        <div>
+                                            <p className="text-gray-400 text-[10px] font-black uppercase tracking-[0.2em] mb-1">On-Duty Staff</p>
+                                            <h5 className="text-2xl font-black">{activeShift.staff?.name}</h5>
+                                        </div>
+                                        
+                                        <div className="grid grid-cols-2 gap-4 pt-4 border-t border-white/5">
+                                            <div>
+                                                <p className="text-gray-500 text-[9px] font-black uppercase tracking-widest mb-1">Started</p>
+                                                <p className="text-sm font-bold">{new Date(activeShift.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
+                                            </div>
+                                            <div>
+                                                <p className="text-gray-500 text-[9px] font-black uppercase tracking-widest mb-1">Drawer</p>
+                                                <p className="text-sm font-black text-sage-400">{formatCurrency(activeShift.currentBalance)}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <div className="py-8 text-center space-y-3">
+                                        <p className="text-sm font-bold text-gray-400">All terminals are currently offline.</p>
+                                        <button className="text-[10px] font-black text-indigo-400 uppercase tracking-widest underline decoration-2 underline-offset-4">Open Terminals</button>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
                     </div>
                 </div>
             </main>
@@ -300,49 +317,50 @@ const OwnerOverview = () => {
 
 const MetricCard = ({ title, value, icon, color, trend, subtext }) => {
     const colors = {
-        indigo: "bg-indigo-50 text-indigo-600 dark:bg-indigo-900/20 dark:text-indigo-400",
-        red: "bg-red-50 text-red-600 dark:bg-red-900/20 dark:text-red-400",
-        sage: "bg-sage-50 text-sage-600 dark:bg-sage-900/20 dark:text-sage-400",
-        sand: "bg-sand-50 text-sand-600 dark:bg-sand-900/20 dark:text-sand-400",
+        indigo: "text-indigo-600 dark:text-indigo-400 bg-indigo-50/50 dark:bg-indigo-900/20",
+        sage: "text-sage-600 dark:text-sage-400 bg-sage-50/50 dark:bg-sage-900/20",
+        red: "text-red-600 dark:text-red-400 bg-red-50/50 dark:bg-red-900/20",
     };
 
     return (
-        <div className="bg-white dark:bg-charcoal-800 p-6 rounded-[2rem] border border-cream-200 dark:border-charcoal-700 hover:shadow-xl hover:border-indigo-200 dark:hover:border-indigo-900/50 transition-all group">
+        <div className="bg-white dark:bg-charcoal-900 p-6 rounded-[2.5rem] border border-cream-100 dark:border-charcoal-800 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between h-full group active:scale-[0.98]">
             <div className="flex items-center justify-between mb-4">
                 <div className={`w-12 h-12 ${colors[color]} rounded-2xl flex items-center justify-center text-xl group-hover:scale-110 transition-transform`}>
                     {icon}
                 </div>
                 {trend && (
-                    <span className={`text-[10px] font-black px-2 py-1 rounded-full ${trend.startsWith('+') ? 'bg-sage-100 text-sage-600' : 'bg-red-100 text-red-600'}`}>
+                    <span className="text-[10px] font-black px-3 py-1 bg-sage-50 dark:bg-sage-900/30 text-sage-600 dark:text-sage-400 rounded-full uppercase tracking-widest border border-sage-100/50 dark:border-sage-900/50">
                         {trend}
                     </span>
                 )}
             </div>
-            <p className="text-[10px] font-black text-charcoal-400 dark:text-charcoal-500 uppercase tracking-widest mb-1">{title}</p>
-            <h3 className="text-2xl font-black text-charcoal-900 dark:text-white truncate">
-                {value || "RWF 0"}
-            </h3>
-            {subtext && <p className="text-[10px] text-charcoal-500 mt-1 font-medium">{subtext}</p>}
+            <div>
+                <p className="text-[10px] font-black text-charcoal-400 dark:text-charcoal-500 uppercase tracking-[0.2em] mb-1">{title}</p>
+                <h3 className="text-2xl md:text-3xl font-black text-charcoal-900 dark:text-white truncate tracking-tight">
+                    {value || "RWF 0"}
+                </h3>
+                {subtext && <p className="text-[10px] text-charcoal-400 dark:text-charcoal-500 mt-2 font-bold uppercase tracking-wide">{subtext}</p>}
+            </div>
         </div>
     );
 };
 
-const ActivityItem = ({ type, title, subtitle, amount, time, status }) => {
+const ActivityItem = ({ type, title, subtitle, amount, time }) => {
     const isOrder = type === 'order';
     return (
-        <div className="px-6 py-4 flex items-center justify-between hover:bg-cream-50/50 dark:hover:bg-charcoal-700/30 transition-colors">
+        <div className="px-6 py-5 flex items-center justify-between hover:bg-cream-50/30 dark:hover:bg-charcoal-800/20 transition-colors group cursor-pointer">
             <div className="flex items-center gap-4">
-                <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${isOrder ? 'bg-indigo-50 text-indigo-500 dark:bg-indigo-900/20' : 'bg-red-50 text-red-500 dark:bg-red-900/20'}`}>
+                <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-transform group-hover:scale-110 ${isOrder ? 'bg-indigo-50 text-indigo-500 dark:bg-indigo-900/20' : 'bg-red-50 text-red-500 dark:bg-red-900/20'}`}>
                     {isOrder ? <FaShoppingCart size={14} /> : <FaArrowDown size={14} />}
                 </div>
                 <div>
-                    <p className="text-sm font-bold text-charcoal-900 dark:text-white">{title}</p>
-                    <p className="text-[10px] text-charcoal-400 font-medium uppercase">{subtitle}</p>
+                    <p className="text-sm font-black text-charcoal-900 dark:text-white truncate max-w-[120px] md:max-w-none">{title}</p>
+                    <p className="text-[10px] text-charcoal-400 font-bold uppercase tracking-widest mt-0.5">{subtitle}</p>
                 </div>
             </div>
             <div className="text-right">
                 <p className={`text-sm font-black ${isOrder ? 'text-charcoal-900 dark:text-white' : 'text-red-500'}`}>{amount}</p>
-                <p className="text-[10px] text-charcoal-400 font-medium">{time}</p>
+                <p className="text-[10px] text-charcoal-300 dark:text-charcoal-500 font-bold mt-0.5">{time}</p>
             </div>
         </div>
     );
@@ -351,27 +369,50 @@ const ActivityItem = ({ type, title, subtitle, amount, time, status }) => {
 const InventoryRow = ({ product, formatCurrency }) => {
     const isLow = product.stock <= (product.lowStockThreshold || 5);
     return (
-        <tr className="hover:bg-cream-50/50 dark:hover:bg-charcoal-700/30 transition-colors group">
-            <td className="px-6 py-4">
-                <div className="font-bold text-charcoal-900 dark:text-white group-hover:text-indigo-600 transition-colors">{product.name}</div>
-                <div className="text-[9px] text-charcoal-400 uppercase font-bold tracking-wider">{product.sku || 'No SKU'}</div>
+        <tr className="hover:bg-cream-50/30 dark:hover:bg-charcoal-800/20 transition-colors group">
+            <td className="px-6 py-5">
+                <div className="font-black text-charcoal-900 dark:text-white group-hover:text-indigo-600 transition-colors text-sm">{product.name}</div>
+                <div className="text-[9px] text-charcoal-400 uppercase font-black tracking-[0.2em] mt-1">{product.sku || 'No SKU'}</div>
             </td>
-            <td className="px-6 py-4">
-                <div className={`inline-flex items-center gap-1.5 font-black ${isLow ? 'text-red-500' : 'text-charcoal-900 dark:text-white'}`}>
-                    {product.stock} <span className="text-[9px] text-charcoal-400 font-medium">Pieces</span>
+            <td className="px-6 py-5">
+                <div className={`inline-flex items-center gap-1.5 font-black text-sm ${isLow ? 'text-red-500' : 'text-charcoal-900 dark:text-white'}`}>
+                    {product.stock} <span className="text-[9px] text-charcoal-400 font-bold uppercase">Units</span>
                 </div>
             </td>
-            <td className="px-6 py-4 font-bold text-charcoal-600 dark:text-charcoal-400">
+            <td className="px-6 py-5 font-black text-charcoal-500 dark:text-charcoal-400 text-sm">
                 {formatCurrency(product.price)}
             </td>
-            <td className="px-6 py-4 text-right">
-                <span className={`px-2.5 py-1 rounded-full text-[9px] font-black uppercase tracking-wider ${
-                    isLow ? 'bg-red-50 text-red-600 border border-red-100' : 'bg-sage-50 text-sage-600 border border-sage-100'
+            <td className="px-6 py-5 text-right">
+                <span className={`px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-[0.2em] ${
+                    isLow ? 'bg-red-50 text-red-600 dark:bg-red-900/20 border border-red-100/50 dark:border-red-900/30' : 'bg-sage-50 text-sage-600 dark:bg-sage-900/20 border border-sage-100/50 dark:border-sage-900/30'
                 }`}>
-                    {isLow ? 'Low Stock' : 'Good'}
+                    {isLow ? 'Low' : 'OK'}
                 </span>
             </td>
         </tr>
+    );
+};
+
+const InventoryCard = ({ product, formatCurrency }) => {
+    const isLow = product.stock <= (product.lowStockThreshold || 5);
+    return (
+        <div className="py-4 flex items-center justify-between group active:bg-cream-50 transition-colors">
+            <div className="min-w-0 flex-1 pr-4">
+                <p className="font-black text-charcoal-900 dark:text-white text-sm truncate">{product.name}</p>
+                <div className="flex items-center gap-2 mt-1">
+                     <span className={`text-[10px] font-black uppercase tracking-widest ${isLow ? 'text-red-500' : 'text-sage-500'}`}>
+                        {product.stock} Units
+                     </span>
+                     <span className="text-[10px] text-charcoal-400 font-bold tracking-widest uppercase truncate">• {product.sku || 'No SKU'}</span>
+                </div>
+            </div>
+            <div className="text-right shrink-0">
+                <p className="text-sm font-black text-charcoal-900 dark:text-white">{formatCurrency(product.price)}</p>
+                <p className={`text-[9px] font-black uppercase tracking-[0.2em] mt-1 ${isLow ? 'text-red-500' : 'text-sage-500'}`}>
+                    {isLow ? 'Restock' : 'Healthy'}
+                </p>
+            </div>
+        </div>
     );
 };
 

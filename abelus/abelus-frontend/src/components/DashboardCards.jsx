@@ -157,8 +157,13 @@ function DashboardCards({ data, loading, setRefreshKey }) {
             className="group bg-white dark:bg-charcoal-800 rounded-2xl p-5 border border-cream-200 dark:border-charcoal-700 hover:shadow-lg hover:border-terracotta-200 dark:hover:border-terracotta-900/50 transition-all duration-300 hover:-translate-y-0.5"
           >
             <div className="flex items-center justify-between mb-4">
-              <div className={`w-12 h-12 ${card.iconBg} rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform`}>
-                <Icon className={`text-xl ${card.iconColor}`} />
+              <div className="flex items-center gap-3">
+                <div className={`w-12 h-12 ${card.iconBg} rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform`}>
+                  <Icon className={`text-xl ${card.iconColor}`} />
+                </div>
+                <p className="text-sm font-black text-charcoal-700 dark:text-white uppercase tracking-wider">
+                  {card.title}
+                </p>
               </div>
               {card.change && (
                 <span className={`inline-flex items-center gap-1 px-2.5 py-1 ${badgeStyles.bg} ${badgeStyles.text} rounded-full text-xs font-semibold`}>
@@ -168,10 +173,7 @@ function DashboardCards({ data, loading, setRefreshKey }) {
               )}
             </div>
 
-            <p className="text-xs font-medium text-charcoal-500 dark:text-charcoal-400 uppercase tracking-wider mb-1">
-              {card.title}
-            </p>
-            <h3 className="text-xl font-bold text-charcoal-800 dark:text-white truncate">
+            <h3 className="text-2xl font-black text-charcoal-800 dark:text-white truncate">
               {card.value}
             </h3>
           </div>

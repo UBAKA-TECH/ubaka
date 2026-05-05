@@ -358,94 +358,105 @@ const SellerAbonne = () => {
                                 <button onClick={() => setShowFicheModal(false)} className="px-4 py-2 bg-gray-200 rounded-lg font-bold hover:bg-gray-300"><FaTimes /></button>
                             </div>
                         </div>
-
                         <div className="overflow-y-auto flex-1 bg-white" id="fiche-print-area">
                             <style>
                                 {`
                                 @media print {
-                                    @page { margin: 20px; }
-                                    body { font-family: sans-serif; background: white; color: black; }
-                                    .print-table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 12px; }
-                                    .print-table th, .print-table td { border: 1px solid #ccc; padding: 8px; text-align: left; }
-                                    .print-header { margin-bottom: 30px; }
+                                    @page { margin: 15mm; }
+                                    body { font-family: 'Inter', sans-serif; background: white; color: black; -webkit-print-color-adjust: exact; }
+                                    .print-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 11px; }
+                                    .print-table th, .print-table td { border: 1px solid #000; padding: 6px 8px; text-align: left; }
+                                    .print-table th { background-color: #f3f4f6 !important; font-weight: 800; text-transform: uppercase; }
+                                    .print-header { display: flex; justify-content: justify-between; align-items: center; border-bottom: 3px solid #000; padding-bottom: 20px; margin-bottom: 30px; }
+                                    .print-logo { height: 60px; width: auto; object-fit: contain; }
                                     .no-print { display: none; }
+                                    .text-red-600 { color: #dc2626 !important; }
                                 }
                                 `}
                             </style>
 
                             <div className="p-8">
-                                <div className="print-header flex justify-between items-center mb-8 border-b-2 border-black pb-6">
+                                <div className="print-header flex justify-between items-center mb-8 border-b-[3px] border-black pb-6">
                                     <div className="flex items-center gap-4">
-                                        {siteSettings?.logo && (
-                                            <img 
-                                                src={siteSettings.logo} 
-                                                alt="Logo" 
-                                                className="h-16 w-16 object-contain"
-                                            />
+                                        {siteSettings?.logo ? (
+                                            <img src={siteSettings.logo} alt="Logo" className="print-logo h-16 w-auto" />
+                                        ) : (
+                                            <div className="w-16 h-16 bg-black text-white flex items-center justify-center font-black text-3xl rounded-xl">
+                                                {siteSettings?.siteName?.charAt(0) || "A"}
+                                            </div>
                                         )}
                                         <div>
-                                            <h1 className="text-2xl font-black uppercase tracking-tight">{siteSettings?.siteName || "ABELUS"}</h1>
-                                            <p className="text-sm font-bold text-gray-600">FICHE DE CLIENT ABONNÉ</p>
+                                            <h1 className="text-2xl font-black uppercase leading-tight">{siteSettings?.siteName || "ABELUS"}</h1>
+                                            <p className="text-xs font-bold tracking-widest text-gray-500 uppercase">Fiche de Suivi Client</p>
                                         </div>
                                     </div>
-                                    <div className="text-left">
-                                        <p className="text-lg font-bold">CLIENT: <span className="underline decoration-dotted underline-offset-4">{selectedClient.name}</span></p>
-                                        <p className="text-xs text-gray-500 mt-1">Generated on: {new Date().toLocaleDateString()}</p>
-                                    </div>
                                     <div className="text-right">
-                                        <p className="text-sm text-gray-500 uppercase font-bold mb-1">Solde Dû</p>
-                                        <p className="font-black text-2xl text-red-600">RWF {selectedClient.totalDebt.toLocaleString()}</p>
+                                        <h2 className="text-xl font-black uppercase mb-1">FICHE DE CLIENT</h2>
+                                        <p className="text-sm font-bold">CLIENT: <span className="underline decoration-black">{selectedClient.name}</span></p>
+                                        <p className="text-xs font-mono mt-1 opacity-50">DATE: {new Date().toLocaleDateString()}</p>
                                     </div>
                                 </div>
 
-                                <table className="print-table w-full border border-gray-300 text-sm">
-                                    <thead className="bg-gray-100">
-                                        <tr>
-                                            <th className="border border-gray-300 p-2">DATE</th>
-                                            <th className="border border-gray-300 p-2">DESIGNATION</th>
-                                            <th className="border border-gray-300 p-2">QUANTITY</th>
-                                            <th className="border border-gray-300 p-2">PU (RWF)</th>
-                                            <th className="border border-gray-300 p-2">PT (RWF)</th>
-                                            <th className="border border-gray-300 p-2 text-red-600">OWED (RWF)</th>
-                                            <th className="border border-gray-300 p-2">RESPONSIBLE</th>
-                                            <th className="border border-gray-300 p-2">SIGNATURE</th>
+                                <table className="print-table w-full border border-black text-sm">
+                                    <thead>
+                                        <tr className="bg-gray-100">
+                                            <th className="border border-black p-2">DATE</th>
+                                            <th className="border border-black p-2">DESIGNATION</th>
+                                            <th className="border border-black p-2 text-center">QTY</th>
+                                            <th className="border border-black p-2 text-right">PU (RWF)</th>
+                                            <th className="border border-black p-2 text-right">PT (RWF)</th>
+                                            <th className="border border-black p-2 text-right text-red-600">DEBT (RWF)</th>
+                                            <th className="border border-black p-2">COLLECTED BY</th>
+                                            <th className="border border-black p-2">RESPONSIBLE</th>
+                                            <th className="border border-black p-2">SIGNATURE</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {clientFiche.map((tx, idx) => (
                                             <tr key={idx}>
-                                                <td className="border border-gray-300 p-2">{new Date(tx.date).toLocaleDateString()}</td>
-                                                <td className="border border-gray-300 p-2 font-bold">{tx.designation}</td>
-                                                <td className="border border-gray-300 p-2 text-center">{tx.quantity}</td>
-                                                <td className="border border-gray-300 p-2 text-right">{tx.pu.toLocaleString()}</td>
-                                                <td className="border border-gray-300 p-2 text-right">{tx.pt.toLocaleString()}</td>
-                                                <td className="border border-gray-300 p-2 text-right font-bold text-red-600">{tx.debtAmount.toLocaleString()}</td>
-                                                <td className="border border-gray-300 p-2">{tx.responsible?.name || "System"}</td>
-                                                <td className="border border-gray-300 p-2"></td>
+                                                <td className="border border-black p-2">{new Date(tx.date).toLocaleDateString()}</td>
+                                                <td className="border border-black p-2 font-bold">{tx.designation}</td>
+                                                <td className="border border-black p-2 text-center">{tx.quantity}</td>
+                                                <td className="border border-black p-2 text-right">{tx.pu.toLocaleString()}</td>
+                                                <td className="border border-black p-2 text-right">{tx.pt.toLocaleString()}</td>
+                                                <td className="border border-black p-2 text-right font-bold text-red-600">{tx.debtAmount.toLocaleString()}</td>
+                                                <td className="border border-black p-2 text-[10px] font-bold">{tx.collectedBy || "-"}</td>
+                                                <td className="border border-black p-2 text-xs">{tx.responsible?.name || "System"}</td>
+                                                <td className="border border-black p-2"></td>
                                             </tr>
                                         ))}
                                         {clientFiche.length === 0 && (
                                             <tr>
-                                                <td colSpan="8" className="p-8 text-center text-gray-500">No unpaid transactions.</td>
+                                                <td colSpan="9" className="p-8 text-center text-gray-500 italic">No unpaid transactions.</td>
                                             </tr>
                                         )}
                                     </tbody>
                                     {clientFiche.length > 0 && (
                                         <tfoot>
-                                            <tr className="bg-gray-100 font-black">
-                                                <td colSpan="4" className="border border-gray-300 p-2 text-right">TOTAL GLOBAL (TG):</td>
-                                                <td className="border border-gray-300 p-2 text-right">{clientFiche.reduce((sum, tx) => sum + tx.pt, 0).toLocaleString()}</td>
-                                                <td className="border border-gray-300 p-2 text-right text-red-600">{selectedClient.totalDebt.toLocaleString()}</td>
-                                                <td colSpan="2" className="border border-gray-300 p-2"></td>
+                                            <tr className="bg-gray-50 font-black">
+                                                <td colSpan="4" className="border border-black p-3 text-right text-xs">TOTAL GLOBAL (TG):</td>
+                                                <td className="border border-black p-3 text-right">{clientFiche.reduce((sum, tx) => sum + tx.pt, 0).toLocaleString()}</td>
+                                                <td className="border border-black p-3 text-right text-red-600">RWF {selectedClient.totalDebt.toLocaleString()}</td>
+                                                <td colSpan="3" className="border border-black p-3 bg-white"></td>
                                             </tr>
                                         </tfoot>
                                     )}
                                 </table>
+
+                                <div className="mt-12 grid grid-cols-2 gap-20">
+                                    <div className="text-center">
+                                        <p className="font-bold border-b border-black pb-2 mb-20 uppercase text-xs tracking-widest">Le Client</p>
+                                    </div>
+                                    <div className="text-center">
+                                        <p className="font-bold border-b border-black pb-2 mb-20 uppercase text-xs tracking-widest">Le Gérant / {siteSettings?.siteName || "ABELUS"}</p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             )}
+
 
             {/* Contract Prices Modal */}
             {showPriceModal && selectedClient && (

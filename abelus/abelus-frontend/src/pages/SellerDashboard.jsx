@@ -224,59 +224,59 @@ export default function SellerDashboard() {
                         {/* Stats Grid */}
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                             {/* Total Earnings */}
-                            <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 flex items-center gap-4 hover:shadow-md transition-all">
-                                <div className="p-3 rounded-lg bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400">
-                                    <FaDollarSign size={24} />
+                            <div className="group bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 hover:shadow-lg transition-all hover:-translate-y-0.5">
+                                <div className="flex items-center gap-3 mb-4">
+                                    <div className="w-12 h-12 rounded-xl bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 flex items-center justify-center group-hover:scale-110 transition-transform">
+                                        <FaDollarSign size={20} />
+                                    </div>
+                                    <p className="text-sm font-black text-gray-700 dark:text-gray-300 uppercase tracking-wider">Total Earnings</p>
                                 </div>
-                                <div>
-                                    <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Total Earnings</p>
-                                    <h3 className="text-xl font-bold text-gray-900 dark:text-white mt-1">{formatCurrency(stats.totalEarnings)}</h3>
-                                </div>
+                                <h3 className="text-2xl font-black text-gray-900 dark:text-white truncate">{formatCurrency(stats.totalEarnings)}</h3>
                             </div>
 
                             {/* Available Balance */}
-                            <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 flex items-center gap-4 hover:shadow-md transition-all">
-                                <div className="p-3 rounded-lg bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400">
-                                    <FaMoneyBillWave size={24} />
+                            <div className="group bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 hover:shadow-lg transition-all hover:-translate-y-0.5">
+                                <div className="flex items-center gap-3 mb-4">
+                                    <div className="w-12 h-12 rounded-xl bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400 flex items-center justify-center group-hover:scale-110 transition-transform">
+                                        <FaMoneyBillWave size={20} />
+                                    </div>
+                                    <p className="text-sm font-black text-gray-700 dark:text-gray-300 uppercase tracking-wider">Balance</p>
                                 </div>
-                                <div>
-                                    <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Available Balance</p>
-                                    <h3 className="text-xl font-bold text-gray-900 dark:text-white mt-1">{formatCurrency(stats.availableBalance)}</h3>
-                                </div>
+                                <h3 className="text-2xl font-black text-gray-900 dark:text-white truncate">{formatCurrency(stats.availableBalance)}</h3>
                             </div>
 
                             {/* Total Orders */}
-                            <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 flex items-center gap-4 hover:shadow-md transition-all">
-                                <div className="p-3 rounded-lg bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400">
-                                    <FaShoppingCart size={24} />
+                            <div className="group bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 hover:shadow-lg transition-all hover:-translate-y-0.5">
+                                <div className="flex items-center gap-3 mb-4">
+                                    <div className="w-12 h-12 rounded-xl bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 flex items-center justify-center group-hover:scale-110 transition-transform">
+                                        <FaShoppingCart size={20} />
+                                    </div>
+                                    <p className="text-sm font-black text-gray-700 dark:text-gray-300 uppercase tracking-wider">Total Orders</p>
                                 </div>
-                                <div>
-                                    <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Total Orders</p>
-                                    <h3 className="text-xl font-bold text-gray-900 dark:text-white mt-1">{stats.totalOrders}</h3>
-                                </div>
+                                <h3 className="text-2xl font-black text-gray-900 dark:text-white truncate">{stats.totalOrders}</h3>
                             </div>
 
                             {/* Total Products */}
-                            <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 flex items-center gap-4 hover:shadow-md transition-all">
-                                <div className="p-3 rounded-lg bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400">
-                                    <FaBox size={24} />
+                            <div className="group bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 hover:shadow-lg transition-all hover:-translate-y-0.5">
+                                <div className="flex items-center gap-3 mb-4">
+                                    <div className="w-12 h-12 rounded-xl bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400 flex items-center justify-center group-hover:scale-110 transition-transform">
+                                        <FaBox size={20} />
+                                    </div>
+                                    <p className="text-sm font-black text-gray-700 dark:text-gray-300 uppercase tracking-wider">Products</p>
                                 </div>
-                                <div>
-                                    <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Total Products</p>
-                                    <h3 className="text-xl font-bold text-gray-900 dark:text-white mt-1">{stats.totalProducts}</h3>
-                                </div>
+                                <h3 className="text-2xl font-black text-gray-900 dark:text-white truncate">{stats.totalProducts}</h3>
                             </div>
 
                             {/* Money in Drawer (New Card) */}
-                            <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 flex items-center gap-4 hover:shadow-md transition-all">
-                                <div className="p-3 rounded-lg bg-orange-50 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400">
-                                    <FaMoneyBillWave size={24} />
+                            <div className="group bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 hover:shadow-lg transition-all hover:-translate-y-0.5">
+                                <div className="flex items-center gap-3 mb-4">
+                                    <div className="w-12 h-12 rounded-xl bg-orange-50 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400 flex items-center justify-center group-hover:scale-110 transition-transform">
+                                        <FaMoneyBillWave size={20} />
+                                    </div>
+                                    <p className="text-sm font-black text-gray-700 dark:text-gray-300 uppercase tracking-wider">Drawer Cash</p>
                                 </div>
-                                <div>
-                                    <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Money in Drawer</p>
-                                    <h3 className="text-xl font-bold text-gray-900 dark:text-white mt-1">{formatCurrency(shiftStats.moneyInDrawer)}</h3>
-                                    {!shiftStats.isOpen && <p className="text-[10px] text-red-500 font-bold mt-0.5">SHIFT CLOSED</p>}
-                                </div>
+                                <h3 className="text-2xl font-black text-gray-900 dark:text-white truncate">{formatCurrency(shiftStats.moneyInDrawer)}</h3>
+                                {!shiftStats.isOpen && <p className="text-[10px] text-red-500 font-bold mt-1 uppercase tracking-tighter animate-pulse">SHIFT CLOSED</p>}
                             </div>
                         </div>
 

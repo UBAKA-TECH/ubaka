@@ -62,12 +62,14 @@ const FinanceDashboard = () => {
                             { label: "Net Profit", value: stats.netProfit, icon: <FaArrowUp />, color: "text-sage-500", bg: "bg-sage-50" },
                             { label: "Monthly Growth", value: `${stats.monthlyGrowth}%`, icon: <FaChartLine />, color: "text-terracotta-500", bg: "bg-terracotta-50" }
                         ].map((stat, idx) => (
-                            <div key={idx} className="bg-white dark:bg-charcoal-800 p-6 rounded-2xl shadow-sm border border-cream-200 dark:border-charcoal-700">
-                                <div className={`w-12 h-12 ${stat.bg} dark:bg-charcoal-700 rounded-xl flex items-center justify-center ${stat.color} mb-4 text-xl`}>
-                                    {stat.icon}
+                            <div key={idx} className="group bg-white dark:bg-charcoal-800 p-6 rounded-2xl shadow-sm border border-cream-200 dark:border-charcoal-700 hover:shadow-lg transition-all hover:-translate-y-0.5">
+                                <div className="flex items-center gap-3 mb-4">
+                                    <div className={`w-12 h-12 ${stat.bg} dark:bg-charcoal-700 rounded-xl flex items-center justify-center ${stat.color} text-xl group-hover:scale-110 transition-transform`}>
+                                        {stat.icon}
+                                    </div>
+                                    <p className="text-xs font-black text-gray-500 uppercase tracking-widest">{stat.label}</p>
                                 </div>
-                                <p className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-1">{stat.label}</p>
-                                <h3 className="text-2xl font-black text-charcoal-900 dark:text-white">
+                                <h3 className="text-2xl font-black text-charcoal-900 dark:text-white truncate">
                                     {typeof stat.value === 'number' ? `RWF ${stat.value.toLocaleString()}` : stat.value}
                                 </h3>
                             </div>

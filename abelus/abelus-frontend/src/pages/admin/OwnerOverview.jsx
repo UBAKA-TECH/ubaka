@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { 
-  FaChartLine, FaWallet, FaBox, FaShoppingCart, FaUserTie, 
+  FaWallet, FaBox, FaShoppingCart, FaUserTie, 
   FaArrowDown, FaSync, FaDownload, FaHistory,
   FaCheckCircle, FaSearch, FaArrowRight
 } from "react-icons/fa";

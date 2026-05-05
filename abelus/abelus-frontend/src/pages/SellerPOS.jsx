@@ -58,7 +58,8 @@ export default function SellerPOS() {
         description: "",
         amount: "",
         category: "General",
-        paymentMethod: "cash"
+        paymentMethod: "cash",
+        type: "out" // "out" for taking out, "in" for taking in
     });
 
     const handleAbonneCheckout = async () => {
@@ -567,14 +568,17 @@ export default function SellerPOS() {
         if (!activeShift) return alert("No active shift found");
 
         try {
+            const finalAmount = expenseData.type === "in" ? -Math.abs(Number(expenseData.amount)) : Math.abs(Number(expenseData.amount));
+            
             const res = await api.post("/expenses", {
                 ...expenseData,
+                amount: finalAmount,
                 shiftId: activeShift.id
             });
             if (res.data.success) {
-                toast.success("Expense recorded");
+                toast.success(expenseData.type === "in" ? "Money back recorded" : "Expense recorded");
                 setShowExpenseModal(false);
-                setExpenseData({ description: "", amount: "", category: "General", paymentMethod: "cash" });
+                setExpenseData({ description: "", amount: "", category: "General", paymentMethod: "cash", type: "out" });
                 fetchActiveShift(); // Refresh shift stats
             }
         } catch (err) {
@@ -705,11 +709,25 @@ export default function SellerPOS() {
                         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-md">
                             <div className="bg-white dark:bg-gray-800 p-8 rounded-3xl shadow-2xl max-w-md w-full animate-in fade-in zoom-in duration-300 border border-white/20">
                                 <div className="text-center mb-6">
-                                    <div className="w-16 h-16 bg-amber-100 dark:bg-amber-900/30 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                                        <FaWallet className="text-2xl text-amber-600" />
+                                    <div className={`w-16 h-16 ${expenseData.type === "in" ? "bg-green-100 dark:bg-green-900/30" : "bg-amber-100 dark:bg-amber-900/30"} rounded-2xl flex items-center justify-center mx-auto mb-4 transition-colors`}>
+                                        <FaWallet className={`text-2xl ${expenseData.type === "in" ? "text-green-600" : "text-amber-600"}`} />
                                     </div>
-                                    <h2 className="text-2xl font-black text-gray-900 dark:text-white">Record Expense</h2>
-                                    <p className="text-gray-500 dark:text-gray-400 mt-1 text-sm">Money spent from the drawer</p>
+                                    <h2 className="text-2xl font-black text-gray-900 dark:text-white">Drawer Transaction</h2>
+                                    
+                                    <div className="flex p-1 bg-gray-100 dark:bg-gray-700 rounded-xl mt-4 max-w-[240px] mx-auto border border-gray-200 dark:border-gray-600">
+                                        <button 
+                                            onClick={() => setExpenseData({...expenseData, type: 'out'})}
+                                            className={`flex-1 py-2 text-xs font-black rounded-lg transition-all ${expenseData.type === 'out' ? 'bg-white dark:bg-gray-600 text-amber-600 shadow-sm' : 'text-gray-500'}`}
+                                        >
+                                            CASH OUT
+                                        </button>
+                                        <button 
+                                            onClick={() => setExpenseData({...expenseData, type: 'in'})}
+                                            className={`flex-1 py-2 text-xs font-black rounded-lg transition-all ${expenseData.type === 'in' ? 'bg-white dark:bg-gray-600 text-green-600 shadow-sm' : 'text-gray-500'}`}
+                                        >
+                                            CASH IN
+                                        </button>
+                                    </div>
                                 </div>
 
                                 <div className="space-y-4">
@@ -725,10 +743,10 @@ export default function SellerPOS() {
                                     </div>
                                     <div className="grid grid-cols-2 gap-4">
                                         <div className="space-y-1">
-                                            <label className="text-xs font-bold text-gray-500 uppercase ml-1">Amount (RWF)</label>
+                                            <label className="text-xs font-bold text-gray-500 uppercase ml-1">{expenseData.type === "in" ? "Amount Received" : "Amount Paid"}</label>
                                             <input
                                                 type="number"
-                                                className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-xl focus:border-amber-500 outline-none transition-all dark:text-white font-black"
+                                                className={`w-full px-4 py-3 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 ${expenseData.type === 'in' ? 'focus:ring-green-500/20 focus:border-green-500' : 'focus:ring-amber-500/20 focus:border-amber-500'} outline-none transition-all dark:text-white font-black`}
                                                 placeholder="0"
                                                 value={expenseData.amount}
                                                 onChange={(e) => setExpenseData({...expenseData, amount: e.target.value})}
@@ -746,6 +764,7 @@ export default function SellerPOS() {
                                                 <option value="Packaging">Packaging</option>
                                                 <option value="Staff">Staff</option>
                                                 <option value="Maintenance">Maintenance</option>
+                                                <option value="Refund / Money Back">Refund / Money Back</option>
                                             </select>
                                         </div>
                                     </div>
@@ -759,9 +778,9 @@ export default function SellerPOS() {
                                         </button>
                                         <button
                                             onClick={handleRecordExpense}
-                                            className="flex-2 py-3 bg-amber-500 hover:bg-amber-600 text-white rounded-xl font-black shadow-lg shadow-amber-500/20 transition-all active:scale-[0.98]"
+                                            className={`flex-2 py-3 ${expenseData.type === 'in' ? 'bg-green-600 hover:bg-green-700' : 'bg-amber-500 hover:bg-amber-600'} text-white rounded-xl font-black shadow-lg transition-all active:scale-[0.98]`}
                                         >
-                                            Save Expense
+                                            {expenseData.type === 'in' ? 'Save Money In' : 'Save Expense'}
                                         </button>
                                     </div>
                                 </div>

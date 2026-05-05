@@ -213,15 +213,17 @@ export const generateReport = async (req, res) => {
                     helpers.table({
                         columns: [
                             { header: "Description", key: "description", width: 180 },
+                            { header: "Type", key: "type", width: 80 },
                             { header: "Category", key: "category", width: 100 },
-                            { header: "Date", key: "date", width: 100 },
+                            { header: "Date", key: "date", width: 80 },
                             { header: "Amount", key: "amount", width: 100, align: "right" }
                         ],
                         rows: filters.expenses.map(e => ({
                             description: e.description,
+                            type: e.amount < 0 ? "CASH IN" : "CASH OUT",
                             category: e.category,
                             date: new Date(e.date).toLocaleDateString('en-GB', { timeZone: 'Africa/Kigali' }),
-                            amount: `RWF ${(e.amount ?? 0).toLocaleString()}`
+                            amount: e.amount < 0 ? `RWF (${Math.abs(e.amount).toLocaleString()})` : `RWF ${e.amount.toLocaleString()}`
                         }))
                     });
                 }

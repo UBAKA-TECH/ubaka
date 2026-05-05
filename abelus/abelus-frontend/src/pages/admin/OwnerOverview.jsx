@@ -91,9 +91,9 @@ const OwnerOverview = () => {
                     </div>
                 </header>
 
-                {/* Metrics: Horizontal Scroll on Mobile, Grid on Desktop */}
-                <div className="flex overflow-x-auto md:grid md:grid-cols-2 lg:grid-cols-4 gap-4 pb-4 md:pb-0 scrollbar-hide -mx-4 px-4 md:mx-0 md:px-0">
-                    <div className="min-w-[280px] md:min-w-0">
+                {/* Metrics: Grid that adapts to mobile */}
+                <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 px-0">
+                    <div className="col-span-1">
                         <MetricCard 
                             title="Net Cash Today" 
                             value={formatCurrency((analytics?.dailyStats?.revenue || 0) - (analytics?.dailyStats?.expenses || 0))} 
@@ -102,7 +102,7 @@ const OwnerOverview = () => {
                             trend={analytics?.dailyStats?.revenue > 0 ? "+Live" : "No Activity"}
                         />
                     </div>
-                    <div className="min-w-[280px] md:min-w-0">
+                    <div className="col-span-1">
                         <MetricCard 
                             title="Live Drawer" 
                             value={formatCurrency(activeShift?.currentBalance || 0)} 
@@ -111,16 +111,16 @@ const OwnerOverview = () => {
                             subtext={activeShift ? `Operated by ${activeShift.staff?.name}` : "No Active Shift"}
                         />
                     </div>
-                    <div className="min-w-[280px] md:min-w-0">
+                    <div className="col-span-1">
                         <MetricCard 
-                            title="Today's Revenue" 
-                            value={formatCurrency(analytics?.dailyStats?.revenue)} 
-                            icon={<FaChartLine />} 
+                            title="Momo Pay Balance" 
+                            value={formatCurrency(analytics?.dailyStats?.momoRevenue || 0)} 
+                            icon={<FaSync />} 
                             color="indigo"
-                            subtext={`${analytics?.dailyStats?.orderCount || 0} Orders placed`}
+                            subtext="Direct to Owner"
                         />
                     </div>
-                    <div className="min-w-[280px] md:min-w-0">
+                    <div className="col-span-1">
                         <MetricCard 
                             title="Today's Expenses" 
                             value={formatCurrency(analytics?.dailyStats?.expenses)} 
@@ -152,7 +152,7 @@ const OwnerOverview = () => {
                                         title={`Order #${order.orderNumber}`}
                                         subtitle={`${order.items?.length || 0} items • ${order.paymentStatus}`}
                                         amount={formatCurrency(order.total)}
-                                        time={new Date(order.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                        time={new Date(order.createdAt).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', timeZone: 'Africa/Kigali' })}
                                     />
                                 ))}
                                 {recentExpenses.slice(0, 2).map(expense => (
@@ -162,7 +162,7 @@ const OwnerOverview = () => {
                                         title={expense.description}
                                         subtitle={expense.category}
                                         amount={`-${formatCurrency(expense.amount)}`}
-                                        time={new Date(expense.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                        time={new Date(expense.createdAt).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', timeZone: 'Africa/Kigali' })}
                                     />
                                 ))}
                             </div>
@@ -292,7 +292,7 @@ const OwnerOverview = () => {
                                         <div className="grid grid-cols-2 gap-4 pt-4 border-t border-white/5">
                                             <div>
                                                 <p className="text-gray-500 text-[9px] font-black uppercase tracking-widest mb-1">Started</p>
-                                                <p className="text-sm font-bold">{new Date(activeShift.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
+                                                <p className="text-sm font-bold">{new Date(activeShift.startTime).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', timeZone: 'Africa/Kigali' })}</p>
                                             </div>
                                             <div>
                                                 <p className="text-gray-500 text-[9px] font-black uppercase tracking-widest mb-1">Drawer</p>
@@ -317,29 +317,35 @@ const OwnerOverview = () => {
 
 const MetricCard = ({ title, value, icon, color, trend, subtext }) => {
     const colors = {
-        indigo: "text-indigo-600 dark:text-indigo-400 bg-indigo-50/50 dark:bg-indigo-900/20",
-        sage: "text-sage-600 dark:text-sage-400 bg-sage-50/50 dark:bg-sage-900/20",
-        red: "text-red-600 dark:text-red-400 bg-red-50/50 dark:bg-red-900/20",
+        indigo: "text-indigo-600 dark:text-indigo-400 bg-indigo-50/80 dark:bg-indigo-900/30",
+        sage: "text-emerald-600 dark:text-emerald-400 bg-emerald-50/80 dark:bg-emerald-900/30",
+        red: "text-rose-600 dark:text-rose-400 bg-rose-50/80 dark:bg-rose-900/30",
     };
 
     return (
-        <div className="bg-white dark:bg-charcoal-900 p-6 rounded-[2.5rem] border border-cream-100 dark:border-charcoal-800 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between h-full group active:scale-[0.98]">
-            <div className="flex items-center justify-between mb-4">
-                <div className={`w-12 h-12 ${colors[color]} rounded-2xl flex items-center justify-center text-xl group-hover:scale-110 transition-transform`}>
+        <div className="bg-white dark:bg-[#1A1A1A] p-4 md:p-6 rounded-[2rem] border border-gray-100 dark:border-white/5 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between h-full group">
+            <div className="flex items-start justify-between mb-3">
+                <div className={`w-10 h-10 md:w-12 md:h-12 ${colors[color]} rounded-2xl flex items-center justify-center text-lg md:text-xl transition-transform`}>
                     {icon}
                 </div>
                 {trend && (
-                    <span className="text-[10px] font-black px-3 py-1 bg-sage-50 dark:bg-sage-900/30 text-sage-600 dark:text-sage-400 rounded-full uppercase tracking-widest border border-sage-100/50 dark:border-sage-900/50">
+                    <span className="text-[8px] md:text-[9px] font-black px-2 py-1 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 rounded-lg uppercase tracking-widest">
                         {trend}
                     </span>
                 )}
             </div>
-            <div>
-                <p className="text-[10px] font-black text-charcoal-400 dark:text-charcoal-500 uppercase tracking-[0.2em] mb-1">{title}</p>
-                <h3 className="text-2xl md:text-3xl font-black text-charcoal-900 dark:text-white truncate tracking-tight">
+            <div className="space-y-1">
+                <p className="text-[10px] md:text-[11px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-[0.2em]">
+                    {title}
+                </p>
+                <h3 className="text-2xl md:text-2xl lg:text-3xl font-black text-gray-900 dark:text-white leading-none py-1">
                     {value || "RWF 0"}
                 </h3>
-                {subtext && <p className="text-[10px] text-charcoal-400 dark:text-charcoal-500 mt-2 font-bold uppercase tracking-wide">{subtext}</p>}
+                {subtext && (
+                    <p className="text-[9px] md:text-[10px] text-gray-500 dark:text-gray-400 font-black uppercase tracking-widest opacity-90">
+                        {subtext}
+                    </p>
+                )}
             </div>
         </div>
     );

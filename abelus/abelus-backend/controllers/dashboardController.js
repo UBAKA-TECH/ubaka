@@ -37,16 +37,16 @@ export const getDashboardAnalytics = async (req, res) => {
     // Batch 1: Basic Counts
     const [
       totalOrders, deliveredOrders, inProductionOrders, cancelledOrders, totalProducts,
-      todayRevenueAgg, todayExpensesAgg, allProductsForValue
+      todayOrdersForRevenue, todayExpensesAgg, allProductsForValue
     ] = await Promise.all([
       prisma.order.count({ where: orderFilter }),
       prisma.order.count({ where: { ...orderFilter, status: "delivered" } }),
       prisma.order.count({ where: { ...orderFilter, status: "in_production" } }),
       prisma.order.count({ where: { ...orderFilter, status: "cancelled" } }),
       prisma.product.count({ where: productFilter }),
-      prisma.order.aggregate({
-        _sum: { grandTotal: true },
-        where: { ...orderFilter, createdAt: { gte: startOfToday }, OR: [{ status: "delivered" }, { paymentStatus: "completed" }] }
+      prisma.order.findMany({
+        where: { ...orderFilter, createdAt: { gte: startOfToday }, OR: [{ status: "delivered" }, { paymentStatus: "completed" }] },
+        select: { grandTotal: true, paymentMethod: true }
       }),
       prisma.expense.aggregate({
         _sum: { amount: true },
@@ -58,7 +58,30 @@ export const getDashboardAnalytics = async (req, res) => {
       })
     ]);
     
-    const todayRevenue = todayRevenueAgg?._sum?.grandTotal || 0;
+    let todayRevenue = 0;
+    let momoRevenue = 0;
+    let cashRevenue = 0;
+
+    (todayOrdersForRevenue || []).forEach(order => {
+        const total = order.grandTotal || 0;
+        todayRevenue += total;
+        const method = (order.paymentMethod || "cash").toLowerCase();
+        if (method.includes("momo") || method.includes("mobile")) {
+            momoRevenue += total;
+        } else {
+            cashRevenue += total;
+        }
+    });
+
+    // Add Debt Collections to Revenue & Cash
+    const debtCollections = await prisma.abonneTransaction.aggregate({
+        _sum: { amountPaid: true },
+        where: { createdAt: { gte: startOfToday } }
+    });
+    const totalDebtToday = debtCollections?._sum?.amountPaid || 0;
+    todayRevenue += totalDebtToday;
+    cashRevenue += totalDebtToday; // Debt collection is usually cash in hand
+
     const todayExpenses = todayExpensesAgg?._sum?.amount || 0;
     const totalInventoryValue = (allProductsForValue || []).reduce((sum, p) => sum + ((p.stock || 0) * (p.price || 0)), 0);
 
@@ -262,7 +285,9 @@ export const getDashboardAnalytics = async (req, res) => {
       outOfStockCount,
       dailyStats: {
         revenue: todayRevenue,
-        expenses: todayExpenses
+        expenses: todayExpenses,
+        momoRevenue: momoRevenue,
+        cashRevenue: cashRevenue
       },
       totalInventoryValue
     });

@@ -233,9 +233,8 @@ export const generateReport = async (req, res) => {
                     helpers.table({
                         columns: [
                             { header: "Date", key: "date", width: 55 },
-                            { header: "Client", key: "client", width: 105 },
-                            { header: "RESPONSIBLE", key: "rep", width: 70 },
-                            { header: "Item/Service", key: "designation", width: 100 },
+                            { header: "Client", key: "client", width: 140 },
+                            { header: "Item/Service", key: "designation", width: 135 },
                             { header: "Qty", key: "quantity", width: 25, align: "center" },
                             { header: "Total", key: "pt", width: 55, align: "right" },
                             { header: "Balance", key: "owed", width: 55, align: "right" },
@@ -244,7 +243,6 @@ export const generateReport = async (req, res) => {
                         rows: filters.abonneTransactions.map(tx => ({
                             date: new Date(tx.date).toLocaleDateString('en-GB', { timeZone: 'Africa/Kigali' }),
                             client: tx.client?.name || "Unknown",
-                            rep: tx.collectedBy || "N/A",
                             designation: tx.designation,
                             quantity: tx.quantity,
                             pt: `RWF ${(tx.pt ?? 0).toLocaleString()}`,

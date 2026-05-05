@@ -5,6 +5,9 @@ import upload from "../middleware/uploadMiddleware.js";
 
 const router = express.Router();
 
+// Staff/Admin Routes
+router.get("/all", authMiddleware(["admin", "owner", "inventory"]), productController.getProductsAll);
+
 // Public routes
 router.get("/suggestions", productController.getSuggestions);
 router.get("/recommendations", productController.getProductRecommendations); // New Engine
@@ -15,9 +18,7 @@ router.get("/by-ids", productController.getProductsByIds);
 router.get("/:id", productController.getProductById);
 router.get("/:id/related", productController.getRelatedProducts);
 
-
-// Seller/Staff routes
-router.get("/all", authMiddleware(["admin", "owner", "inventory"]), productController.getProductsAll);
+// Seller routes
 router.get("/seller/my-products", authMiddleware(["seller", "admin", "owner", "inventory"]), productController.getSellerProducts);
 
 // Admin/Seller/Staff routes

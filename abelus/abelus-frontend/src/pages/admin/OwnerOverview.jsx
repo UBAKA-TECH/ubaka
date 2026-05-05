@@ -8,6 +8,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import api from "../../utils/axiosInstance";
 import toast from "react-hot-toast";
+import supabase from "../../utils/supabaseClient";
 
 const OwnerOverview = () => {
     const { user } = useAuth();
@@ -44,6 +45,61 @@ const OwnerOverview = () => {
             setLoading(false);
         }
     }, []);
+    
+    const [auditLoading, setAuditLoading] = useState(false);
+
+    const handleMonthlyAudit = async () => {
+        if (auditLoading) return;
+        
+        const now = new Date();
+        const month = now.getMonth() + 1;
+        const year = now.getFullYear();
+        
+        const toastId = toast.loading("Generating Monthly Audit Report...");
+        setAuditLoading(true);
+        
+        try {
+            const params = new URLSearchParams({
+                type: 'monthly',
+                month: month.toString(),
+                year: year.toString(),
+                format: 'pdf'
+            });
+            
+            const url = `${api.defaults.baseURL.replace(/\/$/, "")}/orders/report?${params.toString()}`;
+            
+            const { data: { session } } = await supabase.auth.getSession();
+            const token = session?.access_token;
+
+            const res = await fetch(url, { headers: { Authorization: `Bearer ${token}` } });
+            
+            if (!res.ok) {
+                const errorData = await res.json().catch(() => ({}));
+                throw new Error(errorData.message || "Failed to generate PDF");
+            }
+
+            const blob = await res.blob();
+            const blobUrl = URL.createObjectURL(blob);
+            
+            const w = window.open(blobUrl, "_blank");
+            if (!w) {
+                // Fallback for popup blockers
+                const link = document.createElement('a');
+                link.href = blobUrl;
+                link.download = `monthly-audit-${month}-${year}.pdf`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+            
+            toast.success("Audit Generated Successfully", { id: toastId });
+        } catch (error) {
+            console.error("Audit failed:", error);
+            toast.error(error.message || "Failed to generate audit", { id: toastId });
+        } finally {
+            setAuditLoading(false);
+        }
+    };
 
     useEffect(() => {
         fetchData();
@@ -87,8 +143,13 @@ const OwnerOverview = () => {
                         >
                             <FaSync className={`${loading ? "animate-spin" : ""}`} />
                         </button>
-                        <button className="flex-1 md:flex-none flex items-center justify-center gap-2 px-6 py-3 bg-charcoal-900 dark:bg-white text-white dark:text-black rounded-2xl font-bold text-sm shadow-xl active:scale-95 transition-all">
-                            <FaDownload /> Monthly Audit
+                        <button 
+                            onClick={handleMonthlyAudit}
+                            disabled={auditLoading}
+                            className="flex-1 md:flex-none flex items-center justify-center gap-2 px-6 py-3 bg-charcoal-900 dark:bg-white text-white dark:text-black rounded-2xl font-bold text-sm shadow-xl active:scale-95 transition-all disabled:opacity-50"
+                        >
+                            {auditLoading ? <FaSync className="animate-spin" /> : <FaDownload />} 
+                            {auditLoading ? "Generating..." : "Monthly Audit"}
                         </button>
                     </div>
                 </header>

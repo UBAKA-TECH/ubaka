@@ -8,7 +8,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import api from "../../utils/axiosInstance";
 import toast from "react-hot-toast";
-import supabase from "../../utils/supabaseClient";
+import { supabase } from "../../utils/supabaseClient";
 
 const OwnerOverview = () => {
     const { user } = useAuth();

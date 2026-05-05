@@ -271,7 +271,7 @@ function SellerReports() {
                             </span>
                           </td>
                           <td className="px-8 py-4 text-xs font-medium text-[#64748B]">
-                            {new Date(log.timestamp).toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' })}
+                            {new Date(log.timestamp).toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short', timeZone: 'Africa/Kigali' })}
                           </td>
                           <td className="px-8 py-4 text-right">
                              <span className="text-[10px] font-bold text-[#94A3B8] uppercase tracking-tighter">#{log.id.slice(-8)}</span>

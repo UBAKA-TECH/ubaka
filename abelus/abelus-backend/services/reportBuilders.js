@@ -106,12 +106,9 @@ const getRangeReport = async (start, end, sellerId) => {
   const topProduct = Object.entries(productCount).sort((a, b) => b[1] - a[1])[0]?.[0] || "N/A";
   const topCustomization = Object.entries(customizationCount).sort((a, b) => b[1] - a[1])[0]?.[0] || "N/A";
 
-  let totalStartingCash = 0;
-  let totalClosingCash = 0;
-  shifts.forEach(s => {
-    totalStartingCash += (s.startingDrawerAmount || 0);
-    totalClosingCash += (s.actualEndingDrawerAmount || s.expectedEndingDrawerAmount || 0);
-  });
+  const totalStartingCash = shifts.length > 0 ? (shifts[0].startingDrawerAmount || 0) : 0;
+  const totalClosingCash = shifts.length > 0 ? (shifts[shifts.length - 1].actualEndingDrawerAmount || shifts[shifts.length - 1].expectedEndingDrawerAmount || 0) : 0;
+
 
   // Calculate specifically CASH expenses for the drawer formula
   const cashExpenses = expenses
@@ -178,7 +175,13 @@ const getDailyReport = async ({ date, sellerId }) => {
  * 📈 Custom Range Report
  */
 const getCustomRangeReport = async ({ start, end, sellerId }) => {
-  return await getRangeReport(new Date(start), new Date(end), sellerId);
+  const startDate = new Date(start);
+  startDate.setHours(0, 0, 0, 0);
+  
+  const endDate = new Date(end);
+  endDate.setHours(23, 59, 59, 999);
+  
+  return await getRangeReport(startDate, endDate, sellerId);
 };
 
 /**
@@ -244,8 +247,13 @@ const getCustomerReport = async ({ customerId, sellerId }) => {
  * 📈 Revenue Report
  */
 const getRevenueReport = async ({ start, end, sellerId }) => {
+  const startDate = new Date(start);
+  startDate.setHours(0, 0, 0, 0);
+  const endDate = new Date(end);
+  endDate.setHours(23, 59, 59, 999);
+
   const where = {
-    createdAt: { gte: new Date(start), lt: new Date(end) },
+    createdAt: { gte: startDate, lt: endDate },
     status: "delivered",
   };
   if (sellerId) {

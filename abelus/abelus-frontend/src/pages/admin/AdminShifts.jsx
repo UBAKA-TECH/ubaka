@@ -104,8 +104,8 @@ const AdminShifts = () => {
                                             </p>
                                         </div>
                                         <p className="text-xs text-gray-400 flex items-center gap-2 mt-0.5">
-                                            <FaClock className="text-[10px]" /> {new Date(shift.startTime).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})} 
-                                            {shift.endTime && ` — ${new Date(shift.endTime).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`}
+                                            <FaClock className="text-[10px]" /> {new Date(shift.startTime).toLocaleTimeString('en-GB', {hour: '2-digit', minute:'2-digit', timeZone: 'Africa/Kigali'})} 
+                                            {shift.endTime && ` — ${new Date(shift.endTime).toLocaleTimeString('en-GB', {hour: '2-digit', minute:'2-digit', timeZone: 'Africa/Kigali'})}`}
                                         </p>
                                     </div>
                                 </div>
@@ -139,7 +139,7 @@ const AdminShifts = () => {
                                     <FaClipboardList className="text-terracotta-500" /> Shift Audit Report
                                 </h2>
                                 <p className="text-sm text-gray-500 dark:text-gray-400 mt-1 font-medium italic">
-                                    Cashier: {selectedShift.user?.name || "Unknown"} | {new Date(selectedShift.startTime).toLocaleString()}
+                                    Cashier: {selectedShift.user?.name || "Unknown"} | {new Date(selectedShift.startTime).toLocaleString('en-GB', { timeZone: 'Africa/Kigali' })}
                                 </p>
                             </div>
                             <button
@@ -224,7 +224,7 @@ const AdminShifts = () => {
                                                     <div key={expense.id} className="flex justify-between items-center p-3 bg-gray-50 dark:bg-gray-700/50 rounded-xl border border-gray-100 dark:border-gray-600">
                                                         <div>
                                                             <p className="font-bold text-xs dark:text-white">{expense.description}</p>
-                                                            <p className="text-[10px] text-gray-400 uppercase font-bold">{expense.category} | {new Date(expense.date).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</p>
+                                                            <p className="text-[10px] text-gray-400 uppercase font-bold">{expense.category} | {new Date(expense.date).toLocaleTimeString('en-GB', {hour:'2-digit', minute:'2-digit', timeZone: 'Africa/Kigali'})}</p>
                                                         </div>
                                                         <p className="font-black text-red-500">- {formatCurrency(expense.amount)}</p>
                                                     </div>
@@ -243,7 +243,7 @@ const AdminShifts = () => {
                                                         <span className="text-[10px] text-gray-400 font-bold uppercase">{order.paymentMethod}</span>
                                                     </div>
                                                     <div className="flex items-center gap-4">
-                                                        <span className="text-xs text-gray-400">{new Date(order.createdAt).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</span>
+                                                        <span className="text-xs text-gray-400">{new Date(order.createdAt).toLocaleTimeString('en-GB', {hour:'2-digit', minute:'2-digit', timeZone: 'Africa/Kigali'})}</span>
                                                         <span className="font-bold dark:text-white">{formatCurrency(order.grandTotal)}</span>
                                                     </div>
                                                 </div>

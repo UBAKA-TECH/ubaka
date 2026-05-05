@@ -167,7 +167,7 @@ export const generateReport = async (req, res) => {
                         ],
                         rows: filters.shifts.map((shift, idx) => ({
                             index: idx + 1,
-                            period: `${new Date(shift.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - ${shift.endTime ? new Date(shift.endTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : "STILL OPEN"}`,
+                            period: `${new Date(shift.startTime).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', timeZone: 'Africa/Kigali' })} - ${shift.endTime ? new Date(shift.endTime).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', timeZone: 'Africa/Kigali' }) : "STILL OPEN"}`,
                             opening: `RWF ${(shift.startingDrawerAmount ?? 0).toLocaleString()}`,
                             closing: `RWF ${(shift.actualEndingDrawerAmount || shift.expectedEndingDrawerAmount || 0).toLocaleString()}`,
                             status: shift.status
@@ -178,7 +178,7 @@ export const generateReport = async (req, res) => {
                 helpers.section("Transaction Detail");
                 const flattenedItems = (orders || []).flatMap(o => (o.items || []).map(i => ({
                     ...i,
-                    orderDate: new Date(o.createdAt).toLocaleDateString(),
+                    orderDate: new Date(o.createdAt).toLocaleDateString('en-GB', { timeZone: 'Africa/Kigali' }),
                     paymentMethod: String(o.paymentMethod || "cash").toLowerCase()
                 })));
 
@@ -219,7 +219,7 @@ export const generateReport = async (req, res) => {
                         rows: filters.expenses.map(e => ({
                             description: e.description,
                             category: e.category,
-                            date: new Date(e.date).toLocaleDateString(),
+                            date: new Date(e.date).toLocaleDateString('en-GB', { timeZone: 'Africa/Kigali' }),
                             amount: `RWF ${(e.amount ?? 0).toLocaleString()}`
                         }))
                     });

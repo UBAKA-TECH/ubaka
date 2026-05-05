@@ -121,7 +121,7 @@ function App() {
                   <Route path="/faq" element={<FAQ />} />
                   <Route path="/print-portal" element={<PrintPortal />} />
                   <Route path="/orders" element={
-                    <ProtectedRoute allowedRoles={['customer', 'seller', 'admin', 'cashier']}>
+                    <ProtectedRoute allowedRoles={['customer', 'seller', 'admin', 'cashier', 'owner']}>
                       <OrderHistory />
                     </ProtectedRoute>
                   } />
@@ -134,7 +134,7 @@ function App() {
                   <Route path="/auth/success" element={<AuthSuccess />} />
                   {/* Admin Routes with Shared Layout */}
                   <Route element={
-                    <ProtectedRoute allowedRoles={['admin']}>
+                    <ProtectedRoute allowedRoles={['admin', 'owner']}>
                       <AdminLayout />
                     </ProtectedRoute>
                   }>
@@ -205,7 +205,7 @@ function App() {
                   <Route path="/logout" element={<Logout />} />
 
                   <Route path="/dashboard" element={
-                    <ProtectedRoute allowedRoles={['customer', 'seller', 'admin', 'cashier']}>
+                    <ProtectedRoute allowedRoles={['customer', 'seller', 'admin', 'cashier', 'owner']}>
                       <UserDashboard />
                     </ProtectedRoute>
                   } />

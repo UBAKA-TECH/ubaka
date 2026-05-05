@@ -234,7 +234,7 @@ function AdminReports() {
                         logs.map((log) => (
                           <tr key={log.id} className="hover:bg-cream-50 dark:hover:bg-charcoal-700/50 transition-colors group">
                             <td className="px-6 py-4 text-sm text-charcoal-600 dark:text-charcoal-400 whitespace-nowrap">
-                              {new Date(log.timestamp).toLocaleDateString()} <span className="text-xs opacity-70 ml-1">{new Date(log.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                              {new Date(log.timestamp).toLocaleDateString('en-GB', { timeZone: 'Africa/Kigali' })} <span className="text-xs opacity-70 ml-1">{new Date(log.timestamp).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', timeZone: 'Africa/Kigali' })}</span>
                             </td>
                             <td className="px-6 py-4 text-sm font-medium text-charcoal-800 dark:text-white capitalize whitespace-nowrap">
                               {log.type.replace('-', ' ')}

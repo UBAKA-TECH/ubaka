@@ -179,7 +179,7 @@ To become a seller on Abelus, you must:
 
 14.1. This Agreement is governed by the laws of the Republic of Rwanda.
 
-14.2. Any disputes shall be resolved through the courts of Kigali, Rwanda.
+14.2. Any disputes shall be resolved through the courts of Gicumbi, Byumba.
 
 ---
 
@@ -188,7 +188,7 @@ To become a seller on Abelus, you must:
 For questions about these terms:
 - Email: sellers@abelus.rw
 - Phone: +250 XXX XXX XXX
-- Address: Kigali, Rwanda
+- Address: Gicumbi, Byumba
 
 ---
 
@@ -211,6 +211,6 @@ For questions about these terms:
 `;
 
 export default {
-    SELLER_TERMS_VERSION,
-    SELLER_TERMS_CONTENT
+   SELLER_TERMS_VERSION,
+   SELLER_TERMS_CONTENT
 };

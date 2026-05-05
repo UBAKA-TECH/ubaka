@@ -317,7 +317,7 @@ export default function AdminSiteSettings() {
 
                                 <div className="form-group">
                                     <label className="block text-sm font-medium text-charcoal-700 dark:text-charcoal-300 mb-2"><FaMapMarkerAlt className="inline mr-2 text-terracotta-500" /> Address</label>
-                                    <input type="text" value={footerForm.contactAddress} onChange={(e) => setFooterForm({ ...footerForm, contactAddress: e.target.value })} placeholder="123 Commerce St, Kigali, Rwanda"
+                                    <input type="text" value={footerForm.contactAddress} onChange={(e) => setFooterForm({ ...footerForm, contactAddress: e.target.value })} placeholder="123 Commerce St, Gicumbi, Byumba"
                                         className="w-full px-4 py-2.5 bg-cream-50 dark:bg-charcoal-700 border border-cream-200 dark:border-charcoal-600 rounded-xl text-charcoal-800 dark:text-white outline-none focus:border-terracotta-500" />
                                 </div>
 

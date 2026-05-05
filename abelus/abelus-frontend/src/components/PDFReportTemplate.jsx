@@ -225,10 +225,10 @@ const PDFReportTemplate = ({
           </div>
         </div>
         <div style={styles.headerRight}>
-          <p style={styles.dateText}>{generatedDate.toLocaleDateString('en-US', { 
-            year: 'numeric', 
-            month: 'long', 
-            day: 'numeric' 
+          <p style={styles.dateText}>{generatedDate.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
           })}</p>
         </div>
       </header>
@@ -303,7 +303,7 @@ const PDFReportTemplate = ({
       {/* Footer */}
       <footer style={styles.footer}>
         <div style={styles.footerContent}>
-          <span>abelus Custom Solutions | Kigali, Rwanda</span>
+          <span>abelus Custom Solutions | Gicumbi, Byumba</span>
           <span>info@abelus.rw | +250 788 000 000</span>
           <span>Page 1</span>
         </div>

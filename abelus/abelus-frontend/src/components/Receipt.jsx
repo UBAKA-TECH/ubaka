@@ -118,16 +118,16 @@ export default function Receipt({ order, seller, onClose, onPrint }) {
                     {/* Header */}
                     <div className="text-center mb-4">
                         {logo && (
-                            <img 
-                                src={logo} 
-                                alt="Logo" 
+                            <img
+                                src={logo}
+                                alt="Logo"
                                 className="h-12 mx-auto mb-2 object-contain"
                                 style={{ maxHeight: '50px' }}
                             />
                         )}
                         <div className="text-lg font-bold text-gray-900">{seller?.storeName || seller?.name || 'ABELUS STORE'}</div>
                         <div className="text-xs text-gray-500 mt-1">
-                            {seller?.storeAddress || 'Kigali, Rwanda'}
+                            {seller?.storeAddress || 'Gicumbi, Byumba'}
                         </div>
                         {seller?.phone && <div className="text-xs text-gray-500">Tel: {seller.phone}</div>}
                     </div>

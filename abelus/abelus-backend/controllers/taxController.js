@@ -133,9 +133,9 @@ export const fetchLiveRates = async (req, res, next) => {
                 shipping: true
             },
             {
-                name: "Kigali City Tax",
-                province: "Kigali City",
-                district: "*",
+                name: "Northern Province Tax",
+                province: "Northern Province",
+                district: "Gicumbi",
                 sector: "*",
                 cell: "*",
                 rate: 0.5,

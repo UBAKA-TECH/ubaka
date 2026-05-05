@@ -22,7 +22,7 @@ export default function Contact() {
 
   const mapSource = settings?.googleMapsQuery
     ? `https://maps.google.com/maps?q=${encodeURIComponent(settings.googleMapsQuery)}&t=&z=15&ie=UTF8&iwloc=&output=embed`
-    : "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3987.523336224859!2d30.06034561475492!3d-1.94399399859239!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x19dca4247de48c37%3A0x6d3b3a4a9f7d6d3c!2sKigali%2C%20Rwanda!5e0!3m2!1sen!2sus!4v1620052300000!5m2!1sen!2sus";
+    : "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d31901.07604313465!2d30.0467549!3d-1.6166549!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x19dc63979435b699%3A0x7d0a64e1c72f9e4b!2sGicumbi%2C%20Rwanda!5e0!3m2!1sen!2sus!4v1714900000000!5m2!1sen!2sus";
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-slate-950 transition-colors duration-300">
@@ -117,7 +117,7 @@ export default function Contact() {
                       </div>
                       <div className="flex-1">
                         <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-1 uppercase tracking-widest text-sm opacity-50">Address</h3>
-                        <p className="text-gray-600 dark:text-gray-400 font-medium leading-relaxed">{settings?.contactAddress || "123 Abelus Lane, Kigali, Rwanda"}</p>
+                        <p className="text-gray-600 dark:text-gray-400 font-medium leading-relaxed">{settings?.contactAddress || "123 Abelus Lane, Gicumbi, Byumba"}</p>
                       </div>
                     </div>
                     <div className="flex gap-6 group">

@@ -129,18 +129,39 @@ export const updateExpense = async (req, res, next) => {
     const { id } = req.params;
     const { description, amount, category, paymentMethod, date } = req.body;
 
-    const expense = await prisma.expense.update({
-      where: { id },
-      data: {
-        description,
-        amount: amount ? parseFloat(amount) : undefined,
-        category,
-        paymentMethod,
-        date: date ? new Date(date) : undefined
+    const result = await prisma.$transaction(async (tx) => {
+      // Get old expense to calculate difference
+      const oldExpense = await tx.expense.findUnique({ where: { id } });
+      if (!oldExpense) throw new Error("Expense not found");
+
+      const updatedExpense = await tx.expense.update({
+        where: { id },
+        data: {
+          description,
+          amount: amount ? parseFloat(amount) : undefined,
+          category,
+          paymentMethod,
+          date: date ? new Date(date) : undefined
+        }
+      });
+
+      // If amount changed and it was linked to a shift drawer, adjust the shift
+      if (oldExpense.shiftId && (oldExpense.paymentMethod === "cash" || oldExpense.paymentMethod === "drawer")) {
+        const diff = (amount ? parseFloat(amount) : oldExpense.amount) - oldExpense.amount;
+        if (diff !== 0) {
+          await tx.shift.update({
+            where: { id: oldExpense.shiftId },
+            data: {
+              expectedEndingDrawerAmount: { decrement: diff }
+            }
+          });
+        }
       }
+
+      return updatedExpense;
     });
 
-    res.json({ success: true, message: "Expense updated", data: expense });
+    res.json({ success: true, message: "Expense updated", data: result });
   } catch (error) {
     next(error);
   }
@@ -152,7 +173,24 @@ export const updateExpense = async (req, res, next) => {
 export const deleteExpense = async (req, res, next) => {
   try {
     const { id } = req.params;
-    await prisma.expense.delete({ where: { id } });
+
+    await prisma.$transaction(async (tx) => {
+      const expense = await tx.expense.findUnique({ where: { id } });
+      if (!expense) throw new Error("Expense not found");
+
+      // 🕒 If linked to a shift and paid by cash/drawer, "refund" the shift's expected drawer amount
+      if (expense.shiftId && (expense.paymentMethod === "cash" || expense.paymentMethod === "drawer")) {
+        await tx.shift.update({
+          where: { id: expense.shiftId },
+          data: {
+            expectedEndingDrawerAmount: { increment: expense.amount }
+          }
+        });
+      }
+
+      await tx.expense.delete({ where: { id } });
+    });
+
     res.json({ success: true, message: "Expense deleted successfully" });
   } catch (error) {
     next(error);

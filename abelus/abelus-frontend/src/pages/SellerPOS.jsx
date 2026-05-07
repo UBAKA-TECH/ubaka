@@ -54,6 +54,7 @@ export default function SellerPOS() {
 
     // Expenses
     const [showExpenseModal, setShowExpenseModal] = useState(false);
+    const [savingExpense, setSavingExpense] = useState(false);
     const [expenseData, setExpenseData] = useState({
         description: "",
         amount: "",
@@ -566,7 +567,9 @@ export default function SellerPOS() {
     const handleRecordExpense = async () => {
         if (!expenseData.description || !expenseData.amount) return alert("Enter description and amount");
         if (!activeShift) return alert("No active shift found");
+        if (savingExpense) return;
 
+        setSavingExpense(true);
         try {
             const finalAmount = expenseData.type === "in" ? -Math.abs(Number(expenseData.amount)) : Math.abs(Number(expenseData.amount));
             
@@ -583,6 +586,8 @@ export default function SellerPOS() {
             }
         } catch (err) {
             alert(err.response?.data?.message || "Failed to record expense");
+        } finally {
+            setSavingExpense(false);
         }
     };
 
@@ -778,9 +783,17 @@ export default function SellerPOS() {
                                         </button>
                                         <button
                                             onClick={handleRecordExpense}
-                                            className={`flex-2 py-3 ${expenseData.type === 'in' ? 'bg-green-600 hover:bg-green-700' : 'bg-amber-500 hover:bg-amber-600'} text-white rounded-xl font-black shadow-lg transition-all active:scale-[0.98]`}
+                                            disabled={savingExpense}
+                                            className={`flex-2 py-3 ${expenseData.type === 'in' ? 'bg-green-600 hover:bg-green-700' : 'bg-amber-500 hover:bg-amber-600'} text-white rounded-xl font-black shadow-lg transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2`}
                                         >
-                                            {expenseData.type === 'in' ? 'Save Money In' : 'Save Expense'}
+                                            {savingExpense ? (
+                                                <>
+                                                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                                                    Saving...
+                                                </>
+                                            ) : (
+                                                expenseData.type === 'in' ? 'Save Money In' : 'Save Expense'
+                                            )}
                                         </button>
                                     </div>
                                 </div>

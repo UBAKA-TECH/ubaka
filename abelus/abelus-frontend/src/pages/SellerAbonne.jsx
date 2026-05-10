@@ -386,7 +386,7 @@ const SellerAbonne = () => {
                                             </div>
                                         )}
                                         <div>
-                                            <h1 className="text-2xl font-black uppercase leading-tight">{siteSettings?.siteName || "ABELUS"}</h1>
+                                            <h1 className="text-2xl font-black uppercase leading-tight">{siteSettings?.siteName || "Impressa"}</h1>
                                             <p className="text-xs font-bold tracking-widest text-gray-500 uppercase">Fiche de Suivi Client</p>
                                         </div>
                                     </div>
@@ -448,7 +448,7 @@ const SellerAbonne = () => {
                                         <p className="font-bold border-b border-black pb-2 mb-20 uppercase text-xs tracking-widest">Le Client</p>
                                     </div>
                                     <div className="text-center">
-                                        <p className="font-bold border-b border-black pb-2 mb-20 uppercase text-xs tracking-widest">Le Gérant / {siteSettings?.siteName || "ABELUS"}</p>
+                                        <p className="font-bold border-b border-black pb-2 mb-20 uppercase text-xs tracking-widest">Le Gérant / {siteSettings?.siteName || "Impressa"}</p>
                                     </div>
                                 </div>
                             </div>

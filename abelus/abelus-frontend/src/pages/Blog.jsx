@@ -84,7 +84,7 @@ export default function Blog() {
             <div className="absolute top-20 right-20 w-72 h-72 bg-sand-200 dark:bg-sand-900/20 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-2000"></div>
           </div>
           <div className="relative mx-auto max-w-7xl px-4 text-center">
-            <h1 className="text-5xl md:text-6xl font-black text-charcoal-800 dark:text-white mb-6">Abelus <span className="text-terracotta-500 dark:text-terracotta-400">Blog</span></h1>
+            <h1 className="text-5xl md:text-6xl font-black text-charcoal-800 dark:text-white mb-6">Impressa <span className="text-terracotta-500 dark:text-terracotta-400">Blog</span></h1>
             <p className="text-xl text-charcoal-600 dark:text-charcoal-400 max-w-2xl mx-auto leading-relaxed">
               Insights, tips, and inspiration for your printing projects and creative vision.
             </p>

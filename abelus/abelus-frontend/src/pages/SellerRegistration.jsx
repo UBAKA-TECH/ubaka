@@ -245,7 +245,7 @@ export default function SellerRegistration() {
 
                         <FaStore className="text-6xl mx-auto mb-6 relative z-10" />
                         <h1 className="text-4xl font-black mb-2 relative z-10">Become a Seller</h1>
-                        <p className="text-amber-50 font-medium relative z-10">Join Abelus marketplace and start selling your products</p>
+                        <p className="text-amber-50 font-medium relative z-10">Join Impressa marketplace and start selling your products</p>
                     </div>
 
                     {/* Progress Steps */}
@@ -346,7 +346,7 @@ export default function SellerRegistration() {
 
                                 <div className="bg-amber-50 dark:bg-amber-950/20 border border-amber-100 dark:border-amber-900/30 rounded-2xl p-5 mb-8">
                                     <p className="text-sm font-bold text-amber-800 dark:text-amber-400 leading-relaxed">
-                                        To sell on Abelus, you need a valid TIN number and RDB certificate issued by the Rwanda Development Board.
+                                        To sell on Impressa, you need a valid TIN number and RDB certificate issued by the Rwanda Development Board.
                                     </p>
                                 </div>
 
@@ -488,7 +488,7 @@ export default function SellerRegistration() {
                                         disabled={!termsScrolled}
                                     />
                                     <label htmlFor="termsAccepted" className="text-sm font-bold text-gray-800 dark:text-gray-300 cursor-pointer leading-tight">
-                                        I have read and agree to the Terms & Conditions and understand that Abelus will verify my RDB documents.
+                                        I have read and agree to the Terms & Conditions and understand that Impressa will verify my RDB documents.
                                     </label>
                                 </div>
 

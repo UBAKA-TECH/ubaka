@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 
 const WishlistContext = createContext(null);
-const KEY = "abelus_wishlist";
+const KEY = "Impressa_wishlist";
 
 export function WishlistProvider({ children }) {
   const [ids, setIds] = useState(() => {

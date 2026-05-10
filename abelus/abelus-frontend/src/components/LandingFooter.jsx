@@ -9,11 +9,11 @@ import api from "../utils/axiosInstance";
 export default function LandingFooter() {
   const [footerData, setFooterData] = useState({
     footerTagline: 'Your premium destination for quality products. Curated collections, exclusive deals, and exceptional service.',
-    contactEmail: 'uwanyirigiraeleora@gmail.com',
-    contactPhone: '+25078 881 9878',
-    contactAddress: 'Building near Bank of Kigali Gicumbi Branch',
-    siteName: 'Abelus',
-    logo: null,
+    contactEmail: 'ishfabzele2@gmail.com',
+    contactPhone: '+250 789 079 978',
+    contactAddress: 'Building near Gicumbi distict office (Eudiose Building)',
+    siteName: 'Impressa',
+    logo: '/Impressa.jpeg',
     socialLinks: { facebook: '', twitter: '', instagram: '', linkedin: '' }
   });
 
@@ -26,12 +26,8 @@ export default function LandingFooter() {
           setFooterData(prev => ({
             ...prev,
             footerTagline: data.data.footerTagline || prev.footerTagline,
-            contactEmail: data.data.contactEmail || prev.contactEmail,
-            contactPhone: data.data.contactPhone || prev.contactPhone,
-            contactAddress: data.data.contactAddress || prev.contactAddress,
-            siteName: data.data.siteName || prev.siteName,
-            logo: data.data.logo || prev.logo,
             socialLinks: data.data.socialLinks || prev.socialLinks
+            // Ignored backend overrides for siteName, logo, and contact info to enforce Impressa branding
           }));
         }
       } catch (error) {
@@ -57,15 +53,9 @@ export default function LandingFooter() {
           {/* Brand Column */}
           <div>
             <Link to="/" className="flex items-center gap-2 mb-6 no-underline">
-              {footerData.logo ? (
-                <img src={footerData.logo} alt={footerData.siteName} className="h-10 w-auto object-contain" />
-              ) : (
-                <div className="w-10 h-10 bg-gradient-to-br from-terracotta-500 to-terracotta-600 rounded-xl flex items-center justify-center font-bold text-xl text-white shadow-lg ring-1 ring-white/10">
-                  {footerData.siteName ? footerData.siteName.charAt(0) : 'A'}
-                </div>
-              )}
+              <img src="/Impressa.jpeg" alt={footerData.siteName || "Impressa"} className="h-10 w-auto object-contain rounded-md" />
               <span className="text-2xl font-bold text-charcoal-800 dark:text-white tracking-tight">
-                {footerData.siteName || 'Abelus'}
+                Impressa
               </span>
             </Link>
 
@@ -169,7 +159,7 @@ export default function LandingFooter() {
         <div className="mx-auto max-w-7xl px-4 py-6">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-charcoal-400 dark:text-charcoal-500 text-sm">
-              © {new Date().getFullYear()} Abelus. All rights reserved.
+              © {new Date().getFullYear()} Impressa. All rights reserved.
             </p>
             <div className="flex gap-6 text-sm">
               <Link to="/privacy" className="text-charcoal-400 dark:text-charcoal-500 hover:text-terracotta-500 dark:hover:text-terracotta-400 transition-colors no-underline">

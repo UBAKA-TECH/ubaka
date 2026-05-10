@@ -40,7 +40,7 @@ export default function InstallApp() {
     if (!isVisible) return null;
 
     return (
-        <div className="fixed bottom-20 left-4 right-4 md:bottom-6 md:left-6 md:right-auto md:w-80 bg-gradient-to-r from-violet-600 to-indigo-600 text-white p-4 rounded-xl shadow-2xl z-50 flex items-center justify-between animate-slide-up">
+        <div className="fixed top-0 left-0 right-0 md:top-auto md:bottom-6 md:left-6 md:right-auto md:w-80 bg-gradient-to-r from-violet-600 to-indigo-600 text-white p-4 md:rounded-xl shadow-2xl z-[60] flex items-center justify-between animate-slide-down md:animate-slide-up">
             <div className="flex items-center gap-3">
                 <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
                     <FaMobileAlt className="text-xl" />

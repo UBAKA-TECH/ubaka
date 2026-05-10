@@ -49,7 +49,7 @@ router.post("/report/logs/:id/download", authMiddleware(["admin", "owner"]), ord
 router.post("/pos", authMiddleware(["admin", "owner", "seller", "cashier"]), orderController.createPOSOrder);
 
 // Service Inquiry (Print Portal)
-router.post("/inquiry", optionalAuth, upload.single("file"), orderController.createInquiry);
+router.post("/inquiry", optionalAuth, upload.array("files", 10), orderController.createInquiry);
 router.post("/submit-quote", authMiddleware(["admin", "owner", "seller", "cashier"]), orderController.submitPrintQuote);
 
 // Get seller's POS products (inventory for seller/cashier)

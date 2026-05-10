@@ -1,4 +1,4 @@
-// Abelus Home Page - Premium Marketplace Design
+// Impressa Home Page - Premium Marketplace Design
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import {

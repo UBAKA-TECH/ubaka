@@ -22,7 +22,7 @@ const AdminAbonne = () => {
     const [priceSearch, setPriceSearch] = useState("");
     const [loadingPrices, setLoadingPrices] = useState(false);
 
-    const [siteSettings, setSiteSettings] = useState({ logo: null, siteName: "Abelus" });
+    const [siteSettings, setSiteSettings] = useState({ logo: null, siteName: "Impressa" });
 
     useEffect(() => {
         fetchClients();

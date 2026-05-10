@@ -36,7 +36,7 @@ const PrivacyPolicy = () => {
                                 <h2 className="text-3xl font-black text-gray-900 dark:text-white">1. Introduction</h2>
                             </div>
                             <p className="text-lg text-gray-600 dark:text-gray-400 leading-relaxed font-medium">
-                                Welcome to Abelus. We respect your privacy and are committed to protecting your personal data.
+                                Welcome to Impressa. We respect your privacy and are committed to protecting your personal data.
                                 This privacy policy will inform you as to how we look after your personal data when you visit our website
                                 and tell you about your privacy rights and how the law protects you.
                             </p>
@@ -74,7 +74,7 @@ const PrivacyPolicy = () => {
                                 <h2 className="text-3xl font-black text-gray-900 dark:text-white">3. Use of Data</h2>
                             </div>
                             <p className="text-lg text-gray-600 dark:text-gray-400 leading-relaxed font-medium">
-                                Abelus uses the collected data for various professional purposes:
+                                Impressa uses the collected data for various professional purposes:
                             </p>
                             <ul className="space-y-4">
                                 {[
@@ -113,8 +113,8 @@ const PrivacyPolicy = () => {
                             </div>
                             <p className="text-lg text-gray-600 dark:text-gray-400 leading-relaxed font-medium">
                                 If you have any questions about this Privacy Policy, please reach out to our team at
-                                <a href="mailto:support@abelus.com" className="ml-2 text-violet-600 dark:text-violet-400 font-black hover:underline underline-offset-8 transition-all">
-                                    support@abelus.com
+                                <a href="mailto:support@Impressa.com" className="ml-2 text-violet-600 dark:text-violet-400 font-black hover:underline underline-offset-8 transition-all">
+                                    support@Impressa.com
                                 </a>.
                             </p>
                         </section>

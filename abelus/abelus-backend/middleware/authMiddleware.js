@@ -12,11 +12,13 @@ export const authMiddleware = (requiredRoles = []) => {
     try {
       // 1. Verify token with Supabase (with a safety timeout)
       const authPromise = supabase.auth.getUser(token);
-      const timeoutPromise = new Promise((_, reject) => 
-        setTimeout(() => reject(new Error("Supabase Auth Timeout")), 8000)
-      );
+      let timeoutId;
+      const timeoutPromise = new Promise((_, reject) => {
+        timeoutId = setTimeout(() => reject(new Error("Supabase Auth Timeout")), 15000);
+      });
 
       const { data: { user: sbUser }, error: sbError } = await Promise.race([authPromise, timeoutPromise]);
+      clearTimeout(timeoutId);
       
       const authTime = Date.now() - startTime;
       if (authTime > 2000) {

@@ -69,7 +69,7 @@ function AdminChatbot({ storageKey = "adminChatMessages", title = "AI Assistant"
       {/* Expanding Chat Panel */}
       <div
         className={`
-          absolute bottom-20 right-0 w-[360px] sm:w-[400px] 
+          fixed sm:absolute bottom-24 sm:bottom-20 left-4 right-4 sm:left-auto sm:right-0 w-auto sm:w-[400px] 
           bg-white/80 dark:bg-charcoal-800/90 backdrop-blur-xl 
           rounded-[2rem] shadow-2xl border border-white/20 dark:border-charcoal-700 
           overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.19,1,0.22,1)] origin-bottom-right
@@ -102,7 +102,7 @@ function AdminChatbot({ storageKey = "adminChatMessages", title = "AI Assistant"
         {/* Messages Information */}
         <div
           ref={listRef}
-          className="h-[450px] overflow-y-auto p-6 space-y-6 bg-cream-50/50 dark:bg-charcoal-900/50 scrollbar-thin scrollbar-thumb-terracotta-200 dark:scrollbar-thumb-charcoal-600"
+          className="h-[55vh] sm:h-[450px] overflow-y-auto p-6 space-y-6 bg-cream-50/50 dark:bg-charcoal-900/50 scrollbar-thin scrollbar-thumb-terracotta-200 dark:scrollbar-thumb-charcoal-600"
         >
           {messages.length === 0 && (
             <div className="flex flex-col items-center justify-center h-full text-center opacity-50 space-y-4">

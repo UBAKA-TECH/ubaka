@@ -181,7 +181,7 @@ export default function AdminSiteSettings() {
                                     <div className="space-y-6">
                                         <div className="form-group">
                                             <label className="block text-sm font-medium text-charcoal-700 dark:text-charcoal-300 mb-2">Site Name</label>
-                                            <input type="text" value={generalForm.siteName} onChange={(e) => setGeneralForm({ ...generalForm, siteName: e.target.value })} placeholder="Abelus"
+                                            <input type="text" value={generalForm.siteName} onChange={(e) => setGeneralForm({ ...generalForm, siteName: e.target.value })} placeholder="Impressa"
                                                 className="w-full px-4 py-2.5 bg-cream-50 dark:bg-charcoal-700 border border-cream-200 dark:border-charcoal-600 rounded-xl text-charcoal-800 dark:text-white outline-none focus:border-terracotta-500" />
                                         </div>
                                         <div className="form-group">

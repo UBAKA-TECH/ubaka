@@ -32,7 +32,7 @@ function SellerSidebar({ isOpen, onClose }) {
                 <div className="p-6 flex items-center justify-between">
                     <div>
                         <h1 className="text-2xl font-black bg-gradient-to-r from-blue-400 to-emerald-400 bg-clip-text text-transparent tracking-tight">
-                            ABELUS
+                            Impressa
                         </h1>
                         <p className="text-[10px] text-gray-500 uppercase tracking-[0.2em] font-bold mt-1">
                             {isCashier ? "Cashier Portal" : "Seller Portal"}

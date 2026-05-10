@@ -360,11 +360,11 @@ export const createInquiry = async (req, res) => {
       return res.status(404).json({ message: "Service not found" });
     }
 
-    let filePath = "";
-    if (req.file) {
-      filePath = req.file.path;
-    } else if (req.files && req.files.length > 0) {
-      filePath = req.files[0].path;
+    let filePaths = [];
+    if (req.files && req.files.length > 0) {
+      filePaths = req.files.map(f => f.path);
+    } else if (req.file) {
+      filePaths = [req.file.path];
     }
 
     const order = await prisma.order.create({
@@ -386,7 +386,7 @@ export const createInquiry = async (req, res) => {
             price: product.price, // Base price for reference
             subtotal: 0,
             customizations: {
-              customFile: filePath,
+              customFiles: filePaths,
               customerNotes: notes
             }
           }]

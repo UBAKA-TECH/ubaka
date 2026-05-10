@@ -28,7 +28,7 @@ const FAQ = () => {
         },
         {
             question: "How can I contact customer support?",
-            answer: "You can reach our customer support team via email at support@abelus.com or by calling 1-800-ABELUS during business hours."
+            answer: "You can reach our customer support team via email at support@Impressa.com or by calling 1-800-Impressa during business hours."
         }
     ];
 
@@ -93,7 +93,7 @@ const FAQ = () => {
                                 Contact Support
                             </a>
                             <a
-                                href="mailto:support@abelus.com"
+                                href="mailto:support@Impressa.com"
                                 className="w-full sm:w-auto px-10 py-5 bg-violet-700/50 text-white rounded-2xl font-black text-lg hover:bg-violet-700 transition-all border border-white/20 active:scale-95 text-center"
                             >
                                 Email Us

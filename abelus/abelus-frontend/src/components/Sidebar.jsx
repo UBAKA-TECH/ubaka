@@ -105,7 +105,7 @@ function Sidebar({ isOpen, onClose }) {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-2xl font-black bg-gradient-to-r from-terracotta-400 to-sand-400 bg-clip-text text-transparent">
-                ABELUS
+                Impressa
               </h1>
               <p className="text-[10px] text-charcoal-400 uppercase tracking-[0.2em] mt-0.5">
                 {isOwner ? "Owner Portal" : "Admin Portal"}

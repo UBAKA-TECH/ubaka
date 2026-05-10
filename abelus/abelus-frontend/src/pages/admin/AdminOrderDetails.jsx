@@ -238,7 +238,7 @@ const AdminOrderDetails = () => {
                     <div className="hidden">
                         <div id="receipt-print-area">
                             <div style={{ textAlign: 'center', marginBottom: '20px' }}>
-                                <h2 style={{ margin: 0 }}>ABELUS</h2>
+                                <h2 style={{ margin: 0 }}>Impressa</h2>
                                 <p style={{ fontSize: '10px', margin: '5px 0' }}>Official Receipt</p>
                                 <p style={{ fontSize: '10px' }}>Order ID: #{order.id.slice(-8).toUpperCase()}</p>
                                 <p style={{ fontSize: '10px' }}>Date: {new Date(order.createdAt).toLocaleDateString()}</p>

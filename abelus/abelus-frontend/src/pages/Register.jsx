@@ -16,6 +16,7 @@ function Register() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
     const [success, setSuccess] = useState(false);
+    const [successType, setSuccessType] = useState('application_submitted'); // 'confirm_email' | 'application_submitted'
     const [termsContent, setTermsContent] = useState("");
     const [termsScrolled, setTermsScrolled] = useState(false);
     const termsRef = useRef(null);
@@ -233,8 +234,9 @@ function Register() {
                 const token = authData.session?.access_token;
                 
                 if (!token) {
-                    // If no token, maybe email confirmation is needed
-                    setError("Registration successful! Please check your email to confirm your account before completing your seller application.");
+                    // Email confirmation required — show success state, not an error
+                    setSuccessType('confirm_email');
+                    setSuccess(true);
                     setLoading(false);
                     return;
                 }
@@ -262,6 +264,7 @@ function Register() {
                     }
                 });
 
+                setSuccessType('application_submitted');
                 setSuccess(true);
             } else {
                 // Customer registration successful
@@ -285,24 +288,52 @@ function Register() {
                     <div className="absolute top-0 right-0 w-96 h-96 bg-emerald-600/5 dark:bg-emerald-600/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
 
                     <div className="mx-auto w-full max-w-sm lg:w-[32rem] relative z-10">
-                        <div className="bg-emerald-50 dark:bg-emerald-900/10 border-2 border-emerald-500/20 rounded-[40px] p-8 md:p-12 text-center animate-fade-in-up">
-                            <div className="w-24 h-24 bg-white dark:bg-slate-900 rounded-full flex items-center justify-center mx-auto mb-8 shadow-xl shadow-emerald-200/50 dark:shadow-none border-2 border-emerald-500">
-                                <FaCheckCircle className="text-5xl text-emerald-500" />
+                        <div className={`border-2 rounded-[40px] p-8 md:p-12 text-center animate-fade-in-up ${
+                            successType === 'confirm_email'
+                                ? 'bg-blue-50 dark:bg-blue-900/10 border-blue-500/20'
+                                : 'bg-emerald-50 dark:bg-emerald-900/10 border-emerald-500/20'
+                        }`}>
+                            <div className={`w-24 h-24 bg-white dark:bg-slate-900 rounded-full flex items-center justify-center mx-auto mb-8 shadow-xl dark:shadow-none border-2 ${
+                                successType === 'confirm_email' ? 'border-blue-500 shadow-blue-200/50' : 'border-emerald-500 shadow-emerald-200/50'
+                            }`}>
+                                {successType === 'confirm_email'
+                                    ? <span className="text-5xl">📧</span>
+                                    : <FaCheckCircle className="text-5xl text-emerald-500" />}
                             </div>
-                            <h2 className="text-4xl font-black text-gray-900 dark:text-white mb-4 tracking-tight">Application Submitted!</h2>
-                            <p className="text-lg text-emerald-800 dark:text-emerald-400 font-bold mb-8">Your seller application has been received and is currently under review.</p>
+                            <h2 className="text-4xl font-black text-gray-900 dark:text-white mb-4 tracking-tight">
+                                {successType === 'confirm_email' ? 'Check Your Email!' : 'Application Submitted!'}
+                            </h2>
+                            <p className={`text-lg font-bold mb-8 ${
+                                successType === 'confirm_email' ? 'text-blue-800 dark:text-blue-400' : 'text-emerald-800 dark:text-emerald-400'
+                            }`}>
+                                {successType === 'confirm_email'
+                                    ? 'Your account was created! Please confirm your email, then log in to complete your seller application.'
+                                    : 'Your seller application has been received and is currently under review.'}
+                            </p>
 
-                            <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 mb-10 text-left space-y-4 border border-emerald-100 dark:border-emerald-900/30">
+                            <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 mb-10 text-left space-y-4 border border-gray-100 dark:border-slate-800">
                                 <h3 className="text-sm font-black text-gray-400 uppercase tracking-widest border-b border-gray-100 dark:border-slate-800 pb-3">What happens next?</h3>
-                                <ul className="space-y-4 font-bold text-gray-700 dark:text-gray-300">
-                                    <li className="flex gap-3 items-center"><span className="text-emerald-500">✅</span> Documents under review (1-3 days)</li>
-                                    <li className="flex gap-3 items-center"><span className="text-emerald-500">📧</span> Email notification when approved</li>
-                                    <li className="flex gap-3 items-center"><span className="text-emerald-500">🏪</span> Instant access to dashboard</li>
-                                </ul>
+                                {successType === 'confirm_email' ? (
+                                    <ul className="space-y-4 font-bold text-gray-700 dark:text-gray-300">
+                                        <li className="flex gap-3 items-center"><span className="text-blue-500">1️⃣</span> Open the confirmation email from Impressa</li>
+                                        <li className="flex gap-3 items-center"><span className="text-blue-500">2️⃣</span> Click the confirmation link</li>
+                                        <li className="flex gap-3 items-center"><span className="text-blue-500">3️⃣</span> Log in and go to Become a Seller to complete your application</li>
+                                    </ul>
+                                ) : (
+                                    <ul className="space-y-4 font-bold text-gray-700 dark:text-gray-300">
+                                        <li className="flex gap-3 items-center"><span className="text-emerald-500">✅</span> Documents under review (1-3 days)</li>
+                                        <li className="flex gap-3 items-center"><span className="text-emerald-500">📧</span> Email notification when approved</li>
+                                        <li className="flex gap-3 items-center"><span className="text-emerald-500">🏪</span> Instant access to dashboard</li>
+                                    </ul>
+                                )}
                             </div>
 
                             <button
-                                className="w-full py-5 bg-emerald-600 text-white rounded-2xl font-black text-lg hover:bg-emerald-700 transition-all shadow-xl shadow-emerald-200 dark:shadow-none active:scale-[0.98] flex items-center justify-center gap-3"
+                                className={`w-full py-5 text-white rounded-2xl font-black text-lg transition-all active:scale-[0.98] flex items-center justify-center gap-3 ${
+                                    successType === 'confirm_email'
+                                        ? 'bg-blue-600 hover:bg-blue-700 shadow-xl shadow-blue-200 dark:shadow-none'
+                                        : 'bg-emerald-600 hover:bg-emerald-700 shadow-xl shadow-emerald-200 dark:shadow-none'
+                                }`}
                                 onClick={() => navigate("/login")}
                             >
                                 Go to Login <FaArrowRight />
@@ -547,7 +578,7 @@ function Register() {
                                 <div className="bg-blue-50 dark:bg-blue-900/10 border-2 border-blue-500/20 p-6 rounded-3xl flex items-start gap-4">
                                     <FaInfoCircle className="text-blue-500 text-2xl mt-1 shrink-0" />
                                     <p className="text-sm font-bold text-blue-800 dark:text-blue-400 leading-relaxed">
-                                        To sell on Abelus, you need a valid TIN number and RDB certificate issued by the Rwanda Development Board.
+                                        To sell on Impressa, you need a valid TIN number and RDB certificate issued by the Rwanda Development Board.
                                     </p>
                                 </div>
 
@@ -688,7 +719,7 @@ function Register() {
                                         disabled={!termsScrolled}
                                     />
                                     <label htmlFor="termsAccepted" className="text-sm font-bold text-gray-800 dark:text-gray-300 cursor-pointer leading-tight">
-                                        I have read and agree to the Terms & Conditions and understand that Abelus will verify my RDB documents.
+                                        I have read and agree to the Terms & Conditions and understand that Impressa will verify my RDB documents.
                                     </label>
                                 </div>
 

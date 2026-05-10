@@ -38,7 +38,7 @@ export default function Header() {
   const [isSearching, setIsSearching] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [siteSettings, setSiteSettings] = useState({
-    siteName: 'Abelus',
+    siteName: 'Impressa',
     logo: null
   });
 
@@ -128,7 +128,7 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-50 bg-charcoal-800 text-white shadow-xl border-b border-charcoal-700">
-      <div className="mx-auto max-w-7xl px-6 h-16 flex items-center justify-between gap-6">
+      <div className="mx-auto max-w-7xl px-3 md:px-6 h-16 flex items-center justify-between gap-2 md:gap-6">
 
         {/* Mobile Menu Button - Left */}
         <button
@@ -140,17 +140,9 @@ export default function Header() {
 
         {/* Logo */}
         <Link to="/" className="flex items-center gap-3 shrink-0">
-          {siteSettings.logo ? (
-            <img src={siteSettings.logo} alt={siteSettings.siteName} className="h-10 w-auto object-contain" />
-          ) : (
-            <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-gradient-to-br from-terracotta-500 to-terracotta-600 shadow-lg shadow-terracotta-500/20 ring-1 ring-white/20">
-              <span className="text-xl font-bold text-white tracking-tighter">
-                {siteSettings.siteName ? siteSettings.siteName.charAt(0) : 'A'}
-              </span>
-            </div>
-          )}
+          <img src="/Impressa.jpeg" alt="Impressa" className="h-10 w-auto object-contain rounded-md" />
           <span className="text-xl font-bold tracking-tight text-white hidden sm:block">
-            {siteSettings.siteName || 'Abelus'}
+            Impressa
           </span>
         </Link>
 
@@ -258,7 +250,7 @@ export default function Header() {
         )}
 
         {/* Action Icons & Auth - ALWAYS VISIBLE */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-1 md:gap-3">
 
           {/* Theme Toggle */}
           <button
@@ -358,7 +350,7 @@ export default function Header() {
           ) : (
             <Link
               to="/login"
-              className="ml-2 px-6 py-2.5 bg-gradient-to-r from-terracotta-500 to-terracotta-600 hover:from-terracotta-400 hover:to-terracotta-500 text-white text-sm font-bold rounded-full shadow-lg shadow-terracotta-900/20 transition-all"
+              className="ml-2 px-4 md:px-6 py-2 md:py-2.5 bg-gradient-to-r from-terracotta-500 to-terracotta-600 hover:from-terracotta-400 hover:to-terracotta-500 text-white text-sm font-bold rounded-full shadow-lg shadow-terracotta-900/20 transition-all whitespace-nowrap shrink-0"
             >
               Sign In
             </Link>

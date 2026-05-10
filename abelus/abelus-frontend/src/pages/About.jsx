@@ -51,7 +51,7 @@ export default function About() {
           </div>
           <div className="relative mx-auto max-w-7xl px-4 text-center">
             <h1 className="text-5xl md:text-7xl font-black text-gray-900 dark:text-white mb-8 tracking-tight">
-              About <span className="text-violet-600 dark:text-violet-400">Abelus</span>
+              About <span className="text-violet-600 dark:text-violet-400">Impressa</span>
             </h1>
             <p className="text-xl md:text-2xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto leading-relaxed">
               We're a team of passionate creators, designers, and printers dedicated to bringing your vision to life with exceptional quality and service.
@@ -68,7 +68,7 @@ export default function About() {
                 </div>
                 <h2 className="text-4xl md:text-5xl font-black text-gray-900 dark:text-white leading-tight">Our Story</h2>
                 <p className="text-lg text-gray-600 dark:text-gray-400 leading-relaxed">
-                  Abelus was born from a simple idea: to make high-quality custom printing accessible and easy for everyone. What started in a small workshop has grown into a leading online platform, serving thousands of happy customers across Rwanda.
+                  Impressa was born from a simple idea: to make high-quality custom printing accessible and easy for everyone. What started in a small workshop has grown into a leading online platform, serving thousands of happy customers across Rwanda.
                 </p>
                 <p className="text-lg text-gray-600 dark:text-gray-400 leading-relaxed">
                   We believe that a great design deserves a great print. That's why we've invested in the latest printing technology and a team of experts who are as passionate about quality as you are about your projects.
@@ -77,7 +77,7 @@ export default function About() {
               <div className="relative group">
                 <div className="absolute -inset-4 bg-violet-600/20 dark:bg-violet-400/10 rounded-3xl blur-2xl group-hover:bg-violet-600/30 transition-all duration-500"></div>
                 <div className="relative h-[500px] rounded-3xl overflow-hidden shadow-2xl">
-                  <img src={process.env.PUBLIC_URL + '/images/about-us-story.jpg'} alt="Abelus Workshop" className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-700" />
+                  <img src={process.env.PUBLIC_URL + '/images/about-us-story.jpg'} alt="Impressa Workshop" className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-700" />
                 </div>
               </div>
             </div>
@@ -162,7 +162,7 @@ export default function About() {
           <div className="mx-auto max-w-4xl px-4 text-center relative z-10">
             <h2 className="text-4xl md:text-5xl font-black text-white mb-8 leading-tight">Ready to Create?</h2>
             <p className="text-xl text-violet-100 mb-12 max-w-2xl mx-auto leading-relaxed">
-              Join thousands of businesses and individuals who trust Abelus for their printing needs. We're here to make your vision a reality.
+              Join thousands of businesses and individuals who trust Impressa for their printing needs. We're here to make your vision a reality.
             </p>
             <Link
               to="/shop"

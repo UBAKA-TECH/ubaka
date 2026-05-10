@@ -117,7 +117,7 @@ export default function Contact() {
                       </div>
                       <div className="flex-1">
                         <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-1 uppercase tracking-widest text-sm opacity-50">Address</h3>
-                        <p className="text-gray-600 dark:text-gray-400 font-medium leading-relaxed">{settings?.contactAddress || "123 Abelus Lane, Gicumbi, Byumba"}</p>
+                        <p className="text-gray-600 dark:text-gray-400 font-medium leading-relaxed">Building near Gicumbi distict office (Eudiose Building)</p>
                       </div>
                     </div>
                     <div className="flex gap-6 group">
@@ -126,7 +126,7 @@ export default function Contact() {
                       </div>
                       <div className="flex-1">
                         <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-1 uppercase tracking-widest text-sm opacity-50">Phone</h3>
-                        <p className="text-gray-600 dark:text-gray-400 font-medium leading-relaxed">{settings?.contactPhone || "(+250) 788 123 456"}</p>
+                        <p className="text-gray-600 dark:text-gray-400 font-medium leading-relaxed">+250 789 079 978</p>
                       </div>
                     </div>
                     <div className="flex gap-6 group">
@@ -136,7 +136,7 @@ export default function Contact() {
                       <div className="flex-1">
                         <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-1 uppercase tracking-widest text-sm opacity-50">Email</h3>
                         <p className="text-gray-600 dark:text-gray-400 font-medium leading-relaxed">
-                          <a href={`mailto:${settings?.contactEmail || "contact@abelus.com"}`} className="hover:text-violet-600 dark:hover:text-violet-400 transition-colors">{settings?.contactEmail || "contact@abelus.com"}</a>
+                          <a href="mailto:ishfabzele2@gmail.com" className="hover:text-violet-600 dark:hover:text-violet-400 transition-colors">ishfabzele2@gmail.com</a>
                         </p>
                       </div>
                     </div>

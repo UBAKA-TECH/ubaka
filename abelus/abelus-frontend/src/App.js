@@ -81,6 +81,8 @@ import SellerShifts from "./pages/SellerShifts";
 import AdminShifts from "./pages/admin/AdminShifts";
 
 
+import React, { useEffect, useState } from "react";
+import ScrollToTop from "./components/ScrollToTop";
 import { CartProvider } from "./context/CartContext";
 import { WishlistProvider } from "./context/WishlistContext";
 import { ToastProvider } from "./context/ToastContext";
@@ -101,6 +103,7 @@ function App() {
           <CartProvider>
             <WishlistProvider>
               <Router>
+                <ScrollToTop />
                 <Toaster position="top-center" toastOptions={{ duration: 4000 }} />
                 <InstallApp />
                 <Routes>

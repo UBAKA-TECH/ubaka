@@ -120,7 +120,7 @@ const GiftCards = () => {
                         <FaGift className="text-6xl text-amber-400 mx-auto mb-6 animate-bounce" />
                         <h1 className="text-4xl md:text-6xl font-bold mb-6 tracking-tight">The Perfect Gift for <span className="text-amber-400">Everyone</span></h1>
                         <p className="text-xl text-charcoal-300 max-w-2xl mx-auto mb-10 leading-relaxed">
-                            Give the gift of choice with an Abelus Gift Card. Deliver instantly via email or schedule for the perfect moment.
+                            Give the gift of choice with an Impressa Gift Card. Deliver instantly via email or schedule for the perfect moment.
                         </p>
                         <div className="flex flex-wrap justify-center gap-4">
                             <a href="#buy-cards" className="bg-terracotta-500 hover:bg-terracotta-600 text-white px-8 py-4 rounded-full font-bold transition-all shadow-xl hover:shadow-terracotta-500/20">Buy Now</a>
@@ -143,7 +143,7 @@ const GiftCards = () => {
                                     <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-3xl -mr-16 -mt-16"></div>
                                     <div className="z-10">
                                         <div className="text-sm font-medium opacity-80 uppercase tracking-widest">{opt.label}</div>
-                                        <div className="text-3xl font-black mt-1">Abelus</div>
+                                        <div className="text-3xl font-black mt-1">Impressa</div>
                                     </div>
                                     <div className="z-10 flex justify-between items-end">
                                         <div className="text-2xl font-bold">{opt.isCustom ? "Custom" : formatRwf(opt.amount)}</div>

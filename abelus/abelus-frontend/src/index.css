@@ -3,6 +3,9 @@
 @tailwind utilities;
 
 @layer base {
+  html, body {
+    overflow-x: clip;
+  }
   /* Custom Scrollbar Styles */
   ::-webkit-scrollbar {
     width: 6px;

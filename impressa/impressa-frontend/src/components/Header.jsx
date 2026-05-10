@@ -37,10 +37,6 @@ export default function Header() {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [siteSettings, setSiteSettings] = useState({
-    siteName: 'Impressa',
-    logo: null
-  });
 
 
   const location = useLocation();
@@ -67,19 +63,7 @@ export default function Header() {
       }
     };
 
-    const fetchSettings = async () => {
-      try {
-        const res = await api.get('/site-settings/public');
-        if (res.data.success) {
-          setSiteSettings(res.data.data);
-        }
-      } catch (error) {
-        console.error('Error fetching site settings:', error);
-      }
-    };
-
     fetchCategories();
-    fetchSettings();
   }, []);
 
 

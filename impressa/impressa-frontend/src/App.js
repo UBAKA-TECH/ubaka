@@ -81,7 +81,7 @@ import SellerShifts from "./pages/SellerShifts";
 import AdminShifts from "./pages/admin/AdminShifts";
 
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 import ScrollToTop from "./components/ScrollToTop";
 import { CartProvider } from "./context/CartContext";
 import { WishlistProvider } from "./context/WishlistContext";

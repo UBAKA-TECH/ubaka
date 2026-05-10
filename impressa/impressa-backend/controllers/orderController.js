@@ -1020,6 +1020,13 @@ export const getOrders = async (req, res) => {
   try {
     const { status, search, page = 1, limit = 10 } = req.query;
     const where = {};
+
+    // 🔒 Security: Filter by seller if not admin/owner
+    if (req.user.role !== 'admin' && req.user.role !== 'owner') {
+      const effectiveSellerId = req.user.role === 'cashier' ? req.user.managedById : req.user.id;
+      where.items = { some: { sellerId: effectiveSellerId } };
+    }
+
     if (status && status !== "all") where.status = status;
     if (search) {
       where.OR = [

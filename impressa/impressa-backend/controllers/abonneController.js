@@ -8,8 +8,17 @@ import logger from "../config/logger.js";
  */
 export const getAbonnes = async (req, res) => {
     try {
+        const where = { status: "active" };
+        
+        const effectiveSellerId = req.user.role === 'cashier' ? req.user.managedById : req.user.id;
+        
+        // If not admin/owner, only show own abonnes
+        if (req.user.role !== 'admin' && req.user.role !== 'owner') {
+            where.sellerId = effectiveSellerId;
+        }
+
         const abonnes = await prisma.clientAbonne.findMany({
-            where: { status: "active" },
+            where,
             orderBy: { name: 'asc' }
         });
         res.status(200).json({ success: true, data: abonnes });
@@ -32,8 +41,15 @@ export const createAbonne = async (req, res) => {
             return res.status(400).json({ success: false, message: "Name is required" });
         }
 
+        const effectiveSellerId = req.user.role === 'cashier' ? req.user.managedById : req.user.id;
+
         const newAbonne = await prisma.clientAbonne.create({
-            data: { name, phone, email }
+            data: { 
+                name, 
+                phone, 
+                email,
+                sellerId: effectiveSellerId
+            }
         });
         res.status(201).json({ success: true, data: newAbonne });
     } catch (error) {
@@ -50,8 +66,19 @@ export const createAbonne = async (req, res) => {
 export const updateAbonne = async (req, res) => {
     try {
         const { name, phone, email, status } = req.body;
+        const abonneId = req.params.id;
+
+        // Check ownership
+        const effectiveSellerId = req.user.role === 'cashier' ? req.user.managedById : req.user.id;
+        const abonne = await prisma.clientAbonne.findUnique({ where: { id: abonneId } });
+        if (!abonne) return res.status(404).json({ success: false, message: "Client not found" });
+        
+        if (req.user.role !== 'admin' && req.user.role !== 'owner' && abonne.sellerId !== effectiveSellerId) {
+            return res.status(403).json({ success: false, message: "Unauthorized access" });
+        }
+
         const updatedAbonne = await prisma.clientAbonne.update({
-            where: { id: req.params.id },
+            where: { id: abonneId },
             data: { name, phone, email, status }
         });
         res.status(200).json({ success: true, data: updatedAbonne });
@@ -68,8 +95,19 @@ export const updateAbonne = async (req, res) => {
  */
 export const deleteAbonne = async (req, res) => {
     try {
+        const abonneId = req.params.id;
+
+        // Check ownership
+        const effectiveSellerId = req.user.role === 'cashier' ? req.user.managedById : req.user.id;
+        const abonne = await prisma.clientAbonne.findUnique({ where: { id: abonneId } });
+        if (!abonne) return res.status(404).json({ success: false, message: "Client not found" });
+        
+        if (req.user.role !== 'admin' && req.user.role !== 'owner' && abonne.sellerId !== effectiveSellerId) {
+            return res.status(403).json({ success: false, message: "Unauthorized access" });
+        }
+
         await prisma.clientAbonne.delete({
-            where: { id: req.params.id }
+            where: { id: abonneId }
         });
         res.status(200).json({ success: true, message: "Abonne deleted successfully" });
     } catch (error) {
@@ -85,11 +123,17 @@ export const deleteAbonne = async (req, res) => {
  */
 export const getAbonneFiche = async (req, res) => {
     try {
+        const effectiveSellerId = req.user.role === 'cashier' ? req.user.managedById : req.user.id;
         const client = await prisma.clientAbonne.findUnique({
             where: { id: req.params.id }
         });
         if (!client) {
             return res.status(404).json({ success: false, message: "Client not found" });
+        }
+
+        // Check ownership
+        if (req.user.role !== 'admin' && req.user.role !== 'owner' && client.sellerId !== effectiveSellerId) {
+            return res.status(403).json({ success: false, message: "Unauthorized access" });
         }
 
         const transactions = await prisma.abonneTransaction.findMany({
@@ -126,11 +170,17 @@ export const payAbonneDebt = async (req, res) => {
             return res.status(400).json({ success: false, message: "Valid payment amount is required" });
         }
 
+        const effectiveSellerId = req.user.role === 'cashier' ? req.user.managedById : req.user.id;
         const client = await prisma.clientAbonne.findUnique({
             where: { id: clientId }
         });
         if (!client) {
             return res.status(404).json({ success: false, message: "Client not found" });
+        }
+
+        // Check ownership
+        if (req.user.role !== 'admin' && req.user.role !== 'owner' && client.sellerId !== effectiveSellerId) {
+            return res.status(403).json({ success: false, message: "Unauthorized access" });
         }
 
         // Get all unpaid/partially paid transactions sorted by oldest first
@@ -237,6 +287,14 @@ export const payAbonneDebt = async (req, res) => {
  */
 export const getContractPrices = async (req, res) => {
     try {
+        const effectiveSellerId = req.user.role === 'cashier' ? req.user.managedById : req.user.id;
+        const client = await prisma.clientAbonne.findUnique({ where: { id: req.params.id } });
+        if (!client) return res.status(404).json({ success: false, message: "Client not found" });
+
+        if (req.user.role !== 'admin' && req.user.role !== 'owner' && client.sellerId !== effectiveSellerId) {
+            return res.status(403).json({ success: false, message: "Unauthorized access" });
+        }
+
         const prices = await prisma.contractPrice.findMany({
             where: { clientId: req.params.id },
             include: { product: { select: { name: true, sku: true, price: true } } }
@@ -262,6 +320,15 @@ export const updateContractPrice = async (req, res) => {
             return res.status(400).json({ success: false, message: "Product and price are required" });
         }
 
+        // Check ownership
+        const effectiveSellerId = req.user.role === 'cashier' ? req.user.managedById : req.user.id;
+        const client = await prisma.clientAbonne.findUnique({ where: { id: clientId } });
+        if (!client) return res.status(404).json({ success: false, message: "Client not found" });
+
+        if (req.user.role !== 'admin' && req.user.role !== 'owner' && client.sellerId !== effectiveSellerId) {
+            return res.status(403).json({ success: false, message: "Unauthorized access" });
+        }
+
         const contractPrice = await prisma.contractPrice.upsert({
             where: {
                 clientId_productId: { clientId, productId }
@@ -285,6 +352,16 @@ export const updateContractPrice = async (req, res) => {
 export const deleteContractPrice = async (req, res) => {
     try {
         const { id, productId } = req.params;
+
+        // Check ownership
+        const effectiveSellerId = req.user.role === 'cashier' ? req.user.managedById : req.user.id;
+        const client = await prisma.clientAbonne.findUnique({ where: { id } });
+        if (!client) return res.status(404).json({ success: false, message: "Client not found" });
+
+        if (req.user.role !== 'admin' && req.user.role !== 'owner' && client.sellerId !== effectiveSellerId) {
+            return res.status(403).json({ success: false, message: "Unauthorized access" });
+        }
+
         await prisma.contractPrice.delete({
             where: {
                 clientId_productId: { 

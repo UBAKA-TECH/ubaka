@@ -119,6 +119,7 @@ model User {
   wishlist          Wishlist?
   expenses          Expense[]
   storeSlug         String?        @unique
+  abonnes           ClientAbonne[] @relation("SellerAbonnes")
 
   // Staff Management
   managedById       String?
@@ -379,6 +380,9 @@ model ClientAbonne {
   email       String?
   totalDebt   Float    @default(0)
   status      String   @default("active") // active, inactive
+
+  sellerId    String
+  seller      User     @relation("SellerAbonnes", fields: [sellerId], references: [id])
 
   transactions AbonneTransaction[]
   contractPrices ContractPrice[]

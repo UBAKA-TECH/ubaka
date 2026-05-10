@@ -50,7 +50,10 @@ export const getDashboardAnalytics = async (req, res) => {
       }),
       prisma.expense.aggregate({
         _sum: { amount: true },
-        where: { createdAt: { gte: startOfToday } }
+        where: { 
+          createdAt: { gte: startOfToday },
+          ...(isStaff && { shift: { userId: { in: [user.id, ...(user.managedById ? [user.managedById] : [])] } } }) // Approximation since expense doesn't have sellerId directly, but shift does
+        }
       }),
       prisma.product.findMany({
         where: productFilter,
@@ -76,7 +79,10 @@ export const getDashboardAnalytics = async (req, res) => {
     // Add Debt Collections to Revenue & Cash
     const debtCollections = await prisma.abonneTransaction.aggregate({
       _sum: { amountPaid: true },
-      where: { createdAt: { gte: startOfToday } }
+      where: { 
+        createdAt: { gte: startOfToday },
+        ...(isStaff && { client: { sellerId: effectiveSellerId } })
+      }
     });
     const totalDebtToday = debtCollections?._sum?.amountPaid || 0;
     todayRevenue += totalDebtToday;

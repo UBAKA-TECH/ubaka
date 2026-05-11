@@ -143,7 +143,7 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-50 bg-charcoal-800 text-white shadow-xl border-b border-charcoal-700">
-      <div className="mx-auto max-w-7xl px-3 md:px-6 h-16 flex items-center justify-between gap-1 md:gap-2 lg:gap-4 xl:gap-6">
+      <div className="mx-auto max-w-[98%] px-2 md:px-4 h-16 flex items-center justify-between gap-1 md:gap-2 lg:gap-3 xl:gap-4">
 
         {/* Mobile Menu Button - Left */}
         <button
@@ -203,20 +203,20 @@ export default function Header() {
               )}
             </div>
 
-            <Link to="/shop" className="px-2 xl:px-3 py-2 text-sm font-medium text-cream-300 hover:text-white transition-colors">{t('nav.shop')}</Link>
-            <Link to="/print-portal" className="px-2 xl:px-3 py-2 text-sm font-medium text-blue-400 hover:text-blue-300 transition-colors whitespace-nowrap">{t('nav.print_portal')}</Link>
-            <Link to="/daily-deals" className="px-2 xl:px-3 py-2 text-sm font-medium text-sand-400 hover:text-sand-300 transition-colors whitespace-nowrap">{t('nav.deals')}</Link>
-            <Link to="/gift-cards" className="px-2 xl:px-3 py-2 text-sm font-medium text-terracotta-400 hover:text-terracotta-300 transition-colors whitespace-nowrap">{t('nav.gift_cards')}</Link>
-            <Link to="/track" className="flex items-center gap-1 px-2 xl:px-3 py-2 text-sm font-medium text-cream-300 hover:text-white transition-colors whitespace-nowrap">
+            <Link to="/shop" className="px-1 xl:px-2 py-2 text-sm font-medium text-cream-300 hover:text-white transition-colors">{t('nav.shop')}</Link>
+            <Link to="/print-portal" className="px-1 xl:px-2 py-2 text-sm font-medium text-blue-400 hover:text-blue-300 transition-colors whitespace-nowrap">{t('nav.print_portal')}</Link>
+            <Link to="/daily-deals" className="px-1 xl:px-2 py-2 text-sm font-medium text-sand-400 hover:text-sand-300 transition-colors whitespace-nowrap">{t('nav.deals')}</Link>
+            <Link to="/gift-cards" className="px-1 xl:px-2 py-2 text-sm font-medium text-terracotta-400 hover:text-terracotta-300 transition-colors whitespace-nowrap">{t('nav.gift_cards')}</Link>
+            <Link to="/track" className="flex items-center gap-1 px-1 xl:px-2 py-2 text-sm font-medium text-cream-300 hover:text-white transition-colors whitespace-nowrap">
               <LuTruck className="w-4 h-4" /> {t('nav.track')}
             </Link>
-            <Link to="/blog" className="px-2 xl:px-3 py-2 text-sm font-medium text-cream-300 hover:text-white transition-colors">{t('nav.blog')}</Link>
+            <Link to="/blog" className="px-1 xl:px-2 py-2 text-sm font-medium text-cream-300 hover:text-white transition-colors">{t('nav.blog')}</Link>
           </nav>
         )}
 
         {/* Search Bar - DESKTOP ONLY */}
         {!isSellerOrAdminView && (
-          <div className="hidden md:block flex-1 max-w-sm xl:max-w-md px-2 xl:px-4">
+          <div className="hidden md:block flex-1 max-w-sm xl:max-w-md px-1 xl:px-2">
             <div className="relative w-full group">
               <form onSubmit={handleSearchSubmit}>
                 <input

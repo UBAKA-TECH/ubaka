@@ -39,7 +39,7 @@ const getLogoBuffer = async (logoUrlOrPath) => {
 export const generateReport = async (req, res) => {
     try {
         const { type, format, ...filters } = req.query;
-        const validTypes = ["monthly", "daily", "custom-range", "customer", "status", "revenue", "weekly"];
+        const validTypes = ["monthly", "daily", "custom-range", "customer", "status", "revenue", "weekly", "inventory"];
         if (!validTypes.includes(type)) {
             return res.status(400).json({ message: `Invalid report type. Must be one of: ${validTypes.join(", ")}` });
         }
@@ -65,6 +65,7 @@ export const generateReport = async (req, res) => {
             filters.expenses = result.expenses;
             filters.shifts = result.shifts;
             filters.abonneTransactions = result.abonneTransactions;
+            filters.products = result.products; // For inventory reports
         } catch (buildError) {
             console.error("buildReportData error:", buildError);
             return res.status(500).json({ message: `Failed to build report data: ${buildError.message}` });
@@ -123,9 +124,11 @@ export const generateReport = async (req, res) => {
             reportDateTitle = "";
         }
 
-        const performanceTitle = (filters.month && filters.year)
-            ? `Monthly Performance Statement${reportDateTitle}`
-            : `Daily Performance Statement${reportDateTitle}`;
+        const performanceTitle = type === "inventory" 
+            ? "Stock & Inventory Status Report"
+            : (filters.month && filters.year)
+                ? `Monthly Performance Statement${reportDateTitle}`
+                : `Daily Performance Statement${reportDateTitle}`;
 
         // Drawer Logic Safety: Ensure we don't crash if summary values are missing
         const expectedAmt = summary?.expectedDrawerAmount ?? 0;
@@ -167,12 +170,20 @@ export const generateReport = async (req, res) => {
                     helpers.infoBox("Strategic AI Insights", aiSummary);
                 }
 
-                helpers.metricCards([
-                    { label: "Total Revenue", value: `RWF ${(summary?.totalRevenue ?? 0).toLocaleString()}`, color: "#1E3A8A" },
-                    { label: "Total Expenses", value: `RWF ${(summary?.totalExpenses ?? 0).toLocaleString()}`, color: "#1F2937" },
-                    { label: "Drawer Amount", value: `RWF ${(verificationAmount ?? 0).toLocaleString()}`, color: "#3B82F6" },
-                    { label: "Difference", value: diffValue, color: cashDiscrepancy === 0 ? "#059669" : (cashDiscrepancy > 0 ? "#059669" : "#B91C1C") }
-                ]);
+                if (type === "inventory") {
+                    helpers.metricCards([
+                        { label: "Total Products", value: (summary?.totalProducts ?? 0).toString(), color: "#1E3A8A" },
+                        { label: "Total Stock", value: (summary?.totalStock ?? 0).toLocaleString(), color: "#1F2937" },
+                        { label: "Inventory Value", value: `RWF ${(summary?.totalValue ?? 0).toLocaleString()}`, color: "#059669" }
+                    ]);
+                } else {
+                    helpers.metricCards([
+                        { label: "Total Revenue", value: `RWF ${(summary?.totalRevenue ?? 0).toLocaleString()}`, color: "#1E3A8A" },
+                        { label: "Total Expenses", value: `RWF ${(summary?.totalExpenses ?? 0).toLocaleString()}`, color: "#1F2937" },
+                        { label: "Drawer Amount", value: `RWF ${(verificationAmount ?? 0).toLocaleString()}`, color: "#3B82F6" },
+                        { label: "Difference", value: diffValue, color: cashDiscrepancy === 0 ? "#059669" : (cashDiscrepancy > 0 ? "#059669" : "#B91C1C") }
+                    ]);
+                }
 
                 if (type === "daily" && filters.shifts && filters.shifts.length > 0) {
                     helpers.section("Shift Activity Overview");
@@ -194,37 +205,62 @@ export const generateReport = async (req, res) => {
                     });
                 }
 
-                helpers.section("Transaction Detail");
-                const flattenedItems = (orders || []).flatMap(o => (o.items || []).map(i => ({
-                    ...i,
-                    orderDate: new Date(o.createdAt).toLocaleDateString('en-GB', { timeZone: 'Africa/Kigali' }),
-                    paymentMethod: String(o.paymentMethod || "cash").toLowerCase()
-                })));
-
-                helpers.table({
-                    columns: [
-                        { header: "Date", key: "orderDate", width: 60 },
-                        { header: "Item Name", key: "productName", width: 140 },
-                        { header: "Qty", key: "quantity", width: 30, align: "center" },
-                        { header: "P/U", key: "price", width: 60, align: "right" },
-                        { header: "Cash (RWF)", key: "cashTotal", width: 80, align: "right" },
-                        { header: "Momo (RWF)", key: "momoTotal", width: 80, align: "right" }
-                    ],
-                    rows: flattenedItems.map(i => {
-                        const isCash = String(i.paymentMethod || "cash").toLowerCase().includes("cash");
-                        return {
-                            ...i,
-                            price: (i.price ?? 0).toLocaleString(),
-                            cashTotal: isCash ? (i.subtotal ?? 0).toLocaleString() : "0",
-                            momoTotal: !isCash ? (i.subtotal ?? 0).toLocaleString() : "0"
+                if (type === "inventory") {
+                    helpers.section("Complete Inventory List");
+                    helpers.table({
+                        columns: [
+                            { header: "Product Name", key: "name", width: 170 },
+                            { header: "Category", key: "categoryName", width: 100 },
+                            { header: "Stock", key: "stock", width: 50, align: "center" },
+                            { header: "Price (RWF)", key: "priceStr", width: 80, align: "right" },
+                            { header: "Total Value", key: "valueStr", width: 100, align: "right" }
+                        ],
+                        rows: (filters.products || []).map(p => ({
+                            name: p.name,
+                            categoryName: p.categories?.[0]?.name || "N/A",
+                            stock: p.stock,
+                            priceStr: (p.price ?? 0).toLocaleString(),
+                            valueStr: ((p.stock ?? 0) * (p.price ?? 0)).toLocaleString()
+                        })),
+                        totals: {
+                            categoryName: "TOTALS",
+                            stock: (summary?.totalStock ?? 0).toLocaleString(),
+                            valueStr: `RWF ${(summary?.totalValue ?? 0).toLocaleString()}`
                         }
-                    }),
-                    totals: {
-                        price: "TOTALS",
-                        cashTotal: `RWF ${(summary?.cashRevenue ?? 0).toLocaleString()}`,
-                        momoTotal: `RWF ${(summary?.momoRevenue ?? 0).toLocaleString()}`
-                    }
-                });
+                    });
+                } else {
+                    helpers.section("Transaction Detail");
+                    const flattenedItems = (orders || []).flatMap(o => (o.items || []).map(i => ({
+                        ...i,
+                        orderDate: new Date(o.createdAt).toLocaleDateString('en-GB', { timeZone: 'Africa/Kigali' }),
+                        paymentMethod: String(o.paymentMethod || "cash").toLowerCase()
+                    })));
+
+                    helpers.table({
+                        columns: [
+                            { header: "Date", key: "orderDate", width: 60 },
+                            { header: "Item Name", key: "productName", width: 140 },
+                            { header: "Qty", key: "quantity", width: 30, align: "center" },
+                            { header: "P/U", key: "price", width: 60, align: "right" },
+                            { header: "Cash (RWF)", key: "cashTotal", width: 80, align: "right" },
+                            { header: "Momo (RWF)", key: "momoTotal", width: 80, align: "right" }
+                        ],
+                        rows: flattenedItems.map(i => {
+                            const isCash = String(i.paymentMethod || "cash").toLowerCase().includes("cash");
+                            return {
+                                ...i,
+                                price: (i.price ?? 0).toLocaleString(),
+                                cashTotal: isCash ? (i.subtotal ?? 0).toLocaleString() : "0",
+                                momoTotal: !isCash ? (i.subtotal ?? 0).toLocaleString() : "0"
+                            }
+                        }),
+                        totals: {
+                            price: "TOTALS",
+                            cashTotal: `RWF ${(summary?.cashRevenue ?? 0).toLocaleString()}`,
+                            momoTotal: `RWF ${(summary?.momoRevenue ?? 0).toLocaleString()}`
+                        }
+                    });
+                }
 
                 if (filters.expenses && filters.expenses.length > 0) {
                     helpers.section("Business Expenses Breakdown");

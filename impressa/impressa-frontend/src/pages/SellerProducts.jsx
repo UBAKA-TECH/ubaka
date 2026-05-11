@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { FaPlus, FaSearch, FaEdit, FaTrash, FaBoxOpen, FaEye } from "react-icons/fa";
+import { FaPlus, FaSearch, FaEdit, FaTrash, FaBoxOpen, FaEye, FaFilePdf } from "react-icons/fa";
 import api from "../utils/axiosInstance";
 import ProductCreateEditModal from "../components/ProductCreateEditModal";
 // wind migration
@@ -8,6 +8,7 @@ import ProductCreateEditModal from "../components/ProductCreateEditModal";
 const SellerProducts = () => {
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [downloadingReport, setDownloadingReport] = useState(false);
     const [error, setError] = useState(null);
     const [searchTerm, setSearchTerm] = useState("");
     const [creating, setCreating] = useState(false);
@@ -27,6 +28,30 @@ const SellerProducts = () => {
             setError("Failed to load products.");
         } finally {
             setLoading(false);
+        }
+    };
+
+    const handleDownloadReport = async () => {
+        try {
+            setDownloadingReport(true);
+            const response = await api.get("/reports", {
+                params: { type: 'inventory', format: 'pdf' },
+                responseType: 'blob'
+            });
+
+            // Create a blob link to trigger the download
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', `Inventory_Report_${new Date().toISOString().split('T')[0]}.pdf`);
+            document.body.appendChild(link);
+            link.click();
+            link.parentNode.removeChild(link);
+        } catch (err) {
+            console.error("Report download failed:", err);
+            alert("Failed to generate inventory report. Please try again.");
+        } finally {
+            setDownloadingReport(false);
         }
     };
 
@@ -69,12 +94,22 @@ const SellerProducts = () => {
                             <h1 className="text-2xl font-bold text-gray-800 dark:text-white">My Products</h1>
                             <p className="text-gray-500 dark:text-gray-400 mt-1">Manage your inventory and product listings</p>
                         </div>
-                        <button
-                            onClick={() => setCreating(true)}
-                            className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-lg font-medium transition-colors shadow-sm"
-                        >
-                            <FaPlus className="text-sm" /> Add New Product
-                        </button>
+                        <div className="flex items-center gap-3">
+                            <button
+                                onClick={handleDownloadReport}
+                                disabled={downloadingReport}
+                                className="flex items-center gap-2 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 px-5 py-2.5 rounded-lg font-medium transition-colors shadow-sm border border-gray-200 dark:border-gray-700 disabled:opacity-50"
+                            >
+                                <FaFilePdf className={downloadingReport ? "animate-pulse text-red-500" : "text-red-500"} /> 
+                                {downloadingReport ? "Generating..." : "Inventory PDF"}
+                            </button>
+                            <button
+                                onClick={() => setCreating(true)}
+                                className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-lg font-medium transition-colors shadow-sm"
+                            >
+                                <FaPlus className="text-sm" /> Add New Product
+                            </button>
+                        </div>
                     </div>
 
                     {/* Search Bar */}

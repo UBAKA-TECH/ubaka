@@ -295,6 +295,34 @@ const getRevenueReport = async ({ start, end, sellerId }) => {
 };
 
 /**
+ * 📈 Inventory Report
+ */
+const getInventoryReport = async ({ sellerId }) => {
+  const where = {};
+  if (sellerId) {
+    where.sellerId = sellerId;
+  }
+
+  const products = await prisma.product.findMany({
+    where,
+    include: { categories: { select: { name: true } } },
+    orderBy: { name: 'asc' }
+  });
+
+  const totalProducts = products.length;
+  const totalStock = products.reduce((sum, p) => sum + (p.stock || 0), 0);
+  const totalValue = products.reduce((sum, p) => sum + ((p.stock || 0) * (p.price || 0)), 0);
+
+  const summary = {
+    totalProducts,
+    totalStock,
+    totalValue,
+  };
+
+  return { products, summary };
+};
+
+/**
  * 📈 Central Dispatcher
  */
 export const buildReportData = async (type, filters) => {
@@ -332,6 +360,9 @@ export const buildReportData = async (type, filters) => {
       case "revenue": {
         if (!filters.start || !filters.end) throw new Error("Revenue report requires 'start' and 'end'");
         return await getRevenueReport(filters);
+      }
+      case "inventory": {
+        return await getInventoryReport(filters);
       }
       default:
         throw new Error(`Unsupported report type: ${type}`);

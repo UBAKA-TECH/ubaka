@@ -4,6 +4,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import { useAuth } from "../context/AuthContext";
 import { useTheme } from "../context/ThemeContext";
+import { useWishlist } from "../context/WishlistContext";
 import {
   LuSearch,
   LuShoppingCart,
@@ -30,6 +31,7 @@ export default function Header() {
   const { items = [] } = useCart();
   const { user, isAuthenticated, logout } = useAuth();
   const { theme, toggleTheme } = useTheme();
+  const { ids: wishlist = [] } = useWishlist();
 
   const { t, i18n } = useTranslation();
   const location = useLocation();

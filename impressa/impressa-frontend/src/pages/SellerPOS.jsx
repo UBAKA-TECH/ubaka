@@ -1118,10 +1118,39 @@ export default function SellerPOS() {
                             <div>
                                 <h1 className="text-xl font-bold text-gray-800 dark:text-white flex items-center gap-2">
                                     <FaStore className="text-indigo-600" /> {seller?.storeName || 'My Store'} POS <span className="text-[10px] bg-gray-100 dark:bg-gray-700 px-2 py-0.5 rounded text-gray-400">v1.1</span>
+                                    {/* Shift Status Indicator for Mobile */}
+                                    <span className={`md:hidden ml-2 w-2 h-2 rounded-full animate-pulse ${activeShift?.id ? 'bg-green-500' : 'bg-red-500'}`}></span>
                                 </h1>
                                 <p className="text-sm text-gray-500 dark:text-gray-400 mt-1 flex items-center gap-1">
                                     <FaBarcode /> Scan barcode or select products
                                 </p>
+                            </div>
+
+                            {/* Mobile Quick Actions */}
+                            <div className="md:hidden flex gap-2 w-full">
+                                {activeShift?.id ? (
+                                    <>
+                                        <button
+                                            onClick={() => setShowExpenseModal(true)}
+                                            className="flex-1 bg-amber-500 hover:bg-amber-600 text-white py-2.5 rounded-xl shadow-lg text-xs font-black flex items-center justify-center gap-2 transition-all active:scale-95"
+                                        >
+                                            <FaWallet /> Expense
+                                        </button>
+                                        <button
+                                            onClick={() => setShowCloseShiftModal(true)}
+                                            className="flex-1 bg-red-500 hover:bg-red-600 text-white py-2.5 rounded-xl shadow-lg text-xs font-black flex items-center justify-center gap-2 transition-all active:scale-95"
+                                        >
+                                            <FaTimes /> End Shift
+                                        </button>
+                                    </>
+                                ) : (
+                                    <button
+                                        onClick={() => setShowStartShiftModal(true)}
+                                        className="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-xl shadow-lg text-sm font-black flex items-center justify-center gap-2 transition-all active:scale-95"
+                                    >
+                                        <FaPlus /> Start Your Shift
+                                    </button>
+                                )}
                             </div>
 
                             <div className="relative w-full sm:w-96">

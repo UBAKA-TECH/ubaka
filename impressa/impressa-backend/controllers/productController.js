@@ -327,7 +327,16 @@ export const getSellerProducts = async (req, res) => {
       orderBy: { createdAt: 'desc' },
       take: limit
     });
-    res.json({ success: true, data: products });
+    const total = await prisma.product.count({ where: { sellerId: req.user.id } });
+    res.json({ 
+      success: true, 
+      data: products,
+      pagination: {
+        total,
+        limit: limit || total,
+        count: products.length
+      }
+    });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }

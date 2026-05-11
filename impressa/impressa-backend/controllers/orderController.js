@@ -1012,7 +1012,16 @@ export const getSellerOrders = async (req, res) => {
       orderBy: { createdAt: 'desc' },
       take: limit
     });
-    res.json({ success: true, data: orders });
+    const total = await prisma.order.count({ where: { items: { some: { sellerId: effectiveSellerId } } } });
+    res.json({ 
+      success: true, 
+      data: orders,
+      pagination: {
+        total,
+        limit: limit || total,
+        count: orders.length
+      }
+    });
   } catch (err) {
     res.status(500).json({ message: "Failed to fetch seller orders" });
   }

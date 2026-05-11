@@ -25,7 +25,9 @@ export default function AdminCategories() {
 
     const [form, setForm] = useState({
         name: '',
+        nameRw: '',
         description: '',
+        descriptionRw: '',
         parent: '',
         image: '',
         color: 'from-terracotta-500 to-sand-400',
@@ -101,7 +103,9 @@ export default function AdminCategories() {
             setEditingCategory(category);
             setForm({
                 name: category.name || '',
+                nameRw: category.nameRw || '',
                 description: category.description || '',
+                descriptionRw: category.descriptionRw || '',
                 parent: category.parentId || category.parent?.id || '',
                 image: category.image || '',
                 color: category.color || 'from-terracotta-500 to-sand-400',
@@ -111,7 +115,9 @@ export default function AdminCategories() {
             setEditingCategory(null);
             setForm({
                 name: '',
+                nameRw: '',
                 description: '',
+                descriptionRw: '',
                 parent: '',
                 image: '',
                 color: 'from-terracotta-500 to-sand-400',
@@ -201,6 +207,9 @@ export default function AdminCategories() {
                                                 </td>
                                                 <td className="px-6 py-4">
                                                     <div className="font-medium text-charcoal-800 dark:text-white">{cat.name}</div>
+                                                    {cat.nameRw && (
+                                                        <div className="text-xs text-terracotta-500 dark:text-terracotta-400 font-medium">{cat.nameRw}</div>
+                                                    )}
                                                     {cat.description && (
                                                         <div className="text-xs text-charcoal-500 dark:text-charcoal-400 mt-0.5 line-clamp-1">
                                                             {cat.description}
@@ -323,7 +332,7 @@ export default function AdminCategories() {
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                     <div>
                                         <label className="block text-sm font-medium text-charcoal-700 dark:text-charcoal-300 mb-1.5">
-                                            Category Name *
+                                            Category Name (EN) *
                                         </label>
                                         <input
                                             type="text"
@@ -332,6 +341,19 @@ export default function AdminCategories() {
                                             onChange={(e) => setForm({ ...form, name: e.target.value })}
                                             placeholder="e.g., Electronics"
                                             required
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <label className="block text-sm font-medium text-charcoal-700 dark:text-charcoal-300 mb-1.5">
+                                            Category Name (RW)
+                                        </label>
+                                        <input
+                                            type="text"
+                                            className="w-full px-4 py-2.5 bg-cream-100 dark:bg-charcoal-700 border border-transparent focus:border-terracotta-500 rounded-xl text-charcoal-800 dark:text-white outline-none transition-colors"
+                                            value={form.nameRw}
+                                            onChange={(e) => setForm({ ...form, nameRw: e.target.value })}
+                                            placeholder="e.g., Ibyuma by'ikoranabuhanga"
                                         />
                                     </div>
 
@@ -353,19 +375,47 @@ export default function AdminCategories() {
                                             }
                                         </select>
                                     </div>
+
+                                    <div>
+                                        <label className="block text-sm font-medium text-charcoal-700 dark:text-charcoal-300 mb-1.5">
+                                            Status
+                                        </label>
+                                        <select
+                                            className="w-full px-4 py-2.5 bg-cream-100 dark:bg-charcoal-700 border border-transparent focus:border-terracotta-500 rounded-xl text-charcoal-800 dark:text-white outline-none transition-colors"
+                                            value={form.isActive}
+                                            onChange={(e) => setForm({ ...form, isActive: e.target.value === 'true' })}
+                                        >
+                                            <option value="true">Active</option>
+                                            <option value="false">Inactive</option>
+                                        </select>
+                                    </div>
                                 </div>
 
-                                <div>
-                                    <label className="block text-sm font-medium text-charcoal-700 dark:text-charcoal-300 mb-1.5">
-                                        Description
-                                    </label>
-                                    <textarea
-                                        className="w-full px-4 py-2.5 bg-cream-100 dark:bg-charcoal-700 border border-transparent focus:border-terracotta-500 rounded-xl text-charcoal-800 dark:text-white outline-none transition-colors resize-none"
-                                        rows={3}
-                                        value={form.description}
-                                        onChange={(e) => setForm({ ...form, description: e.target.value })}
-                                        placeholder="Brief description of this category"
-                                    />
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <div>
+                                        <label className="block text-sm font-medium text-charcoal-700 dark:text-charcoal-300 mb-1.5">
+                                            Description (EN)
+                                        </label>
+                                        <textarea
+                                            className="w-full px-4 py-2.5 bg-cream-100 dark:bg-charcoal-700 border border-transparent focus:border-terracotta-500 rounded-xl text-charcoal-800 dark:text-white outline-none transition-colors resize-none"
+                                            rows={3}
+                                            value={form.description}
+                                            onChange={(e) => setForm({ ...form, description: e.target.value })}
+                                            placeholder="English description"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-charcoal-700 dark:text-charcoal-300 mb-1.5">
+                                            Description (RW)
+                                        </label>
+                                        <textarea
+                                            className="w-full px-4 py-2.5 bg-cream-100 dark:bg-charcoal-700 border border-transparent focus:border-terracotta-500 rounded-xl text-charcoal-800 dark:text-white outline-none transition-colors resize-none"
+                                            rows={3}
+                                            value={form.descriptionRw}
+                                            onChange={(e) => setForm({ ...form, descriptionRw: e.target.value })}
+                                            placeholder="Ibisobanuro mu Kinyarwanda"
+                                        />
+                                    </div>
                                 </div>
 
                                 <div>

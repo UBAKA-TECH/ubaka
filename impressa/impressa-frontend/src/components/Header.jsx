@@ -308,7 +308,7 @@ export default function Header() {
               {/* Language Toggle */}
               <button
                 onClick={toggleLanguage}
-                className="hidden sm:flex items-center gap-1 px-3 py-1.5 rounded-full border border-charcoal-600 bg-charcoal-700/50 hover:bg-charcoal-700 transition-all text-[10px] font-black uppercase tracking-widest text-cream-200"
+                className="flex items-center gap-1 px-3 py-1.5 rounded-full border border-charcoal-600 bg-charcoal-700/50 hover:bg-charcoal-700 transition-all text-[10px] font-black uppercase tracking-widest text-cream-200"
               >
                 <span className={i18n.language === 'en' ? 'text-terracotta-400' : ''}>EN</span>
                 <span className="opacity-30">|</span>
@@ -392,6 +392,19 @@ export default function Header() {
                   className="p-2 text-charcoal-400 hover:text-white"
                 >
                   <LuX className="w-6 h-6" />
+                </button>
+              </div>
+
+              {/* Mobile Language Switcher */}
+              <div className="flex justify-between items-center p-4 rounded-xl bg-charcoal-800 border border-charcoal-700">
+                <span className="text-sm font-bold text-charcoal-400 uppercase tracking-widest">Language / Ururimi</span>
+                <button
+                  onClick={toggleLanguage}
+                  className="flex items-center gap-2 px-4 py-2 rounded-lg bg-charcoal-700 text-xs font-black uppercase tracking-widest"
+                >
+                  <span className={i18n.language === 'en' ? 'text-terracotta-400' : 'text-cream-200'}>EN</span>
+                  <span className="opacity-30">|</span>
+                  <span className={i18n.language === 'rw' ? 'text-terracotta-400' : 'text-cream-200'}>RW</span>
                 </button>
               </div>
 

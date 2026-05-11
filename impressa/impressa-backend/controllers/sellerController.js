@@ -232,9 +232,12 @@ export const getSellerPerformanceReports = async (req, res, next) => {
         const startDate = new Date(year, month - 1, 1);
         const endDate = new Date(year, month, 1);
 
-        // 1. Fetch ALL active sellers first (so we show those with 0 sales too)
+        // 1. Fetch ALL active merchants (Sellers, Admins, and Owners with stores)
         const activeSellers = await prisma.user.findMany({
-            where: { role: "seller", sellerStatus: "active" },
+            where: { 
+                role: { in: ["seller", "admin", "owner"] },
+                sellerStatus: "active" 
+            },
             select: { id: true, name: true, email: true, storeName: true }
         });
 

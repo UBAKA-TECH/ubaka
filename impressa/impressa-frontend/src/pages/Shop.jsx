@@ -484,7 +484,7 @@ export default function Shop() {
                   </button>
                 </div>
               ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+                <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-3 md:gap-6">
                   {products.map((p) => (
                     <div
                       key={p.id}
@@ -546,25 +546,25 @@ export default function Shop() {
                       </div>
 
                       {/* Product Info */}
-                      <div className="p-5 flex flex-col flex-1">
+                      <div className="p-3 md:p-5 flex flex-col flex-1">
                         <Link to={`/product/${p.id}`}>
-                          <h3 className="font-bold text-charcoal-800 dark:text-white mb-2 line-clamp-1 group-hover:text-terracotta-500 dark:group-hover:text-terracotta-400 transition-colors text-base">
+                          <h3 className="font-bold text-charcoal-800 dark:text-white mb-1 md:mb-2 line-clamp-1 group-hover:text-terracotta-500 dark:group-hover:text-terracotta-400 transition-colors text-sm md:text-base">
                             {p.name}
                           </h3>
                         </Link>
-                        <p className="text-charcoal-500 dark:text-charcoal-400 text-sm mb-4 line-clamp-2 leading-relaxed flex-1">
+                        <p className="text-charcoal-500 dark:text-charcoal-400 text-[10px] md:text-sm mb-2 md:mb-4 line-clamp-2 leading-relaxed flex-1">
                           {p.description || "Premium quality product"}
                         </p>
 
                         {/* Rating & Action */}
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-1">
-                            <div className="flex text-sand-400 text-sm">
+                            <div className="flex text-sand-400 text-[10px] md:text-sm">
                               {[...Array(5)].map((_, i) => (
                                 <FaStar key={i} className={i < getRating(p.averageRating) ? "text-sand-400" : "text-charcoal-200 dark:text-charcoal-700"} />
                               ))}
                             </div>
-                            <span className="text-xs text-charcoal-400 ml-1">({getRating(p.averageRating).toFixed(1)})</span>
+                            <span className="text-[10px] text-charcoal-400 ml-1">({getRating(p.averageRating).toFixed(1)})</span>
                           </div>
                           <Link
                             to={`/product/${p.id}`}

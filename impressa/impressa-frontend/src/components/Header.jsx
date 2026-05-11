@@ -200,14 +200,14 @@ export default function Header() {
               )}
             </div>
 
-            <Link to="/shop" className="px-2 xl:px-3 py-2 text-sm font-medium text-cream-300 hover:text-white transition-colors">Shop</Link>
-            <Link to="/print-portal" className="px-2 xl:px-3 py-2 text-sm font-medium text-blue-400 hover:text-blue-300 transition-colors whitespace-nowrap">Print Portal</Link>
-            <Link to="/daily-deals" className="px-2 xl:px-3 py-2 text-sm font-medium text-sand-400 hover:text-sand-300 transition-colors whitespace-nowrap">Deals</Link>
-            <Link to="/gift-cards" className="px-2 xl:px-3 py-2 text-sm font-medium text-terracotta-400 hover:text-terracotta-300 transition-colors whitespace-nowrap">Gift Cards</Link>
+            <Link to="/shop" className="px-2 xl:px-3 py-2 text-sm font-medium text-cream-300 hover:text-white transition-colors">{t('nav.shop')}</Link>
+            <Link to="/print-portal" className="px-2 xl:px-3 py-2 text-sm font-medium text-blue-400 hover:text-blue-300 transition-colors whitespace-nowrap">{t('nav.print_portal')}</Link>
+            <Link to="/daily-deals" className="px-2 xl:px-3 py-2 text-sm font-medium text-sand-400 hover:text-sand-300 transition-colors whitespace-nowrap">{t('nav.deals')}</Link>
+            <Link to="/gift-cards" className="px-2 xl:px-3 py-2 text-sm font-medium text-terracotta-400 hover:text-terracotta-300 transition-colors whitespace-nowrap">{t('nav.gift_cards')}</Link>
             <Link to="/track" className="flex items-center gap-1 px-2 xl:px-3 py-2 text-sm font-medium text-cream-300 hover:text-white transition-colors whitespace-nowrap">
-              <LuTruck className="w-4 h-4" /> Track
+              <LuTruck className="w-4 h-4" /> {t('nav.track')}
             </Link>
-            <Link to="/blog" className="px-2 xl:px-3 py-2 text-sm font-medium text-cream-300 hover:text-white transition-colors">Blog</Link>
+            <Link to="/blog" className="px-2 xl:px-3 py-2 text-sm font-medium text-cream-300 hover:text-white transition-colors">{t('nav.blog')}</Link>
           </nav>
         )}
 
@@ -223,7 +223,7 @@ export default function Header() {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onFocus={() => searchQuery.length >= 2 && setShowSuggestions(true)}
-                  placeholder="Search products..."
+                  placeholder={t('common.search')}
                   className="w-full h-10 pl-4 pr-10 rounded-full bg-charcoal-700/50 border border-charcoal-600 focus:border-terracotta-500 focus:ring-1 focus:ring-terracotta-500 text-sm text-white placeholder-charcoal-400 outline-none transition-all"
                 />
                 <button type="submit" className="absolute right-3 top-1/2 -translate-y-1/2 text-charcoal-400 group-focus-within:text-terracotta-400 transition-colors">
@@ -236,7 +236,7 @@ export default function Header() {
                   <div className="fixed inset-0 z-30" onClick={() => setShowSuggestions(false)} />
                   <div className="absolute top-full left-0 right-0 mt-2 bg-charcoal-800 border border-charcoal-600 rounded-2xl shadow-xl z-40 overflow-hidden">
                     {isSearching ? (
-                      <div className="p-4 text-center text-sm text-charcoal-400">Searching...</div>
+                      <div className="p-4 text-center text-sm text-charcoal-400">{t('common.loading')}</div>
                     ) : suggestions.length > 0 ? (
                       <div className="py-1">
                         {suggestions.map((item) => (
@@ -367,7 +367,7 @@ export default function Header() {
               to="/login"
               className="ml-2 px-4 md:px-6 py-2 md:py-2.5 bg-gradient-to-r from-terracotta-500 to-terracotta-600 hover:from-terracotta-400 hover:to-terracotta-500 text-white text-sm font-bold rounded-full shadow-lg shadow-terracotta-900/20 transition-all whitespace-nowrap shrink-0"
             >
-              Sign In
+              {t('auth.sign_in')}
             </Link>
           )}
         </div>
@@ -426,47 +426,47 @@ export default function Header() {
                   onClick={() => setMobileMenuOpen(false)}
                   className="p-4 rounded-xl bg-charcoal-800 text-cream-200 font-medium hover:bg-charcoal-700"
                 >
-                  Shop All
+                  {t('nav.shop')}
                 </Link>
                 <Link
                   to="/print-portal"
                   onClick={() => setMobileMenuOpen(false)}
                   className="p-4 rounded-xl bg-charcoal-800 text-blue-400 font-medium hover:bg-charcoal-700 flex items-center gap-2"
                 >
-                  <LuSearch className="w-4 h-4" /> Print Portal
+                  <LuSearch className="w-4 h-4" /> {t('nav.print_portal')}
                 </Link>
                 <Link
                   to="/daily-deals"
                   onClick={() => setMobileMenuOpen(false)}
                   className="p-4 rounded-xl bg-charcoal-800 text-sand-400 font-medium hover:bg-charcoal-700"
                 >
-                  Daily Deals
+                  {t('nav.deals')}
                 </Link>
                 <Link
                   to="/gift-cards"
                   onClick={() => setMobileMenuOpen(false)}
                   className="p-4 rounded-xl bg-charcoal-800 text-terracotta-400 font-medium hover:bg-charcoal-700 flex items-center gap-2"
                 >
-                  <LuGift className="w-4 h-4" /> Gift Cards
+                  <LuGift className="w-4 h-4" /> {t('nav.gift_cards')}
                 </Link>
                 <Link
                   to="/track"
                   onClick={() => setMobileMenuOpen(false)}
                   className="p-4 rounded-xl bg-charcoal-800 text-cream-200 font-medium hover:bg-charcoal-700 flex items-center gap-2"
                 >
-                  <LuTruck className="w-4 h-4" /> Track Order
+                  <LuTruck className="w-4 h-4" /> {t('nav.track')}
                 </Link>
                 <Link
                   to="/blog"
                   onClick={() => setMobileMenuOpen(false)}
                   className="p-4 rounded-xl bg-charcoal-800 text-cream-200 font-medium hover:bg-charcoal-700"
                 >
-                  Blog
+                  {t('nav.blog')}
                 </Link>
 
                 <div className="h-px bg-charcoal-800 my-2" />
 
-                <div className="text-xs font-bold text-charcoal-500 uppercase tracking-wider px-2 mb-2">Categories</div>
+                <div className="text-xs font-bold text-charcoal-500 uppercase tracking-wider px-2 mb-2">{t('common.categories')}</div>
                 <div className="grid grid-cols-2 gap-2">
                   {categories.slice(0, 8).map(cat => (
                     <Link

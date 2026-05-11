@@ -7,7 +7,8 @@
     "cancel": "Siba",
     "delete": "Gukuraho",
     "search": "Shakisha...",
-    "back": "Subira inyuma"
+    "back": "Subira inyuma",
+    "categories": "Ibyiciro"
   },
   "nav": {
     "dashboard": "Imbonerahamwe",
@@ -18,7 +19,12 @@
     "clients": "Abonnés",
     "reports": "Raporo",
     "shifts": "Igihe cy'akazi",
-    "shop": "Iduka"
+    "shop": "Iduka",
+    "print_portal": "Gucapa",
+    "deals": "Ibigabanijwe",
+    "gift_cards": "Amakarita y'impano",
+    "track": "Kurikirana",
+    "blog": "Amakuru"
   },
   "pos": {
     "cart": "Agatebo",
@@ -31,5 +37,10 @@
     "start_shift": "Tangira akazi",
     "end_shift": "Sohoka mu kazi",
     "expense": "Andika ibyasohotse"
+  },
+  "auth": {
+    "sign_in": "Injira",
+    "sign_out": "Sohoka",
+    "register": "Kwiyandikisha"
   }
 }

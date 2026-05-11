@@ -50,6 +50,12 @@ export default function SellerPOS() {
     const [abonneUpfrontCash, setAbonneUpfrontCash] = useState("");
     const [collectedBy, setCollectedBy] = useState("");
 
+    // Client Management
+    const [clientMode, setClientMode] = useState("guest"); // "guest" or "abonne"
+    const [selectedClient, setSelectedClient] = useState(null);
+    const [clientSearchTerm, setClientSearchTerm] = useState("");
+    const [clientContractPrices, setClientContractPrices] = useState([]);
+
     // Expenses
     const [showExpenseModal, setShowExpenseModal] = useState(false);
     const [savingExpense, setSavingExpense] = useState(false);
@@ -159,6 +165,8 @@ export default function SellerPOS() {
         },
         refetchInterval: 30000 // Poll every 30s
     });
+
+    const loading = productsLoading || shiftLoading;
 
     // Handle shift modal visibility based on activeShift
     useEffect(() => {

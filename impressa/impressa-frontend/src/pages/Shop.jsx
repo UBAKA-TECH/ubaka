@@ -9,12 +9,14 @@ import { LuSlidersHorizontal, LuSparkles, LuTrendingUp, LuPackage } from "react-
 import api from "../utils/axiosInstance";
 import { formatRwf } from "../utils/currency";
 import assetUrl from "../utils/assetUrl";
+import { useTranslation } from "react-i18next";
 import Header from "../components/Header";
 import LandingFooter from "../components/LandingFooter";
 import { useCart } from "../context/CartContext";
 import { useWishlist } from "../context/WishlistContext";
 import { useToast } from "../context/ToastContext";
 import Breadcrumbs from "../components/Breadcrumbs";
+import FlashSaleBanner from "../components/FlashSaleBanner";
 
 const getRating = (rating) => {
   if (!rating) return 0;
@@ -52,6 +54,7 @@ const WishlistButton = ({ product }) => {
 };
 
 export default function Shop() {
+  const { t } = useTranslation();
   const [searchParams, setSearchParams] = useSearchParams();
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
@@ -218,13 +221,13 @@ export default function Shop() {
   };
 
   const getPageTitle = () => {
-    if (sortBy === "featured") return "Featured Products";
-    if (sortBy === "trending") return "Trending Now";
+    if (sortBy === "featured") return t('shop.sort_featured');
+    if (sortBy === "trending") return t('shop.sort_trending');
     if (selectedCategory) {
       const cat = categories.find(c => c.id === selectedCategory || c.name === selectedCategory);
-      return cat ? cat.name : "Shop";
+      return cat ? cat.name : t('shop.breadcrumb_shop');
     }
-    return "All Products";
+    return t('shop.title');
   };
 
   const getPageIcon = () => {
@@ -241,7 +244,7 @@ export default function Shop() {
       {/* Search */}
       <div>
         <label className="flex items-center gap-2 text-sm font-bold text-charcoal-800 dark:text-white mb-3 uppercase tracking-wider">
-          <FaSearch className="text-terracotta-500" /> Search
+          <FaSearch className="text-terracotta-500" /> {t('shop.search_label')}
         </label>
         <div className="relative">
           <input
@@ -253,7 +256,7 @@ export default function Shop() {
                 setDebouncedQ(localSearch); // Trigger immediately
               }
             }}
-            placeholder="Find products... (Press Enter)"
+            placeholder={t('shop.search_placeholder')}
             className="w-full pl-4 pr-10 py-3 bg-cream-100 dark:bg-charcoal-800 border-0 rounded-xl text-sm focus:ring-2 focus:ring-terracotta-500 outline-none transition-all dark:text-white placeholder:text-charcoal-400"
           />
           <button
@@ -271,7 +274,7 @@ export default function Shop() {
       {/* Categories */}
       <div>
         <label className="flex items-center gap-2 text-sm font-bold text-charcoal-800 dark:text-white mb-3 uppercase tracking-wider">
-          <LuSlidersHorizontal className="text-terracotta-500" /> Categories
+          <LuSlidersHorizontal className="text-terracotta-500" /> {t('shop.categories_label')}
         </label>
         <div className="space-y-1 max-h-64 overflow-y-auto pr-2 custom-scrollbar">
           <button
@@ -281,7 +284,7 @@ export default function Shop() {
               }`}
             onClick={() => handleCategoryChange("")}
           >
-            All Categories
+            {t('shop.all_categories')}
           </button>
           {categories.map(c => (
             <button
@@ -301,14 +304,14 @@ export default function Shop() {
       {/* Price Range */}
       <div>
         <label className="flex items-center gap-2 text-sm font-bold text-charcoal-800 dark:text-white mb-3 uppercase tracking-wider">
-          Price Range (RWF)
+          {t('shop.price_range')}
         </label>
         <div className="flex items-center gap-3">
           <input
             type="number"
             value={minPrice}
             onChange={(e) => setMinPrice(e.target.value)}
-            placeholder="Min"
+            placeholder={t('shop.min')}
             className="w-full px-4 py-3 bg-cream-100 dark:bg-charcoal-800 border-0 rounded-xl text-sm outline-none focus:ring-2 focus:ring-terracotta-500 dark:text-white placeholder:text-charcoal-400"
           />
           <span className="text-charcoal-400 font-bold">–</span>
@@ -316,7 +319,7 @@ export default function Shop() {
             type="number"
             value={maxPrice}
             onChange={(e) => setMaxPrice(e.target.value)}
-            placeholder="Max"
+            placeholder={t('shop.max')}
             className="w-full px-4 py-3 bg-cream-100 dark:bg-charcoal-800 border-0 rounded-xl text-sm outline-none focus:ring-2 focus:ring-terracotta-500 dark:text-white placeholder:text-charcoal-400"
           />
         </div>
@@ -328,7 +331,7 @@ export default function Shop() {
           onClick={clearAllFilters}
           className="w-full py-3 text-sm font-bold text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition-all flex items-center justify-center gap-2"
         >
-          <FaTimes /> Clear All Filters
+          <FaTimes /> {t('shop.filters')}
         </button>
       )}
     </div>
@@ -349,13 +352,14 @@ export default function Shop() {
                 </div>
                 <div>
                   <h1 className="text-xl md:text-2xl font-bold text-white">{getPageTitle()}</h1>
-                  <p className="text-white/70 text-sm">{products.length} products</p>
+                  <p className="text-white/70 text-sm">{products.length} {t('shop.product_count')}</p>
                 </div>
               </div>
-              <Breadcrumbs items={[{ label: 'Shop' }]} className="text-white/70 hidden sm:flex" />
+              <Breadcrumbs items={[{ label: t('shop.breadcrumb_shop') }]} className="text-white/70 hidden sm:flex" />
             </div>
           </div>
         </div>
+        <FlashSaleBanner />
 
         <div className="mx-auto max-w-7xl px-4 md:px-6 mt-6">
           <div className="flex flex-col lg:flex-row gap-8">
@@ -365,7 +369,7 @@ export default function Shop() {
               onClick={() => setMobileFiltersOpen(true)}
               className="lg:hidden flex items-center justify-center gap-2 bg-gradient-to-r from-terracotta-500 to-terracotta-600 shadow-xl rounded-2xl px-6 py-4 font-bold text-white hover:from-terracotta-600 hover:to-terracotta-700 transition-all"
             >
-              <FaFilter /> Filters & Categories
+              <FaFilter /> {t('shop.filter_toggle')}
               {hasActiveFilters && (
                 <span className="ml-2 w-2 h-2 bg-white rounded-full" />
               )}
@@ -377,7 +381,7 @@ export default function Shop() {
                 <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setMobileFiltersOpen(false)} />
                 <div className="absolute right-0 top-0 bottom-0 w-full max-w-sm bg-white dark:bg-charcoal-800 shadow-2xl p-6 overflow-y-auto">
                   <div className="flex items-center justify-between mb-8">
-                    <h2 className="text-xl font-black text-charcoal-800 dark:text-white">Filters</h2>
+                    <h2 className="text-xl font-black text-charcoal-800 dark:text-white">{t('shop.filters')}</h2>
                     <button
                       onClick={() => setMobileFiltersOpen(false)}
                       className="w-10 h-10 bg-cream-100 dark:bg-charcoal-700 rounded-full flex items-center justify-center text-charcoal-500 hover:text-charcoal-700 dark:hover:text-white transition-colors"
@@ -397,7 +401,7 @@ export default function Shop() {
                   <div className="w-10 h-10 bg-gradient-to-br from-terracotta-500 to-terracotta-600 rounded-xl flex items-center justify-center text-white">
                     <FaFilter className="text-sm" />
                   </div>
-                  Filters
+                  {t('shop.filters')}
                 </div>
                 {renderFilters()}
               </div>
@@ -430,17 +434,17 @@ export default function Shop() {
                   )}
                 </div>
                 <div className="flex items-center gap-3">
-                  <span className="text-sm text-charcoal-500 dark:text-charcoal-400 whitespace-nowrap font-medium">Sort by:</span>
+                  <span className="text-sm text-charcoal-500 dark:text-charcoal-400 whitespace-nowrap font-medium">{t('shop.sort_by')}</span>
                   <select
                     className="bg-cream-100 dark:bg-charcoal-700 border-0 rounded-xl px-4 py-2.5 text-sm font-medium outline-none focus:ring-2 focus:ring-terracotta-500 dark:text-white cursor-pointer min-w-[160px]"
                     value={sortBy}
                     onChange={handleSortChange}
                   >
-                    <option value="newest">Newest First</option>
-                    <option value="price-asc">Price: Low to High</option>
-                    <option value="price-desc">Price: High to Low</option>
-                    <option value="featured">Featured</option>
-                    <option value="trending">Trending</option>
+                    <option value="newest">{t('shop.sort_newest')}</option>
+                    <option value="price-asc">{t('shop.sort_price_low')}</option>
+                    <option value="price-desc">{t('shop.sort_price_high')}</option>
+                    <option value="featured">{t('shop.sort_featured')}</option>
+                    <option value="trending">{t('shop.sort_trending')}</option>
                   </select>
                 </div>
               </div>
@@ -451,22 +455,22 @@ export default function Shop() {
                     <div className="w-16 h-16 border-4 border-terracotta-200 dark:border-terracotta-900 rounded-full" />
                     <div className="absolute top-0 left-0 w-16 h-16 border-4 border-transparent border-t-terracotta-500 rounded-full animate-spin" />
                   </div>
-                  <p className="mt-6 text-charcoal-500 dark:text-charcoal-400 font-medium animate-pulse">Loading products...</p>
+                  <p className="mt-6 text-charcoal-500 dark:text-charcoal-400 font-medium animate-pulse">{t('common.loading')}</p>
                 </div>
               ) : products.length === 0 ? (
                 <div className="bg-white dark:bg-charcoal-800 rounded-3xl p-16 text-center shadow-xl border border-cream-200 dark:border-charcoal-700">
                   <div className="w-24 h-24 bg-gradient-to-br from-cream-100 to-cream-200 dark:from-charcoal-700 dark:to-charcoal-600 rounded-full flex items-center justify-center mx-auto mb-8">
                     <FaSearch className="text-4xl text-charcoal-300 dark:text-charcoal-500" />
                   </div>
-                  <h3 className="text-2xl font-black text-charcoal-800 dark:text-white mb-3">No Products Found</h3>
+                  <h3 className="text-2xl font-black text-charcoal-800 dark:text-white mb-3">{t('shop.no_products_title')}</h3>
                   <p className="text-charcoal-500 dark:text-charcoal-400 max-w-md mx-auto mb-8">
-                    We couldn't find any products matching your current filters. Try adjusting your search or category selection.
+                    {t('shop.no_products_desc')}
                   </p>
                   <button
                     onClick={clearAllFilters}
                     className="inline-flex items-center gap-2 bg-gradient-to-r from-terracotta-500 to-terracotta-600 hover:from-terracotta-600 hover:to-terracotta-700 text-white px-8 py-3 rounded-full font-bold transition-all shadow-lg shadow-terracotta-500/25"
                   >
-                    <FaTimes /> Clear All Filters
+                    <FaTimes /> {t('shop.filters')}
                   </button>
                 </div>
               ) : (
@@ -523,9 +527,9 @@ export default function Shop() {
                             className="bg-white text-charcoal-800 px-6 py-3 rounded-full font-bold shadow-xl flex items-center gap-2 transform scale-90 group-hover:scale-100 transition-transform duration-300 hover:bg-terracotta-500 hover:text-white"
                           >
                             {p.customizable ? (
-                              <>✨ Customize</>
+                              <>✨ {t('home.hero.cta_shop')}</>
                             ) : (
-                              <><FaShoppingCart /> Add to Cart</>
+                              <><FaShoppingCart /> {t('shop.add_to_cart')}</>
                             )}
                           </button>
                         </div>
@@ -539,7 +543,7 @@ export default function Shop() {
                           </h3>
                         </Link>
                         <p className="text-charcoal-500 dark:text-charcoal-400 text-[10px] md:text-sm mb-2 md:mb-4 line-clamp-2 leading-relaxed flex-1">
-                          {p.description || "Premium quality product"}
+                          {p.description || t('home.hero.description')}
                         </p>
 
                         {/* Rating & Action */}
@@ -556,7 +560,7 @@ export default function Shop() {
                             to={`/product/${p.id}`}
                             className="text-terracotta-500 dark:text-terracotta-400 text-sm font-bold hover:underline"
                           >
-                            View →
+                            {t('home.categories.view_all')} →
                           </Link>
                         </div>
                       </div>

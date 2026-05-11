@@ -13,10 +13,25 @@ export default function AdminBanners() {
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
     const [uploading, setUploading] = useState(false);
+    const [previewLang, setPreviewLang] = useState('en');
 
     const [form, setForm] = useState({
-        title: '', subtitle: '', badge: 'Limited Time Offer', buttonText: 'Shop Now', buttonLink: '/shop',
-        backgroundImage: '', gradientFrom: '#8b5cf6', gradientTo: '#d946ef', startDate: '', endDate: '', position: 'hero', isActive: true
+        title: '',
+        titleRw: '',
+        subtitle: '',
+        subtitleRw: '',
+        badge: 'Limited Time Offer',
+        badgeRw: '',
+        buttonText: 'Shop Now',
+        buttonTextRw: '',
+        buttonLink: '/shop',
+        backgroundImage: '',
+        gradientFrom: '#8b5cf6',
+        gradientTo: '#d946ef',
+        startDate: '',
+        endDate: '',
+        position: 'hero',
+        isActive: true
     });
 
     const BASE_URL = (process.env.REACT_APP_API_URL || '').replace(/\/api$/, '');
@@ -103,16 +118,43 @@ export default function AdminBanners() {
         if (banner) {
             setEditingBanner(banner);
             setForm({
-                title: banner.title || '', subtitle: banner.subtitle || '', badge: banner.badge || 'Limited Time Offer',
-                buttonText: banner.buttonText || 'Shop Now', buttonLink: banner.buttonLink || '/shop', backgroundImage: banner.backgroundImage || '',
-                gradientFrom: banner.gradientFrom || '#8b5cf6', gradientTo: banner.gradientTo || '#d946ef',
+                title: banner.title || '',
+                titleRw: banner.titleRw || '',
+                subtitle: banner.subtitle || '',
+                subtitleRw: banner.subtitleRw || '',
+                badge: banner.badge || 'Limited Time Offer',
+                badgeRw: banner.badgeRw || '',
+                buttonText: banner.buttonText || 'Shop Now',
+                buttonTextRw: banner.buttonTextRw || '',
+                buttonLink: banner.buttonLink || '/shop',
+                backgroundImage: banner.backgroundImage || '',
+                gradientFrom: banner.gradientFrom || '#8b5cf6',
+                gradientTo: banner.gradientTo || '#d946ef',
                 startDate: toLocalISOString(banner.startDate),
                 endDate: toLocalISOString(banner.endDate),
-                position: banner.position || 'hero', isActive: banner.isActive !== false
+                position: banner.position || 'hero',
+                isActive: banner.isActive !== false
             });
         } else {
             setEditingBanner(null);
-            setForm({ title: '', subtitle: '', badge: 'Limited Time Offer', buttonText: 'Shop Now', buttonLink: '/shop', backgroundImage: '', gradientFrom: '#8b5cf6', gradientTo: '#d946ef', startDate: '', endDate: '', position: 'hero', isActive: true });
+            setForm({
+                title: '',
+                titleRw: '',
+                subtitle: '',
+                subtitleRw: '',
+                badge: 'Limited Time Offer',
+                badgeRw: '',
+                buttonText: 'Shop Now',
+                buttonTextRw: '',
+                buttonLink: '/shop',
+                backgroundImage: '',
+                gradientFrom: '#8b5cf6',
+                gradientTo: '#d946ef',
+                startDate: '',
+                endDate: '',
+                position: 'hero',
+                isActive: true
+            });
         }
         setShowModal(true);
     };
@@ -160,9 +202,12 @@ export default function AdminBanners() {
                                         <div className="relative h-40" style={{ background: banner.backgroundImage ? `url(${banner.backgroundImage}) center/cover` : `linear-gradient(135deg, ${banner.gradientFrom}, ${banner.gradientTo})` }}>
                                             <span className={`absolute top-3 right-3 px-2.5 py-1 rounded-full text-xs font-semibold ${statusInfo.classes}`}>{statusInfo.label}</span>
                                             <div className="absolute inset-0 flex flex-col items-center justify-center text-center text-white p-4">
-                                                <span className="bg-white/20 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-medium mb-2">{banner.badge}</span>
+                                                <span className="bg-white/20 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-medium mb-2">
+                                                    {banner.badge} {banner.badgeRw && <span className="opacity-60 ml-1">({banner.badgeRw})</span>}
+                                                </span>
                                                 <h3 className="text-xl font-bold drop-shadow-md">{banner.title}</h3>
-                                                {banner.subtitle && <p className="text-sm opacity-90 mt-1">{banner.subtitle}</p>}
+                                                {banner.titleRw && <p className="text-sm font-medium text-white/80">{banner.titleRw}</p>}
+                                                {banner.subtitle && <p className="text-xs opacity-90 mt-1 line-clamp-1">{banner.subtitle}</p>}
                                             </div>
                                         </div>
 
@@ -209,25 +254,52 @@ export default function AdminBanners() {
 
                                 <div className="p-6 overflow-y-auto max-h-[70vh]">
                                     {/* Live Preview */}
+                                    <div className="flex items-center justify-between mb-3">
+                                        <label className="text-sm font-medium text-charcoal-600 dark:text-charcoal-400">Live Preview</label>
+                                        <div className="flex bg-cream-100 dark:bg-charcoal-700 rounded-lg p-1">
+                                            <button type="button" onClick={() => setPreviewLang('en')} className={`px-3 py-1 text-xs font-bold rounded-md transition-all ${previewLang === 'en' ? 'bg-white dark:bg-charcoal-600 text-terracotta-500 shadow-sm' : 'text-charcoal-500'}`}>EN</button>
+                                            <button type="button" onClick={() => setPreviewLang('rw')} className={`px-3 py-1 text-xs font-bold rounded-md transition-all ${previewLang === 'rw' ? 'bg-white dark:bg-charcoal-600 text-terracotta-500 shadow-sm' : 'text-charcoal-500'}`}>RW</button>
+                                        </div>
+                                    </div>
                                     <div className="mb-6 rounded-xl overflow-hidden h-40" style={{ background: form.backgroundImage ? `url(${form.backgroundImage}) center/cover` : `linear-gradient(135deg, ${form.gradientFrom}, ${form.gradientTo})` }}>
                                         <div className="h-full flex flex-col items-center justify-center text-center text-white p-4">
-                                            <span className="bg-white/20 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-medium mb-2">{form.badge || 'Badge'}</span>
-                                            <h3 className="text-2xl font-bold drop-shadow-md">{form.title || 'Your Title Here'}</h3>
-                                            {form.subtitle && <p className="text-sm opacity-90 mt-1">{form.subtitle}</p>}
-                                            <span className="mt-3 px-4 py-1.5 bg-white text-charcoal-900 rounded-lg font-semibold text-sm">{form.buttonText || 'Button'}</span>
+                                            <span className="bg-white/20 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-medium mb-2">
+                                                {previewLang === 'rw' ? (form.badgeRw || form.badge || 'Badge') : (form.badge || 'Badge')}
+                                            </span>
+                                            <h3 className="text-2xl font-bold drop-shadow-md">
+                                                {previewLang === 'rw' ? (form.titleRw || form.title || 'Your Title Here') : (form.title || 'Your Title Here')}
+                                            </h3>
+                                            {(previewLang === 'rw' ? (form.subtitleRw || form.subtitle) : form.subtitle) && (
+                                                <p className="text-sm opacity-90 mt-1">
+                                                    {previewLang === 'rw' ? (form.subtitleRw || form.subtitle) : form.subtitle}
+                                                </p>
+                                            )}
+                                            <span className="mt-3 px-4 py-1.5 bg-white text-charcoal-900 rounded-lg font-semibold text-sm">
+                                                {previewLang === 'rw' ? (form.buttonTextRw || form.buttonText || 'Button') : (form.buttonText || 'Button')}
+                                            </span>
                                         </div>
                                     </div>
 
                                     <form onSubmit={handleSubmit} className="space-y-4">
                                         <div className="grid grid-cols-2 gap-4">
-                                            <div className="col-span-2">
-                                                <label className="block text-sm font-medium text-charcoal-700 dark:text-charcoal-300 mb-2">Title *</label>
+                                            <div>
+                                                <label className="block text-sm font-medium text-charcoal-700 dark:text-charcoal-300 mb-2">Title (EN) *</label>
                                                 <input type="text" required value={form.title} onChange={e => setForm({ ...form, title: e.target.value })} placeholder="Up to 50% Off"
                                                     className="w-full px-4 py-2.5 bg-cream-100 dark:bg-charcoal-700 border border-transparent focus:border-terracotta-500 rounded-xl text-charcoal-800 dark:text-white outline-none transition-colors" />
                                             </div>
                                             <div>
-                                                <label className="block text-sm font-medium text-charcoal-700 dark:text-charcoal-300 mb-2">Badge</label>
+                                                <label className="block text-sm font-medium text-charcoal-700 dark:text-charcoal-300 mb-2">Title (RW)</label>
+                                                <input type="text" value={form.titleRw} onChange={e => setForm({ ...form, titleRw: e.target.value })} placeholder="Kugera kuri 50%"
+                                                    className="w-full px-4 py-2.5 bg-cream-100 dark:bg-charcoal-700 border border-transparent focus:border-terracotta-500 rounded-xl text-charcoal-800 dark:text-white outline-none transition-colors" />
+                                            </div>
+                                            <div>
+                                                <label className="block text-sm font-medium text-charcoal-700 dark:text-charcoal-300 mb-2">Badge (EN)</label>
                                                 <input type="text" value={form.badge} onChange={e => setForm({ ...form, badge: e.target.value })} placeholder="Limited Time"
+                                                    className="w-full px-4 py-2.5 bg-cream-100 dark:bg-charcoal-700 border border-transparent focus:border-terracotta-500 rounded-xl text-charcoal-800 dark:text-white outline-none" />
+                                            </div>
+                                            <div>
+                                                <label className="block text-sm font-medium text-charcoal-700 dark:text-charcoal-300 mb-2">Badge (RW)</label>
+                                                <input type="text" value={form.badgeRw} onChange={e => setForm({ ...form, badgeRw: e.target.value })} placeholder="Igihe gito"
                                                     className="w-full px-4 py-2.5 bg-cream-100 dark:bg-charcoal-700 border border-transparent focus:border-terracotta-500 rounded-xl text-charcoal-800 dark:text-white outline-none" />
                                             </div>
                                             <div>
@@ -240,14 +312,24 @@ export default function AdminBanners() {
                                                     <option value="sidebar">Sidebar</option>
                                                 </select>
                                             </div>
-                                            <div className="col-span-2">
-                                                <label className="block text-sm font-medium text-charcoal-700 dark:text-charcoal-300 mb-2">Subtitle</label>
+                                            <div>
+                                                <label className="block text-sm font-medium text-charcoal-700 dark:text-charcoal-300 mb-2">Subtitle (EN)</label>
                                                 <input type="text" value={form.subtitle} onChange={e => setForm({ ...form, subtitle: e.target.value })} placeholder="Don't miss our biggest sale..."
                                                     className="w-full px-4 py-2.5 bg-cream-100 dark:bg-charcoal-700 border border-transparent focus:border-terracotta-500 rounded-xl text-charcoal-800 dark:text-white outline-none" />
                                             </div>
                                             <div>
-                                                <label className="block text-sm font-medium text-charcoal-700 dark:text-charcoal-300 mb-2">Button Text</label>
+                                                <label className="block text-sm font-medium text-charcoal-700 dark:text-charcoal-300 mb-2">Subtitle (RW)</label>
+                                                <input type="text" value={form.subtitleRw} onChange={e => setForm({ ...form, subtitleRw: e.target.value })} placeholder="Ntucikwe n'ukugabanyirizwa..."
+                                                    className="w-full px-4 py-2.5 bg-cream-100 dark:bg-charcoal-700 border border-transparent focus:border-terracotta-500 rounded-xl text-charcoal-800 dark:text-white outline-none" />
+                                            </div>
+                                            <div>
+                                                <label className="block text-sm font-medium text-charcoal-700 dark:text-charcoal-300 mb-2">Button Text (EN)</label>
                                                 <input type="text" value={form.buttonText} onChange={e => setForm({ ...form, buttonText: e.target.value })} placeholder="Shop Now"
+                                                    className="w-full px-4 py-2.5 bg-cream-100 dark:bg-charcoal-700 border border-transparent focus:border-terracotta-500 rounded-xl text-charcoal-800 dark:text-white outline-none" />
+                                            </div>
+                                            <div>
+                                                <label className="block text-sm font-medium text-charcoal-700 dark:text-charcoal-300 mb-2">Button Text (RW)</label>
+                                                <input type="text" value={form.buttonTextRw} onChange={e => setForm({ ...form, buttonTextRw: e.target.value })} placeholder="Gura ubu"
                                                     className="w-full px-4 py-2.5 bg-cream-100 dark:bg-charcoal-700 border border-transparent focus:border-terracotta-500 rounded-xl text-charcoal-800 dark:text-white outline-none" />
                                             </div>
                                             <div>

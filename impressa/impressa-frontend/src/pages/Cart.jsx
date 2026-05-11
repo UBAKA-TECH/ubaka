@@ -6,6 +6,7 @@ import { FaShoppingCart, FaTrashAlt, FaArrowRight, FaTimes } from "react-icons/f
 import LandingFooter from "../components/LandingFooter";
 import Header from "../components/Header";
 import * as api from "../services/api";
+import FlashSaleBanner from "../components/FlashSaleBanner";
 
 export default function CartPage() {
   const { items, updateQty, removeItem, totals, setFile, applyCoupon, removeCoupon, coupon } = useCart();
@@ -53,6 +54,7 @@ export default function CartPage() {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-slate-950 transition-colors duration-300">
       <Header />
+      <FlashSaleBanner />
 
       <main>
         <section className="relative py-20 overflow-hidden bg-white dark:bg-slate-900 border-b border-gray-100 dark:border-slate-800">

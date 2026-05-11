@@ -11,7 +11,7 @@ import LandingFooter from "../components/LandingFooter";
 import Header from "../components/Header";
 import { useWishlist } from "../context/WishlistContext";
 import AIChatWidget from "../components/AdminChatBot"; // Using the generic Chatbot
-
+import FlashSaleBanner from "../components/FlashSaleBanner";
 import assetUrl from "../utils/assetUrl";
 
 const getRating = (rating) => {
@@ -112,13 +112,12 @@ const defaultColors = [
 ];
 
 export default function Home() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const isRw = i18n.language === 'rw';
   const [featured, setFeatured] = useState([]);
   const [trending, setTrending] = useState([]);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
-  const [activeFlashSale, setActiveFlashSale] = useState(null);
   const [testimonials, setTestimonials] = useState([]);
   const [brandPartners, setBrandPartners] = useState([]);
   const [trustBadges, setTrustBadges] = useState([]);
@@ -127,22 +126,7 @@ export default function Home() {
   const [newsletterEmail, setNewsletterEmail] = useState('');
   const [newsletterStatus, setNewsletterStatus] = useState({ loading: false, message: '', type: '' });
 
-  const [serverTimeOffset, setServerTimeOffset] = useState(0);
   const [promoBanner, setPromoBanner] = useState(null);
-
-  // Flash sale polling function
-  const fetchFlashSale = async () => {
-    try {
-      const res = await api.get('/flash-sales/active');
-      if (res.data.success && res.data.data && res.data.data.length > 0) {
-        setActiveFlashSale(res.data.data[0]);
-      } else {
-        setActiveFlashSale(null);
-      }
-    } catch (err) {
-      console.error('Error polling flash sale:', err);
-    }
-  };
 
   const fetchData = async () => {
     try {
@@ -189,12 +173,7 @@ export default function Home() {
         setCategories(processedCategories);
       }
 
-      // Set active flash sale
-      if (flashSaleData.success && flashSaleData.data && flashSaleData.data.length > 0) {
-        setActiveFlashSale(flashSaleData.data[0]);
-      } else {
-        setActiveFlashSale(null);
-      }
+      // No longer need to set active flash sale here manually
 
       // Set promotional banner
       if (bannersData.success && bannersData.data && bannersData.data.length > 0) {
@@ -222,40 +201,9 @@ export default function Home() {
     }
   };
 
-  // Countdown timer for Flash Sale
-  useEffect(() => {
-    const getTargetTime = () => {
-      if (activeFlashSale) return new Date(activeFlashSale.endDate).getTime();
-      const endTime = new Date();
-      endTime.setHours(23, 59, 59, 999);
-      return endTime.getTime();
-    };
+  // No longer need internal countdown
 
-    const targetTime = getTargetTime();
-
-    const timer = setInterval(() => {
-      const now = Date.now() + serverTimeOffset;
-      const distance = targetTime - now;
-
-      if (distance < 0) {
-        clearInterval(timer);
-        setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
-        fetchFlashSale(); // Refresh data when sale ends
-        return;
-      }
-
-      setTimeLeft({
-        days: Math.floor(distance / (1000 * 60 * 60 * 24)),
-        hours: Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
-        minutes: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
-        seconds: Math.floor((distance % (1000 * 60)) / 1000)
-      });
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, [activeFlashSale, serverTimeOffset]);
-
-  // Initial fetch and time sync
+  // Initial fetch
   useEffect(() => {
     // Handle auth errors in hash (redirect to login)
     if (window.location.hash.includes('error=')) {
@@ -263,22 +211,7 @@ export default function Home() {
       return;
     }
 
-    const syncTimeAndFetch = async () => {
-      try {
-        const serverTimeRes = await api.get('/time');
-        const serverTimestamp = serverTimeRes.data.timestamp || Date.now();
-        setServerTimeOffset(serverTimestamp - Date.now());
-      } catch (err) {
-        console.error('Time sync failed on Home:', err);
-      }
-      await fetchData();
-    };
-
-    syncTimeAndFetch();
-
-    // Polling for updates every 30 seconds
-    const pollInterval = setInterval(fetchFlashSale, 30000);
-    return () => clearInterval(pollInterval);
+    fetchData();
   }, []);
 
   return (
@@ -407,24 +340,24 @@ export default function Home() {
                 </div>
                 {/* Content */}
                 <div className="relative z-10 p-8 md:p-12">
-                  {promoBanner.badge && (
+                  {(isRw ? (promoBanner.badgeRw || promoBanner.badge) : promoBanner.badge) && (
                     <span className="inline-block bg-white/20 text-white px-4 py-1.5 rounded-full text-sm font-semibold mb-4 backdrop-blur-sm">
-                      {promoBanner.badge}
+                      {isRw ? (promoBanner.badgeRw || promoBanner.badge) : promoBanner.badge}
                     </span>
                   )}
                   <h2 className="text-3xl md:text-5xl font-extrabold text-white mb-3">
-                    {promoBanner.title}
+                    {isRw ? (promoBanner.titleRw || promoBanner.title) : promoBanner.title}
                   </h2>
-                  {promoBanner.subtitle && (
+                  {(isRw ? (promoBanner.subtitleRw || promoBanner.subtitle) : promoBanner.subtitle) && (
                     <p className="text-white/90 text-lg mb-6 max-w-lg">
-                      {promoBanner.subtitle}
+                      {isRw ? (promoBanner.subtitleRw || promoBanner.subtitle) : promoBanner.subtitle}
                     </p>
                   )}
                   <Link
                     to={promoBanner.buttonLink || '/shop'}
                     className="inline-block bg-white text-gray-900 px-8 py-3 rounded-full font-bold hover:bg-gray-100 transition shadow-lg"
                   >
-                    {promoBanner.buttonText || 'Shop Now'}
+                    {isRw ? (promoBanner.buttonTextRw || promoBanner.buttonText || 'Gura ubu') : (promoBanner.buttonText || 'Shop Now')}
                   </Link>
                 </div>
               </div>
@@ -432,50 +365,18 @@ export default function Home() {
           </section>
         )}
 
-        {/* Flash Sale with Countdown */}
-        <section className="py-8">
-          <div className="mx-auto max-w-7xl px-4">
-            <div className={`bg-gradient-to-r ${activeFlashSale?.bannerColor || 'from-red-500 to-orange-500'} rounded-2xl p-6 md:p-8 flex flex-col md:flex-row items-center justify-between gap-6`}>
-              <div className="text-center md:text-left">
-                <span className="inline-block bg-white/20 text-white px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider mb-2">
-                  ⚡ {t('home.flash_sale.badge')}
-                </span>
-                <h3 className="text-2xl md:text-3xl font-bold text-white">
-                  {activeFlashSale ? activeFlashSale.name : t('home.flash_sale.ends_in')}
-                </h3>
-              </div>
-              <div className="flex gap-3">
-                {[
-                  { value: String(timeLeft.days).padStart(2, '0'), label: t('home.flash_sale.days') },
-                  { value: String(timeLeft.hours).padStart(2, '0'), label: t('home.flash_sale.hours') },
-                  { value: String(timeLeft.minutes).padStart(2, '0'), label: t('home.flash_sale.mins') },
-                  { value: String(timeLeft.seconds).padStart(2, '0'), label: t('home.flash_sale.secs') }
-                ].map((item, idx) => (
-                  <div key={idx} className="flex flex-col items-center">
-                    <div className="bg-white/10 backdrop-blur-md text-white w-12 h-12 md:w-16 md:h-16 rounded-xl flex items-center justify-center text-xl md:text-2xl font-bold mb-1 border border-white/20">
-                      {item.value}
-                    </div>
-                    <span className="text-[10px] md:text-xs font-bold text-white uppercase tracking-tighter opacity-80">{item.label}</span>
-                  </div>
-                ))}
-              </div>
-              <Link to="/daily-deals" className="bg-white text-red-500 hover:bg-red-50 px-6 py-3 rounded-full font-bold transition shadow-lg flex items-center gap-2 whitespace-nowrap active:scale-95">
-                {t('home.flash_sale.cta')} <FaArrowRight />
-              </Link>
-            </div>
-          </div>
-        </section>
+        <FlashSaleBanner />
 
         {/* Featured Products */}
         <section className="py-16 bg-white dark:bg-charcoal-800 border-y border-cream-200 dark:border-charcoal-700">
           <div className="mx-auto max-w-7xl px-4">
             <div className="flex items-end justify-between mb-10">
               <div>
-                <h2 className="text-3xl font-bold text-charcoal-800 dark:text-white mb-2">Featured Products</h2>
-                <p className="text-charcoal-500 dark:text-charcoal-400">Handpicked just for you</p>
+                <h2 className="text-3xl font-bold text-charcoal-800 dark:text-white mb-2">{t('home.featured.title')}</h2>
+                <p className="text-charcoal-500 dark:text-charcoal-400">{t('home.featured.description')}</p>
               </div>
               <Link to="/shop?sort=featured" className="text-terracotta-500 dark:text-terracotta-400 hover:text-terracotta-600 dark:hover:text-terracotta-300 font-semibold flex items-center gap-1">
-                See All <FaArrowRight className="text-sm" />
+                {t('home.trending.view_all')} <FaArrowRight className="text-sm" />
               </Link>
             </div>
 
@@ -501,16 +402,16 @@ export default function Home() {
               <div className="relative px-8 md:px-16 py-16 md:py-24 flex flex-col md:flex-row items-center justify-between gap-8">
                 <div className="text-center md:text-left">
                   <span className="inline-block bg-white/20 text-white px-4 py-1 rounded-full text-sm font-medium mb-4">
-                    Limited Time Offer
+                    {t('home.promo_banner.badge')}
                   </span>
                   <h2 className="text-3xl md:text-5xl font-bold text-white mb-4">
-                    Up to 50% Off
+                    {t('home.promo_banner.title')}
                   </h2>
                   <p className="text-white/80 text-lg mb-6 max-w-md">
-                    Don't miss out on our biggest sale of the season. Shop now and save big on premium products.
+                    {t('home.promo_banner.description')}
                   </p>
                   <Link to="/daily-deals" className="inline-block bg-white text-terracotta-600 px-8 py-3 rounded-full font-bold hover:bg-cream-100 transition">
-                    Shop the Sale
+                    {t('home.promo_banner.cta')}
                   </Link>
                 </div>
                 <div className="hidden md:block">
@@ -530,11 +431,11 @@ export default function Home() {
           <div className="mx-auto max-w-7xl px-4">
             <div className="flex items-end justify-between mb-10">
               <div>
-                <h2 className="text-3xl font-bold text-charcoal-800 dark:text-white mb-2">Trending Now</h2>
-                <p className="text-charcoal-500 dark:text-charcoal-400">What everyone's buying</p>
+                <h2 className="text-3xl font-bold text-charcoal-800 dark:text-white mb-2">{t('home.trending.title')}</h2>
+                <p className="text-charcoal-500 dark:text-charcoal-400">{t('home.trending.description')}</p>
               </div>
               <Link to="/shop?sort=trending" className="text-terracotta-500 dark:text-terracotta-400 hover:text-terracotta-600 dark:hover:text-terracotta-300 font-semibold flex items-center gap-1">
-                See All <FaArrowRight className="text-sm" />
+                {t('home.trending.view_all')} <FaArrowRight className="text-sm" />
               </Link>
             </div>
 
@@ -557,8 +458,8 @@ export default function Home() {
           <section className="py-20 bg-cream-100 dark:bg-charcoal-900">
             <div className="mx-auto max-w-7xl px-4">
               <div className="text-center mb-12">
-                <h2 className="text-3xl font-bold text-charcoal-800 dark:text-white mb-2">What Our Customers Say</h2>
-                <p className="text-charcoal-500 dark:text-charcoal-400">Real reviews from real shoppers</p>
+                <h2 className="text-3xl font-bold text-charcoal-800 dark:text-white mb-2">{t('home.testimonials.title')}</h2>
+                <p className="text-charcoal-500 dark:text-charcoal-400">{t('home.testimonials.description')}</p>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -594,7 +495,7 @@ export default function Home() {
         {brandPartners.length > 0 && (
           <section className="py-12 bg-white dark:bg-charcoal-800 border-y border-cream-200 dark:border-charcoal-700">
             <div className="mx-auto max-w-7xl px-4">
-              <p className="text-center text-charcoal-400 text-sm uppercase tracking-wider mb-8">Trusted by leading brands</p>
+              <p className="text-center text-charcoal-400 text-sm uppercase tracking-wider mb-8">{t('home.brands.title')}</p>
               <div className="flex flex-wrap justify-center items-center gap-8 md:gap-16 opacity-60 dark:opacity-40 grayscale hover:grayscale-0 transition-all duration-500">
                 {brandPartners.map((partner, idx) => (
                   partner.logo ? (
@@ -630,10 +531,10 @@ export default function Home() {
           <div className="mx-auto max-w-7xl px-4 py-10">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
               {(trustBadges.length > 0 ? trustBadges : [
-                { icon: 'truck', title: 'Free Shipping', description: 'On orders over 50,000 Rwf' },
-                { icon: 'shield', title: 'Secure Payment', description: '100% protected' },
-                { icon: 'undo', title: 'Easy Returns', description: '30-day policy' },
-                { icon: 'headset', title: '24/7 Support', description: 'Always here to help' }
+                { icon: 'truck', title: t('home.features.shipping.title'), description: t('home.features.shipping.description') },
+                { icon: 'shield', title: t('home.features.payment.title'), description: t('home.features.payment.description') },
+                { icon: 'undo', title: t('home.features.returns.title'), description: t('home.features.returns.description') },
+                { icon: 'headset', title: t('home.features.support.title'), description: t('home.features.support.description') }
               ]).map((badge, idx) => {
                 const iconMap = {
                   truck: <FaTruck className="text-2xl" />,
@@ -665,10 +566,10 @@ export default function Home() {
         <section className="py-20 bg-charcoal-700 dark:bg-charcoal-900">
           <div className="mx-auto max-w-7xl px-4 text-center">
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-              Join Our Community
+              {t('home.community.title')}
             </h2>
             <p className="text-charcoal-300 mb-8 max-w-md mx-auto">
-              Subscribe to get exclusive deals, new arrivals, and special offers delivered to your inbox.
+              {t('home.community.description')}
             </p>
             <form
               className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto"
@@ -697,7 +598,7 @@ export default function Home() {
             >
               <input
                 type="email"
-                placeholder="Enter your email"
+                placeholder={t('home.community.placeholder')}
                 value={newsletterEmail}
                 onChange={(e) => setNewsletterEmail(e.target.value)}
                 className="flex-1 bg-charcoal-600 dark:bg-charcoal-800 border border-charcoal-500 rounded-full px-6 py-3 text-white placeholder-charcoal-300 focus:outline-none focus:ring-2 focus:ring-terracotta-500"
@@ -708,7 +609,7 @@ export default function Home() {
                 className="bg-gradient-to-r from-terracotta-500 to-terracotta-600 text-white px-8 py-3 rounded-full font-semibold hover:from-terracotta-600 hover:to-terracotta-700 transition disabled:opacity-50"
                 disabled={newsletterStatus.loading}
               >
-                {newsletterStatus.loading ? 'Subscribing...' : 'Subscribe'}
+                {newsletterStatus.loading ? t('home.community.button_loading') : t('home.community.button')}
               </button>
             </form>
             {newsletterStatus.message && (

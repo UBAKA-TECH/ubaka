@@ -6,11 +6,13 @@ import * as pdfjsLib from 'pdfjs-dist';
 import api from "../utils/axiosInstance";
 import Header from "../components/Header";
 import LandingFooter from "../components/LandingFooter";
+import { useTranslation } from "react-i18next";
 
 // Configure PDF.js worker
 pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.mjs`;
 
 const PrintPortal = () => {
+    const { t } = useTranslation();
     const [searchParams] = useSearchParams();
     const sellerId = searchParams.get("seller");
     
@@ -123,7 +125,7 @@ const PrintPortal = () => {
                     <div className="w-24 h-24 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mx-auto mb-8 animate-bounce">
                         <FaCheckCircle className="text-5xl text-green-600" />
                     </div>
-                    <h1 className="text-4xl font-black text-gray-900 dark:text-white mb-4">Request Sent!</h1>
+                    <h1 className="text-4xl font-black text-gray-900 dark:text-white mb-4">{t('common.success')}!</h1>
                     <p className="text-gray-500 dark:text-gray-400 text-lg mb-10 font-medium">
                         The seller has received your files and details. They will review it and send you a quote shortly. You can track this in your dashboard.
                     </p>
@@ -131,7 +133,7 @@ const PrintPortal = () => {
                         onClick={() => window.location.href = "/"}
                         className="bg-indigo-600 hover:bg-indigo-700 text-white px-10 py-4 rounded-2xl font-bold shadow-xl shadow-indigo-600/20 transition-all active:scale-95"
                     >
-                        Return Home
+                        {t('common.back')}
                     </button>
                 </div>
                 <LandingFooter />
@@ -156,10 +158,10 @@ const PrintPortal = () => {
                                 </div>
                             )}
                             <h1 className="text-4xl md:text-5xl font-bold mb-4 leading-tight">
-                                Online <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-300 to-emerald-300">Print Portal</span>
+                                Online <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-300 to-emerald-300">{t('print_portal.title')}</span>
                             </h1>
                             <p className="text-indigo-100 text-lg font-medium opacity-80 max-w-lg">
-                                Professional printing and document services. Upload files and get a custom quote today.
+                                {t('print_portal.subtitle')}
                             </p>
                         </div>
                         <div className="hidden md:block w-48 h-48 bg-white/5 backdrop-blur-sm rounded-[2.5rem] border border-white/10 p-6 transform rotate-3">
@@ -176,13 +178,13 @@ const PrintPortal = () => {
                     <div className="lg:col-span-2 space-y-6">
                         <div className="bg-white dark:bg-gray-800 rounded-[2rem] shadow-xl p-8 border border-gray-100 dark:border-gray-700 transition-colors">
                             <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-3">
-                                <FaCalculator className="text-indigo-600 text-lg" /> Service Details
+                                <FaCalculator className="text-indigo-600 text-lg" /> {t('print_portal.form.service_details')}
                             </h2>
                             
                             <form onSubmit={handleSubmit} className="space-y-6">
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                                     <div className="space-y-3">
-                                        <label className="text-sm font-bold text-gray-700 dark:text-gray-300 ml-1 uppercase tracking-wider">Select Service</label>
+                                        <label className="text-sm font-bold text-gray-700 dark:text-gray-300 ml-1 uppercase tracking-wider">{t('print_portal.form.select_service')}</label>
                                         <div className="grid grid-cols-1 gap-3">
                                             {loading ? (
                                                 <div className="animate-pulse flex space-x-4 p-4 bg-gray-50 dark:bg-gray-700 rounded-2xl">
@@ -218,12 +220,12 @@ const PrintPortal = () => {
 
                                     <div className="space-y-6">
                                         <div className="space-y-3">
-                                            <label className="text-sm font-bold text-gray-700 dark:text-gray-300 ml-1 uppercase tracking-wider">Upload File(s)</label>
+                                            <label className="text-sm font-bold text-gray-700 dark:text-gray-300 ml-1 uppercase tracking-wider">{t('print_portal.form.upload_files')}</label>
                                             <label className="flex flex-col items-center justify-center w-full h-40 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-[2rem] cursor-pointer bg-gray-50 dark:bg-gray-700/50 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all group overflow-hidden">
                                                 <div className="flex flex-col items-center justify-center pt-5 pb-6">
                                                     <FaCloudUploadAlt className="text-4xl text-gray-400 group-hover:text-indigo-500 transition-colors mb-2" />
                                                     <p className="text-xs text-gray-500 dark:text-gray-400 font-bold uppercase tracking-tighter">
-                                                        {isScanning ? "Scanning PDFs..." : "Drop files here or click"}
+                                                        {isScanning ? "Scanning PDFs..." : t('print_portal.form.drop_files')}
                                                     </p>
                                                 </div>
                                                 <input type="file" className="hidden" multiple onChange={handleFileChange} />
@@ -247,7 +249,7 @@ const PrintPortal = () => {
                                         </div>
 
                                         <div className="space-y-3">
-                                            <label className="text-sm font-bold text-gray-700 dark:text-gray-300 ml-1 uppercase tracking-wider">Pages / Quantity</label>
+                                            <label className="text-sm font-bold text-gray-700 dark:text-gray-300 ml-1 uppercase tracking-wider">{t('print_portal.form.pages_qty')}</label>
                                             <input 
                                                 type="number" 
                                                 min="1"
@@ -262,7 +264,7 @@ const PrintPortal = () => {
                                 {/* Color Mode and Editing Options */}
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-gray-50 dark:bg-gray-700/30 p-5 rounded-2xl border border-gray-100 dark:border-gray-700">
                                     <div className="space-y-3">
-                                        <label className="text-sm font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider">Color Mode</label>
+                                        <label className="text-sm font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider">{t('print_portal.form.color_mode')}</label>
                                         <div className="flex gap-4">
                                             <label className="flex items-center gap-2 cursor-pointer">
                                                 <input 
@@ -273,7 +275,7 @@ const PrintPortal = () => {
                                                     onChange={(e) => setColorMode(e.target.value)}
                                                     className="w-4 h-4 text-indigo-600 focus:ring-indigo-500"
                                                 />
-                                                <span className="text-gray-700 dark:text-gray-300 font-medium text-sm">Black & White</span>
+                                                <span className="text-gray-700 dark:text-gray-300 font-medium text-sm">{t('print_portal.form.bw')}</span>
                                             </label>
                                             <label className="flex items-center gap-2 cursor-pointer">
                                                 <input 
@@ -284,12 +286,12 @@ const PrintPortal = () => {
                                                     onChange={(e) => setColorMode(e.target.value)}
                                                     className="w-4 h-4 text-indigo-600 focus:ring-indigo-500"
                                                 />
-                                                <span className="text-gray-700 dark:text-gray-300 font-medium text-sm">Color</span>
+                                                <span className="text-gray-700 dark:text-gray-300 font-medium text-sm">{t('print_portal.form.color')}</span>
                                             </label>
                                         </div>
                                     </div>
                                     <div className="space-y-3">
-                                        <label className="text-sm font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider">Editing Service</label>
+                                        <label className="text-sm font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider">{t('print_portal.form.editing_service')}</label>
                                         <label className="flex items-center gap-3 cursor-pointer">
                                             <input 
                                                 type="checkbox" 
@@ -298,8 +300,8 @@ const PrintPortal = () => {
                                                 className="w-5 h-5 rounded text-indigo-600 focus:ring-indigo-500 border-gray-300"
                                             />
                                             <div>
-                                                <span className="text-gray-700 dark:text-gray-300 font-bold text-sm block">Needs Editing Before Print</span>
-                                                <span className="text-gray-500 text-xs block">I need the shop to adjust/edit this document</span>
+                                                <span className="text-gray-700 dark:text-gray-300 font-bold text-sm block">{t('print_portal.form.needs_editing')}</span>
+                                                <span className="text-gray-500 text-xs block">{t('print_portal.form.editing_helper')}</span>
                                             </div>
                                         </label>
                                     </div>
@@ -308,36 +310,36 @@ const PrintPortal = () => {
                                 {/* Contact Info */}
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <div className="space-y-3">
-                                        <label className="text-sm font-bold text-gray-700 dark:text-gray-300 ml-1 uppercase tracking-wider">Your Name (Required)</label>
+                                        <label className="text-sm font-bold text-gray-700 dark:text-gray-300 ml-1 uppercase tracking-wider">{t('print_portal.form.name_label')}</label>
                                         <input 
                                             type="text" 
                                             required
                                             value={contactName}
                                             onChange={(e) => setContactName(e.target.value)}
-                                            placeholder="Enter your name"
+                                            placeholder={t('print_portal.form.name_placeholder')}
                                             className="w-full px-5 py-3 bg-gray-50 dark:bg-gray-700/50 border-2 border-gray-100 dark:border-gray-600 rounded-xl focus:ring-4 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all dark:text-white font-medium"
                                         />
                                     </div>
                                     <div className="space-y-3">
-                                        <label className="text-sm font-bold text-gray-700 dark:text-gray-300 ml-1 uppercase tracking-wider">Phone Number (Required)</label>
+                                        <label className="text-sm font-bold text-gray-700 dark:text-gray-300 ml-1 uppercase tracking-wider">{t('print_portal.form.phone_label')}</label>
                                         <input 
                                             type="tel" 
                                             required
                                             value={contactPhone}
                                             onChange={(e) => setContactPhone(e.target.value)}
-                                            placeholder="e.g. 0780000000"
+                                            placeholder={t('print_portal.form.phone_placeholder')}
                                             className="w-full px-5 py-3 bg-gray-50 dark:bg-gray-700/50 border-2 border-gray-100 dark:border-gray-600 rounded-xl focus:ring-4 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all dark:text-white font-medium"
                                         />
                                     </div>
                                 </div>
 
                                 <div className="space-y-3">
-                                    <label className="text-sm font-bold text-gray-700 dark:text-gray-300 ml-1 uppercase tracking-wider">Additional Instructions</label>
+                                    <label className="text-sm font-bold text-gray-700 dark:text-gray-300 ml-1 uppercase tracking-wider">{t('print_portal.form.instructions_label')}</label>
                                     <textarea 
                                         rows="4"
                                         value={notes}
                                         onChange={(e) => setNotes(e.target.value)}
-                                        placeholder="E.g. Double sided, specific binding type, delivery instructions..."
+                                        placeholder={t('print_portal.form.instructions_placeholder')}
                                         className="w-full px-6 py-4 bg-gray-50 dark:bg-gray-700/50 border-2 border-gray-100 dark:border-gray-600 rounded-3xl focus:ring-4 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all dark:text-white font-medium resize-none"
                                     ></textarea>
                                 </div>
@@ -354,7 +356,7 @@ const PrintPortal = () => {
                                         </>
                                     ) : (
                                         <>
-                                            <FaCloudUploadAlt /> Request Custom Quote
+                                            <FaCloudUploadAlt /> {t('print_portal.form.submit')}
                                         </>
                                     )}
                                 </button>
@@ -365,32 +367,32 @@ const PrintPortal = () => {
                     {/* Info Side */}
                     <div className="space-y-8">
                         <div className="bg-indigo-600 rounded-[2.5rem] p-10 text-white shadow-2xl shadow-indigo-600/30">
-                            <h3 className="text-2xl font-black mb-6">How it works</h3>
+                            <h3 className="text-2xl font-black mb-6">{t('print_portal.how_it_works.title')}</h3>
                             <ul className="space-y-6">
                                 <li className="flex gap-4">
                                     <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center font-black shrink-0">1</div>
-                                    <p className="font-medium opacity-90">Upload your PDF, Word, or image files directly here.</p>
+                                    <p className="font-medium opacity-90">{t('print_portal.how_it_works.step1')}</p>
                                 </li>
                                 <li className="flex gap-4">
                                     <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center font-black shrink-0">2</div>
-                                    <p className="font-medium opacity-90">The seller reviews your requirements and sets a final price.</p>
+                                    <p className="font-medium opacity-90">{t('print_portal.how_it_works.step2')}</p>
                                 </li>
                                 <li className="flex gap-4">
                                     <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center font-black shrink-0">3</div>
-                                    <p className="font-medium opacity-90">You receive a notification to pay online and start production.</p>
+                                    <p className="font-medium opacity-90">{t('print_portal.how_it_works.step3')}</p>
                                 </li>
                             </ul>
                         </div>
 
                         <div className="bg-white dark:bg-gray-800 rounded-[2.5rem] p-10 border border-gray-100 dark:border-gray-700">
                             <h3 className="text-xl font-black text-gray-900 dark:text-white mb-6 flex items-center gap-2">
-                                <FaInfoCircle className="text-yellow-500" /> Guidelines
+                                <FaInfoCircle className="text-yellow-500" /> {t('print_portal.guidelines.title')}
                             </h3>
                             <div className="space-y-4 text-sm text-gray-500 dark:text-gray-400 font-medium">
-                                <p>• Supported formats: PDF, DOCX, JPG, PNG.</p>
-                                <p>• Max file size: 50MB.</p>
-                                <p>• For large files, please provide a cloud link in instructions.</p>
-                                <p>• Estimated response time: 30-60 minutes.</p>
+                                <p>• {t('print_portal.guidelines.formats')}</p>
+                                <p>• {t('print_portal.guidelines.max_size')}</p>
+                                <p>• {t('print_portal.guidelines.large_files')}</p>
+                                <p>• {t('print_portal.guidelines.response_time')}</p>
                             </div>
                         </div>
                     </div>

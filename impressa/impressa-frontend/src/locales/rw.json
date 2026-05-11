@@ -8,7 +8,12 @@
     "delete": "Gukuraho",
     "search": "Shakisha...",
     "back": "Subira inyuma",
-    "categories": "Ibyiciro"
+    "categories": "Ibyiciro",
+    "install_app": {
+      "title": "Injiza Porogaramu",
+      "description": "Gira uburambe bwuzuye",
+      "button": "Injiza"
+    }
   },
   "nav": {
     "dashboard": "Imbonerahamwe",
@@ -69,14 +74,165 @@
       "description": "Reba ibice byatoranijwe neza",
       "view_all": "Reba byose"
     },
+    "featured": {
+      "title": "Ibicuruzwa byatoranijwe",
+      "description": "Ibyiza twaguhitiyemo",
+      "cta": "Tangira ubu"
+    },
+    "promo_banner": {
+      "badge": "Poromosiyo y'akanya gato",
+      "title": "Gabanirwa kugeza kuri 50%",
+      "description": "Ntucikwe n'igabanuka rikomeye ry'uyu mwaka. Gura ubu uzigame amafaranga menshi.",
+      "cta": "Gura ubu"
+    },
     "flash_sale": {
       "badge": "KUGABANYA IBICIRO",
-      "ends_in": "Bisoza mu:",
+      "ends_in": "Birarangira mu:",
       "days": "IMINSI",
       "hours": "AMASAHA",
       "mins": "IMINOTA",
       "secs": "AMASEGONDA",
-      "cta": "Gura ibigabanijwe"
+      "cta": "Gura Ibyagabanyijwe"
+    },
+    "trending": {
+      "title": "Ibigezweho ubu",
+      "description": "Ibyo buri wese ari kugura",
+      "view_all": "Reba byose"
+    },
+    "features": {
+      "shipping": {
+        "title": "Kugezwaho ku buntu",
+        "description": "Ku bicuruzwa birengeje 50,000 Rwf"
+      },
+      "payment": {
+        "title": "Kwishura kwizewe",
+        "description": "100% birinzwe"
+      },
+      "returns": {
+        "title": "Kugarura byoroshye",
+        "description": "Muri minsi 30"
+      },
+      "support": {
+        "title": "Ubufasha bw'amasaha 24/7",
+        "description": "Turi hano ngo tugufashe"
+      }
+    },
+    "community": {
+      "title": "Sangira natwe",
+      "description": "Iyandikishe kugira ngo ubone poromosiyo, ibishya, n'ubutumwa bwihariye muri imeyili yawe.",
+      "placeholder": "Andika imeyili yawe",
+      "button": "Iyandikishe",
+      "button_loading": "Turi kwandika..."
+    },
+    "testimonials": {
+      "title": "Ibyo abakiriya bacu bavuga",
+      "description": "Ubuhamya bw'ukuri bw'abahahira hano"
+    },
+    "brands": {
+      "title": "Twizewe n'ibigo bikomeye"
     }
+  },
+  "daily_deals": {
+    "title": "Ibigabanijwe by'uyu munsi",
+    "subtitle": "Garuka vuba ube ari wowe uherukwa n'ibigabanijwe bitaha!",
+    "no_deals_title": "Nta bigabanijwe bihari ubu",
+    "no_deals_desc": "Garuka vuba! Ibigabanijwe bishya bishyirwaho kenshi. Iyandikishe mu butumwa bwacu kugira ngo ube uwa mbere ubimenya!",
+    "browse_all": "Reba ibicuruzwa byose",
+    "sale_badge": "KUGABANYA IBICIRO",
+    "sale_tag": "YAGABANYIJWE",
+    "hurry_ends": "Irangira kuri",
+    "sold": "Byaguzwe",
+    "left": "Ibisigaye",
+    "only_left": "Hasigaye {{count}} gusa!",
+    "sold_out": "Byashize",
+    "loading": "Turi gushaka ibigabanijwe...",
+    "default_desc": "Ibigabanuko bikomeye ku bicuruzwa byiza. Ntucikwe!"
+  },
+  "print_portal": {
+    "title": "Ihuriro ryo gucapa kuri interineti",
+    "subtitle": "Serivisi zo gucapa kinyamwuga n'izindi nyandiko. Ohereza inyandiko none tugukorere ku giciro gitoya uyu munsi.",
+    "how_it_works": {
+      "title": "Uko bikora",
+      "step1": "Ohereza inyandiko zawe (PDF, Word, cyangwa amashusho) hano.",
+      "step2": "Ugurisha azasuzuma inyandiko zawe maze ashyireho igiciro cya nyuma.",
+      "step3": "Uzabona ubutumwa bukumenyesha kwishura maze inyandiko zawe zigacapwe."
+    },
+    "form": {
+      "service_details": "Amakuru kuri serivisi",
+      "select_service": "HITAMO SERIVISI",
+      "upload_files": "OHEREZA INYANDIKO",
+      "drop_files": "Shyira inyandiko hano cyangwa ukandeho",
+      "pages_qty": "Impapuro / Umubare",
+      "color_mode": "Ibara",
+      "bw": "Umukara n'Umweru",
+      "color": "Amabara",
+      "editing_service": "Serivisi yo gutunganya inyandiko",
+      "needs_editing": "Ikeneye gutunganywa mbere yo gucapwa",
+      "editing_helper": "Nkeneye ko iduka ritunganya iyi nyandiko",
+      "name_label": "Izina ryawe (Rirakenewe)",
+      "name_placeholder": "Andika izina ryawe",
+      "phone_label": "Nimero ya terefone (Irakenewe)",
+      "phone_placeholder": "urugero: 0780000000",
+      "instructions_label": "Ibindi wifuza kutubwira",
+      "instructions_placeholder": "Urugero: Kuri kumpande zombi, uburyo bwo kuzihambira, aho zagugezwa...",
+      "submit": "Saba igiciro cyihariye"
+    },
+    "guidelines": {
+      "title": "Amabwiriza",
+      "formats": "Inyandiko zemewe: PDF, DOCX, JPG, PNG.",
+      "max_size": "Ingano ntarengwa: 50MB.",
+      "large_files": "Ku nyandiko nini cyane, ushobora gushyira link yo muri cloud mu miterere y'ibyifuzo.",
+      "response_time": "Twagusubiza mu minota 30-60."
+    }
+  },
+  "shop": {
+    "title": "Ibicuruzwa byose",
+    "breadcrumb_home": "Ahabanza",
+    "breadcrumb_shop": "Iduka",
+    "filter_toggle": "Ibyiciro n'iyungurura",
+    "filters": "Yungurura",
+    "search_label": "SHAKISHA",
+    "search_placeholder": "Shakisha ibicuruzwa... (Kanda Enter)",
+    "categories_label": "IBYICIRO",
+    "all_categories": "Ibyiciro byose",
+    "price_range": "IGICIRO (RWF)",
+    "min": "Igito",
+    "max": "Ikinini",
+    "sort_by": "Hitamo uko bikurikirana:",
+    "sort_newest": "Ibishya imbere",
+    "sort_price_low": "Igiciro: Kuva ku gito",
+    "sort_price_high": "Igiciro: Kuva ku kinini",
+    "sort_featured": "Byatoranijwe",
+    "sort_trending": "Ibigezweho",
+    "no_products_title": "Nta gicuruzwa kiba hano",
+    "no_products_desc": "Nta gicuruzwa twabonye kijyanye n'ibyo washatse. Gerageza guhindura ibyo washatse cyangwa icyiciro.",
+    "product_count": "ibicuruzwa",
+    "add_to_cart": "Shyira mu gatebo",
+    "quick_view": "Reba mu ncamake",
+    "sale_badge": "Poromosiyo",
+    "prev": "Ibanjirije",
+    "next": "Ikurikira"
+  },
+  "footer": {
+    "description": "Ihuriro ryawe ry'ibicuruzwa byiza cyane. Ibice byatoranijwe, poromosiyo zidasanzwe, na serivisi nziza cyane.",
+    "shop": "Iduka",
+    "company": "Ikigo",
+    "get_in_touch": "Tuvugishe",
+    "all_products": "Ibicuruzwa byose",
+    "print_portal": "Gucapa",
+    "new_arrivals": "Ibishya",
+    "best_sellers": "Ibikunzwe cyane",
+    "deals": "Ibigabanijwe",
+    "gift_cards": "Amakarita y'impano",
+    "about_us": "Abo turibo",
+    "blog": "Amakuru",
+    "contact": "Twandikire",
+    "faq": "Ibibazo n'ibisubizo",
+    "careers": "Akazi",
+    "address": "Inyubako yegereye ibiro by'akarere ka Gicumbi (Eudiose Building)",
+    "rights": "Uburenganzira bwose burasigasiriwe.",
+    "privacy": "Amategeko y'ibanga",
+    "terms": "Amategeko n'amabwiriza",
+    "cookies": "Kuki (Cookies)"
   }
 }

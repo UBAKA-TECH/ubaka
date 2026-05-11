@@ -4,9 +4,11 @@ import {
   FaFacebookF, FaTwitter, FaInstagram, FaLinkedinIn,
   FaEnvelope, FaPhone, FaMapMarkerAlt
 } from "react-icons/fa";
+import { useTranslation } from "react-i18next";
 import api from "../utils/axiosInstance";
 
 export default function LandingFooter() {
+  const { t } = useTranslation();
   const [footerData, setFooterData] = useState({
     footerTagline: 'Your premium destination for quality products. Curated collections, exclusive deals, and exceptional service.',
     contactEmail: 'ishfabzele2@gmail.com',
@@ -60,7 +62,7 @@ export default function LandingFooter() {
             </Link>
 
             <p className="text-charcoal-500 dark:text-charcoal-400 mb-6 leading-relaxed">
-              {footerData.footerTagline}
+              {t('footer.description')}
             </p>
             <div className="flex gap-3">
               {socialIcons.map(({ key, Icon, url }) => (
@@ -88,15 +90,15 @@ export default function LandingFooter() {
 
           {/* Shop Column */}
           <div>
-            <h3 className="text-charcoal-800 dark:text-white font-semibold text-lg mb-6">Shop</h3>
+            <h3 className="text-charcoal-800 dark:text-white font-semibold text-lg mb-6">{t('footer.shop')}</h3>
             <ul className="space-y-3 p-0 list-none">
               {[
-                { label: 'All Products', to: '/shop' },
-                { label: 'Print Portal', to: '/print-portal' },
-                { label: 'New Arrivals', to: '/shop?category=new' },
-                { label: 'Best Sellers', to: '/shop?sort=popular' },
-                { label: 'Deals', to: '/daily-deals' },
-                { label: 'Gift Cards', to: '/gift-cards' }
+                { label: t('footer.all_products'), to: '/shop' },
+                { label: t('footer.print_portal'), to: '/print-portal' },
+                { label: t('footer.new_arrivals'), to: '/shop?category=new' },
+                { label: t('footer.best_sellers'), to: '/shop?sort=popular' },
+                { label: t('footer.deals'), to: '/daily-deals' },
+                { label: t('footer.gift_cards'), to: '/gift-cards' }
               ].map((link, idx) => (
                 <li key={idx}>
                   <Link to={link.to} className="hover:text-terracotta-500 dark:hover:text-terracotta-400 transition-colors no-underline text-inherit">
@@ -109,14 +111,14 @@ export default function LandingFooter() {
 
           {/* Company Column */}
           <div>
-            <h3 className="text-charcoal-800 dark:text-white font-semibold text-lg mb-6">Company</h3>
+            <h3 className="text-charcoal-800 dark:text-white font-semibold text-lg mb-6">{t('footer.company')}</h3>
             <ul className="space-y-3 p-0 list-none">
               {[
-                { label: 'About Us', to: '/about' },
-                { label: 'Blog', to: '/blog' },
-                { label: 'Contact', to: '/contact' },
-                { label: 'FAQ', to: '/faq' },
-                { label: 'Careers', to: '/careers' }
+                { label: t('footer.about_us'), to: '/about' },
+                { label: t('footer.blog'), to: '/blog' },
+                { label: t('footer.contact'), to: '/contact' },
+                { label: t('footer.faq'), to: '/faq' },
+                { label: t('footer.careers'), to: '/careers' }
               ].map((link, idx) => (
                 <li key={idx}>
                   <Link to={link.to} className="hover:text-terracotta-500 dark:hover:text-terracotta-400 transition-colors no-underline text-inherit">
@@ -129,7 +131,7 @@ export default function LandingFooter() {
 
           {/* Contact Column */}
           <div>
-            <h3 className="text-charcoal-800 dark:text-white font-semibold text-lg mb-6">Get in Touch</h3>
+            <h3 className="text-charcoal-800 dark:text-white font-semibold text-lg mb-6">{t('footer.get_in_touch')}</h3>
             <ul className="space-y-4 p-0 list-none">
               <li className="flex items-center gap-3">
                 <div className="w-10 h-10 bg-cream-200 dark:bg-charcoal-700 rounded-lg flex items-center justify-center text-terracotta-500 dark:text-terracotta-400">
@@ -147,7 +149,7 @@ export default function LandingFooter() {
                 <div className="w-10 h-10 bg-cream-200 dark:bg-charcoal-700 rounded-lg flex items-center justify-center text-terracotta-500 dark:text-terracotta-400 shrink-0">
                   <FaMapMarkerAlt />
                 </div>
-                <span className="text-charcoal-600 dark:text-cream-300">{footerData.contactAddress}</span>
+                <span className="text-charcoal-600 dark:text-cream-300">{t('footer.address')}</span>
               </li>
             </ul>
           </div>
@@ -159,17 +161,17 @@ export default function LandingFooter() {
         <div className="mx-auto max-w-7xl px-4 py-6">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-charcoal-400 dark:text-charcoal-500 text-sm">
-              © {new Date().getFullYear()} Impressa. All rights reserved.
+              © {new Date().getFullYear()} Impressa. {t('footer.rights')}
             </p>
             <div className="flex gap-6 text-sm">
               <Link to="/privacy" className="text-charcoal-400 dark:text-charcoal-500 hover:text-terracotta-500 dark:hover:text-terracotta-400 transition-colors no-underline">
-                Privacy Policy
+                {t('footer.privacy')}
               </Link>
               <Link to="/terms" className="text-charcoal-400 dark:text-charcoal-500 hover:text-terracotta-500 dark:hover:text-terracotta-400 transition-colors no-underline">
-                Terms of Service
+                {t('footer.terms')}
               </Link>
               <Link to="/cookies" className="text-charcoal-400 dark:text-charcoal-500 hover:text-terracotta-500 dark:hover:text-terracotta-400 transition-colors no-underline">
-                Cookies
+                {t('footer.cookies')}
               </Link>
             </div>
           </div>

@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
 import { FaMobileAlt, FaTimes } from 'react-icons/fa';
+import { useTranslation } from 'react-i18next';
 
 export default function InstallApp() {
+    const { t } = useTranslation();
     const [deferredPrompt, setDeferredPrompt] = useState(null);
     const [isVisible, setIsVisible] = useState(false);
 
@@ -46,8 +48,8 @@ export default function InstallApp() {
                     <FaMobileAlt className="text-xl" />
                 </div>
                 <div>
-                    <h3 className="font-bold text-sm">Install App</h3>
-                    <p className="text-xs text-white/80">Get the full experience</p>
+                    <h3 className="font-bold text-sm">{t('common.install_app.title')}</h3>
+                    <p className="text-xs text-white/80">{t('common.install_app.description')}</p>
                 </div>
             </div>
             <div className="flex items-center gap-2">
@@ -55,7 +57,7 @@ export default function InstallApp() {
                     onClick={handleInstallClick}
                     className="bg-white text-violet-700 px-3 py-1.5 rounded-lg text-xs font-bold shadow-sm hover:bg-gray-50 transition-colors"
                 >
-                    Install
+                    {t('common.install_app.button')}
                 </button>
                 <button
                     onClick={() => setIsVisible(false)}

@@ -8,7 +8,12 @@
     "delete": "Delete",
     "search": "Search...",
     "back": "Back",
-    "categories": "Categories"
+    "categories": "Categories",
+    "install_app": {
+      "title": "Install App",
+      "description": "Get the full experience",
+      "button": "Install"
+    }
   },
   "nav": {
     "dashboard": "Dashboard",
@@ -69,6 +74,17 @@
       "description": "Browse our curated collections",
       "view_all": "View All"
     },
+    "featured": {
+      "title": "Featured Products",
+      "description": "Handpicked for you",
+      "cta": "Explore Now"
+    },
+    "promo_banner": {
+      "badge": "Limited Time Offer",
+      "title": "Up to 50% Off",
+      "description": "Don't miss out on our biggest sale of the season. Shop now and save big on premium products.",
+      "cta": "Shop the Sale"
+    },
     "flash_sale": {
       "badge": "FLASH SALE",
       "ends_in": "Ends in:",
@@ -77,6 +93,146 @@
       "mins": "MINS",
       "secs": "SECS",
       "cta": "Shop Flash Sale"
+    },
+    "trending": {
+      "title": "Trending Now",
+      "description": "What everyone's buying",
+      "view_all": "See All"
+    },
+    "features": {
+      "shipping": {
+        "title": "Free Shipping",
+        "description": "On orders over 50,000 Rwf"
+      },
+      "payment": {
+        "title": "Secure Payment",
+        "description": "100% protected"
+      },
+      "returns": {
+        "title": "Easy Returns",
+        "description": "30-day policy"
+      },
+      "support": {
+        "title": "24/7 Support",
+        "description": "Always here to help"
+      }
+    },
+    "community": {
+      "title": "Join Our Community",
+      "description": "Subscribe to get exclusive deals, new arrivals, and special offers delivered to your inbox.",
+      "placeholder": "Enter your email",
+      "button": "Subscribe",
+      "button_loading": "Subscribing..."
+    },
+    "testimonials": {
+      "title": "What Our Customers Say",
+      "description": "Real reviews from real shoppers"
+    },
+    "brands": {
+      "title": "Trusted by leading brands"
     }
+  },
+  "daily_deals": {
+    "title": "Daily Deals",
+    "subtitle": "Check back soon for our next flash sale!",
+    "no_deals_title": "No Active Flash Sales",
+    "no_deals_desc": "Check back soon! New flash sales are added regularly. Join our newsletter to get notified first!",
+    "browse_all": "Browse All Products",
+    "sale_badge": "Flash Sale",
+    "sale_tag": "OFF",
+    "hurry_ends": "Hurry! Sale ends",
+    "sold": "Sold",
+    "left": "Left",
+    "only_left": "Only {{count}} left!",
+    "sold_out": "Sold Out",
+    "loading": "Loading daily deals...",
+    "default_desc": "Massive discounts on top products. Don't miss out!"
+  },
+  "print_portal": {
+    "title": "Online Print Portal",
+    "subtitle": "Professional printing and document services. Upload files and get a custom quote today.",
+    "how_it_works": {
+      "title": "How it works",
+      "step1": "Upload your PDF, Word, or image files directly here.",
+      "step2": "The seller reviews your requirements and sets a final price.",
+      "step3": "You receive a notification to pay online and start production."
+    },
+    "form": {
+      "service_details": "Service Details",
+      "select_service": "SELECT SERVICE",
+      "upload_files": "UPLOAD FILE(S)",
+      "drop_files": "Drop files here or click",
+      "pages_qty": "Pages / Quantity",
+      "color_mode": "Color Mode",
+      "bw": "Black & White",
+      "color": "Color",
+      "editing_service": "Editing Service",
+      "needs_editing": "Needs Editing Before Print",
+      "editing_helper": "I need the shop to adjust/edit this document",
+      "name_label": "Your Name (Required)",
+      "name_placeholder": "Enter your name",
+      "phone_label": "Phone Number (Required)",
+      "phone_placeholder": "e.g. 0780000000",
+      "instructions_label": "Additional Instructions",
+      "instructions_placeholder": "E.g. Double sided, specific binding type, delivery instructions...",
+      "submit": "Request Custom Quote"
+    },
+    "guidelines": {
+      "title": "Guidelines",
+      "formats": "Supported formats: PDF, DOCX, JPG, PNG.",
+      "max_size": "Max file size: 50MB.",
+      "large_files": "For large files, please provide a cloud link in instructions.",
+      "response_time": "Estimated response time: 30-60 minutes."
+    }
+  },
+  "shop": {
+    "title": "All Products",
+    "breadcrumb_home": "Home",
+    "breadcrumb_shop": "Shop",
+    "filter_toggle": "Filters & Categories",
+    "filters": "Filters",
+    "search_label": "SEARCH",
+    "search_placeholder": "Find products... (Press Enter)",
+    "categories_label": "CATEGORIES",
+    "all_categories": "All Categories",
+    "price_range": "PRICE RANGE (RWF)",
+    "min": "Min",
+    "max": "Max",
+    "sort_by": "Sort by:",
+    "sort_newest": "Newest First",
+    "sort_price_low": "Price: Low to High",
+    "sort_price_high": "Price: High to Low",
+    "sort_featured": "Featured",
+    "sort_trending": "Trending",
+    "no_products_title": "No Products Found",
+    "no_products_desc": "We couldn't find any products matching your current filters. Try adjusting your search or category selection.",
+    "product_count": "products",
+    "add_to_cart": "Add to cart",
+    "quick_view": "Quick view",
+    "sale_badge": "Sale",
+    "prev": "Previous",
+    "next": "Next"
+  },
+  "footer": {
+    "description": "Your premium destination for quality products. Curated collections, exclusive deals, and exceptional service.",
+    "shop": "Shop",
+    "company": "Company",
+    "get_in_touch": "Get in Touch",
+    "all_products": "All Products",
+    "print_portal": "Print Portal",
+    "new_arrivals": "New Arrivals",
+    "best_sellers": "Best Sellers",
+    "deals": "Deals",
+    "gift_cards": "Gift Cards",
+    "about_us": "About Us",
+    "blog": "Blog",
+    "contact": "Contact",
+    "faq": "FAQ",
+    "careers": "Careers",
+    "address": "Building near Gicumbi district office (Eudiose Building)",
+    "rights": "All rights reserved.",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "cookies": "Cookies"
   }
 }

@@ -9,6 +9,7 @@ import assetUrl from "../utils/assetUrl";
 import LandingFooter from "../components/LandingFooter";
 import Header from "../components/Header";
 import Breadcrumbs from "../components/Breadcrumbs";
+import FlashSaleBanner from "../components/FlashSaleBanner";
 import {
   FaHeart, FaShoppingCart, FaStar,
   FaTshirt, FaPlus, FaMinus
@@ -176,6 +177,7 @@ export default function ProductDetail() {
               { label: product?.name || 'Loading...' }
             ]}
           />
+          <FlashSaleBanner />
 
           {loading ? (
             <div className="flex flex-col items-center justify-center py-20 text-gray-500 dark:text-gray-400">

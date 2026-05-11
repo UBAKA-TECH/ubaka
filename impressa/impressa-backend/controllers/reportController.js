@@ -175,8 +175,8 @@ export const generateReport = async (req, res) => {
                 if (type === "inventory") {
                     helpers.metricCards([
                         { label: "Total Products", value: (summary?.totalProducts ?? 0).toString(), color: "#1E3A8A" },
-                        { label: "Total Stock", value: (summary?.totalStock ?? 0).toLocaleString(), color: "#1F2937" },
-                        { label: "Inventory Value", value: `RWF ${(summary?.totalValue ?? 0).toLocaleString()}`, color: "#059669" }
+                        { label: "Total Stock Cost", value: `RWF ${(summary?.totalCostValue ?? 0).toLocaleString()}`, color: "#1F2937" },
+                        { label: "Inventory Value", value: `RWF ${(summary?.totalRetailValue ?? 0).toLocaleString()}`, color: "#059669" }
                     ]);
                 } else {
                     helpers.metricCards([
@@ -227,7 +227,7 @@ export const generateReport = async (req, res) => {
                         totals: {
                             categoryName: "TOTALS",
                             stock: (summary?.totalStock ?? 0).toLocaleString(),
-                            valueStr: `RWF ${(summary?.totalValue ?? 0).toLocaleString()}`
+                            valueStr: `RWF ${(summary?.totalRetailValue ?? 0).toLocaleString()}`
                         }
                     });
                 } else {

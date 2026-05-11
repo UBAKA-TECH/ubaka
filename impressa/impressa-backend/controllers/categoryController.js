@@ -16,6 +16,31 @@ export const getAllCategories = async (req, res, next) => {
       filter.parentId = parent === "null" ? null : parent;
     }
 
+    // Multi-tenant isolation logic
+    if (req.user) {
+      if (req.user.role !== 'admin') {
+        const sellerId = req.user.effectiveSellerId || req.user.id;
+        filter.OR = [
+          { sellerId: sellerId },
+          { sellerId: null }
+        ];
+      }
+      // Admins see everything
+    } else {
+      // PUBLIC ACCESS (Homepage/Shop)
+      const querySellerId = req.query.sellerId || req.query.seller;
+      if (querySellerId) {
+        // If viewing a specific store, show their categories + global
+        filter.OR = [
+          { sellerId: querySellerId },
+          { sellerId: null }
+        ];
+      } else {
+        // DEFAULT: Only show Global Master Categories on homepage
+        filter.sellerId = null;
+      }
+    }
+
     const categories = await prisma.category.findMany({
       where: filter,
       include: { parent: { select: { id: true, name: true, slug: true } } },
@@ -37,7 +62,29 @@ export const getAllCategories = async (req, res, next) => {
  */
 export const getCategoryTree = async (req, res, next) => {
   try {
+    const filter = {};
+    if (req.user) {
+      if (req.user.role !== 'admin') {
+        const sellerId = req.user.effectiveSellerId || req.user.id;
+        filter.OR = [
+          { sellerId: sellerId },
+          { sellerId: null }
+        ];
+      }
+    } else {
+      const querySellerId = req.query.sellerId || req.query.seller;
+      if (querySellerId) {
+        filter.OR = [
+          { sellerId: querySellerId },
+          { sellerId: null }
+        ];
+      } else {
+        filter.sellerId = null;
+      }
+    }
+
     const categories = await prisma.category.findMany({
+      where: filter,
       orderBy: [{ order: 'asc' }, { name: 'asc' }]
     });
 
@@ -132,7 +179,8 @@ export const createCategory = async (req, res, next) => {
         ...rest,
         name,
         slug: categorySlug,
-        parentId: finalParentId
+        parentId: finalParentId,
+        sellerId: req.user && req.user.role !== 'admin' ? (req.user.effectiveSellerId || req.user.id) : null
       }
     });
 
@@ -162,6 +210,23 @@ export const updateCategory = async (req, res, next) => {
     // If parent/parentId is provided, ensure it's mapped correctly
     if (parent !== undefined || parentId !== undefined) {
       updateData.parentId = parentId || parent || null;
+    }
+
+    const existing = await prisma.category.findUnique({ where: { id } });
+    if (!existing) {
+      const err = new Error("Category not found");
+      err.statusCode = 404;
+      return next(err);
+    }
+
+    // Ownership check
+    if (req.user && req.user.role !== 'admin') {
+      const sellerId = req.user.effectiveSellerId || req.user.id;
+      if (existing.sellerId && existing.sellerId !== sellerId) {
+        const err = new Error("Access denied: You do not own this category");
+        err.statusCode = 403;
+        return next(err);
+      }
     }
 
     const category = await prisma.category.update({
@@ -202,6 +267,16 @@ export const deleteCategory = async (req, res, next) => {
       const error = new Error("Category not found");
       error.statusCode = 404;
       return next(error);
+    }
+
+    // Ownership check
+    if (req.user && req.user.role !== 'admin') {
+      const sellerId = req.user.effectiveSellerId || req.user.id;
+      if (category.sellerId && category.sellerId !== sellerId) {
+        const err = new Error("Access denied: You do not own this category");
+        err.statusCode = 403;
+        return next(err);
+      }
     }
 
     // Check if category has children

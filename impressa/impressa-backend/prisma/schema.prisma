@@ -120,6 +120,7 @@ model User {
   expenses          Expense[]
   storeSlug         String?        @unique
   abonnes           ClientAbonne[] @relation("SellerAbonnes")
+  categories        Category[]     @relation("SellerCategories")
 
   // Staff Management
   managedById       String?
@@ -148,6 +149,11 @@ model Category {
 
   createdAt       DateTime   @default(now())
   updatedAt       DateTime   @updatedAt
+
+  sellerId        String?
+  seller          User?      @relation("SellerCategories", fields: [sellerId], references: [id])
+
+  @@index([sellerId])
 }
 
 model Product {

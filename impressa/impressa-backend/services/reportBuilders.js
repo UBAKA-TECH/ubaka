@@ -75,7 +75,15 @@ const getRangeReport = async (start, end, sellerId) => {
         // If filtering by seller, only count this seller's items
         if (sellerId && item.sellerId !== sellerId) return;
 
-        const name = item.product?.name || item.productName;
+        const product = item.product || {};
+        const isService = product.type === "service" || 
+                          product.isDigital || 
+                          product.name?.toLowerCase().includes("printing") ||
+                          product.name?.toLowerCase().includes("service");
+
+        if (isService) return;
+
+        const name = product.name || item.productName;
         if (name) productCount[name] = (productCount[name] || 0) + item.quantity;
         
         const itemRevenue = (item.subtotal || 0);
@@ -308,7 +316,9 @@ const getInventoryReport = async ({ sellerId }) => {
       ...where,
       NOT: [
         { type: "service" },
-        { isDigital: true }
+        { isDigital: true },
+        { name: { contains: "Printing", mode: "insensitive" } },
+        { name: { contains: "Service", mode: "insensitive" } }
       ]
     },
     include: { categories: { select: { name: true } } },

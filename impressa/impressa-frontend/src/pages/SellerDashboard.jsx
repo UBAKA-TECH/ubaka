@@ -90,7 +90,7 @@ export default function SellerDashboard() {
     const { data: recentOrders = [] } = useQuery({
         queryKey: ['recent-orders'],
         queryFn: async () => {
-            const res = await api.get('/orders/seller/my-orders?limit=5');
+            const res = await api.get('/orders/seller/my-orders?limit=10');
             return res.data.success ? (res.data.data || []) : [];
         },
         refetchInterval: 30000 // Poll every 30s
@@ -100,7 +100,7 @@ export default function SellerDashboard() {
     const { data: topProducts = [] } = useQuery({
         queryKey: ['seller-top-products'],
         queryFn: async () => {
-            const res = await api.get('/products/seller/my-products?limit=5');
+            const res = await api.get('/products/seller/my-products?limit=10');
             return res.data.success ? (res.data.data || []) : [];
         }
     });

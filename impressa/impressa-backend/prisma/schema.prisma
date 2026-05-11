@@ -131,8 +131,10 @@ model User {
 model Category {
   id              String     @id @default(uuid())
   name            String
+  nameRw          String?
   slug            String     @unique
   description     String?
+  descriptionRw   String?
   image           String?
   color           String?
   isActive        Boolean    @default(true)
@@ -159,8 +161,10 @@ model Category {
 model Product {
   id                String             @id @default(uuid())
   name              String
+  nameRw            String?
   slug              String             @unique
   description       String?
+  descriptionRw     String?
   price             Float
   costPrice         Float              @default(0)
   stock             Int                @default(0)
@@ -553,9 +557,13 @@ model Notification {
 model Banner {
   id              String   @id @default(uuid())
   title           String
+  titleRw         String?
   subtitle        String?
+  subtitleRw      String?
   badge           String?  @default("Limited Time Offer")
+  badgeRw         String?
   buttonText      String?  @default("Shop Now")
+  buttonTextRw    String?
   buttonLink      String?  @default("/shop")
   backgroundImage String?
   gradientFrom    String?  @default("#8b5cf6")

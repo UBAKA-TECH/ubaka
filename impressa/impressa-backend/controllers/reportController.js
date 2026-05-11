@@ -47,11 +47,9 @@ export const generateReport = async (req, res) => {
         const user = await prisma.user.findUnique({ where: { id: req.user.id } });
         if (!user) return res.status(404).json({ message: "User profile not found." });
 
-        // Enforce sellerId for sellers and staff
-        if (req.user.role !== "admin" && req.user.role !== "owner") {
-            const effectiveSellerId = req.user.role === 'cashier' ? req.user.managedById : req.user.id;
-            filters.sellerId = effectiveSellerId;
-        }
+        // All users (including admins) filter reports by their own sellerId by default
+        const effectiveSellerId = req.user.role === 'cashier' ? req.user.managedById : req.user.id;
+        filters.sellerId = effectiveSellerId;
 
         // Fetch site settings for logo
         const settings = await prisma.siteSettings.findFirst();

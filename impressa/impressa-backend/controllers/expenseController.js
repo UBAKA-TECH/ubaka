@@ -65,9 +65,23 @@ export const getExpenses = async (req, res, next) => {
     const { from, to, category, shiftId, userId } = req.query;
     
     const where = {};
+    
+    // Multi-tenant isolation
+    const isSellerOrAdmin = req.user.role === 'seller' || req.user.role === 'admin';
+    const effectiveSellerId = req.user.role === 'cashier' ? req.user.managedById : req.user.id;
+
+    if (isSellerOrAdmin) {
+      // Seller/Admin sees their own + their staff's expenses
+      const staff = await prisma.user.findMany({ where: { managedById: req.user.id }, select: { id: true } });
+      const allRelatedIds = [req.user.id, ...staff.map(s => s.id)];
+      where.userId = { in: allRelatedIds };
+    } else {
+      // Cashier only sees their own
+      where.userId = req.user.id;
+    }
+
     if (category) where.category = category;
     if (shiftId) where.shiftId = shiftId;
-    if (userId) where.userId = userId;
     
     if (from || to) {
       where.date = {};

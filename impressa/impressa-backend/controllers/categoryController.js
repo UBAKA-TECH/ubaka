@@ -18,14 +18,11 @@ export const getAllCategories = async (req, res, next) => {
 
     // Multi-tenant isolation logic
     if (req.user) {
-      if (req.user.role !== 'admin') {
-        const sellerId = req.user.effectiveSellerId || req.user.id;
-        filter.OR = [
-          { sellerId: sellerId },
-          { sellerId: null }
-        ];
-      }
-      // Admins see everything
+      const sellerId = req.user.effectiveSellerId || req.user.id;
+      filter.OR = [
+        { sellerId: sellerId },
+        { sellerId: null }
+      ];
     } else {
       // PUBLIC ACCESS (Homepage/Shop)
       const querySellerId = req.query.sellerId || req.query.seller;
@@ -43,7 +40,7 @@ export const getAllCategories = async (req, res, next) => {
 
     const categories = await prisma.category.findMany({
       where: filter,
-      include: { parent: { select: { id: true, name: true, slug: true } } },
+      include: { parent: { select: { id: true, name: true, nameRw: true, slug: true } } },
       orderBy: [{ order: 'asc' }, { name: 'asc' }]
     });
 
@@ -64,13 +61,11 @@ export const getCategoryTree = async (req, res, next) => {
   try {
     const filter = {};
     if (req.user) {
-      if (req.user.role !== 'admin') {
-        const sellerId = req.user.effectiveSellerId || req.user.id;
-        filter.OR = [
-          { sellerId: sellerId },
-          { sellerId: null }
-        ];
-      }
+      const sellerId = req.user.effectiveSellerId || req.user.id;
+      filter.OR = [
+        { sellerId: sellerId },
+        { sellerId: null }
+      ];
     } else {
       const querySellerId = req.query.sellerId || req.query.seller;
       if (querySellerId) {
@@ -119,7 +114,7 @@ export const getCategoryByIdOrSlug = async (req, res, next) => {
 
     const category = await prisma.category.findFirst({
       where: isUUID ? { id: identifier } : { slug: identifier },
-      include: { parent: { select: { id: true, name: true, slug: true } } }
+      include: { parent: { select: { id: true, name: true, nameRw: true, slug: true } } }
     });
 
     if (!category) {
@@ -132,7 +127,7 @@ export const getCategoryByIdOrSlug = async (req, res, next) => {
     const path = [];
     let current = category;
     while (current) {
-      path.unshift({ id: current.id, name: current.name, slug: current.slug });
+      path.unshift({ id: current.id, name: current.name, nameRw: current.nameRw, slug: current.slug });
       if (current.parentId) {
         current = await prisma.category.findUnique({ where: { id: current.parentId } });
       } else {

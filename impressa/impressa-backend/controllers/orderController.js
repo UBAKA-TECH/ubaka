@@ -1002,13 +1002,15 @@ export const getMyOrders = async (req, res) => {
 export const getSellerOrders = async (req, res) => {
   try {
     const effectiveSellerId = req.user.role === 'cashier' ? req.user.managedById : req.user.id;
+    const limit = parseInt(req.query.limit) || undefined;
     const orders = await prisma.order.findMany({
       where: { items: { some: { sellerId: effectiveSellerId } } },
       include: { 
         customer: { select: { id: true, name: true, email: true } },
         items: true
       },
-      orderBy: { createdAt: 'desc' }
+      orderBy: { createdAt: 'desc' },
+      take: limit
     });
     res.json({ success: true, data: orders });
   } catch (err) {
@@ -1022,10 +1024,9 @@ export const getOrders = async (req, res) => {
     const where = {};
 
     // 🔒 Security: Filter by seller if not admin/owner
-    if (req.user.role !== 'admin' && req.user.role !== 'owner') {
-      const effectiveSellerId = req.user.role === 'cashier' ? req.user.managedById : req.user.id;
-      where.items = { some: { sellerId: effectiveSellerId } };
-    }
+    // All users (including admins) see only their own orders by default
+    const effectiveSellerId = req.user.role === 'cashier' ? req.user.managedById : req.user.id;
+    where.items = { some: { sellerId: effectiveSellerId } };
 
     if (status && status !== "all") where.status = status;
     if (search) {

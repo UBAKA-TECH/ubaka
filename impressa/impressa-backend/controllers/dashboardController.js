@@ -10,8 +10,8 @@ import { getAnomalyAlerts } from "../utils/anomalyUtils.js";
 export const getDashboardAnalytics = async (req, res) => {
   try {
     const user = req.user;
-    const isStaff = user.role === 'seller' || user.role === 'cashier';
-    const isSeller = user.role === 'seller';
+    const isStaff = user.role === 'seller' || user.role === 'cashier' || user.role === 'admin';
+    const isSeller = user.role === 'seller' || user.role === 'admin';
     
     // Get all staff IDs for a seller to track aggregate expenses
     let staffIds = [user.id];
@@ -20,7 +20,7 @@ export const getDashboardAnalytics = async (req, res) => {
       staffIds = [user.id, ...staff.map(s => s.id)];
     }
 
-    const effectiveSellerId = user.role === 'cashier' ? user.managedById : (user.role === 'seller' ? user.id : null);
+    const effectiveSellerId = user.role === 'cashier' ? user.managedById : user.id;
 
     // Boundaries
     const now = new Date();
@@ -320,9 +320,9 @@ export const getDashboardAnalytics = async (req, res) => {
  */
 export const getForecast = async (req, res) => {
   try {
-    const isStaff = req.user.role === 'seller' || req.user.role === 'cashier';
-    const effectiveSellerId = req.user.role === 'cashier' ? req.user.managedById : (req.user.role === 'seller' ? req.user.id : null);
-    const orderFilter = isStaff ? { items: { some: { sellerId: effectiveSellerId } } } : {};
+    const isStaff = req.user.role === 'seller' || req.user.role === 'cashier' || req.user.role === 'admin';
+    const effectiveSellerId = req.user.role === 'cashier' ? req.user.managedById : req.user.id;
+    const orderFilter = { items: { some: { sellerId: effectiveSellerId } } };
 
     const monthlyOrders = await prisma.order.findMany({
       where: { ...orderFilter, status: "delivered" },
@@ -389,9 +389,9 @@ export const getProductRecommendations = async (req, res) => {
       }
     }
 
-    const isStaff = req.user.role === 'seller' || req.user.role === 'cashier';
-    const effectiveSellerId = req.user.role === 'cashier' ? req.user.managedById : (req.user.role === 'seller' ? req.user.id : null);
-    const productFilter = isStaff ? { sellerId: effectiveSellerId } : {};
+    const isStaff = req.user.role === 'seller' || req.user.role === 'cashier' || req.user.role === 'admin';
+    const effectiveSellerId = req.user.role === 'cashier' ? req.user.managedById : req.user.id;
+    const productFilter = { sellerId: effectiveSellerId };
 
     const recIds = await prisma.product.findMany({ 
       where: productFilter,

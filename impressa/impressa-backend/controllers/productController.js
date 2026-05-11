@@ -316,6 +316,7 @@ export const createProduct = async (req, res) => {
 
 export const getSellerProducts = async (req, res) => {
   try {
+    const limit = parseInt(req.query.limit) || undefined;
     const products = await prisma.product.findMany({
       where: { sellerId: req.user.id },
       include: { 
@@ -323,7 +324,8 @@ export const getSellerProducts = async (req, res) => {
         categories: { select: { id: true, name: true } },
         variations: true
       },
-      orderBy: { createdAt: 'desc' }
+      orderBy: { createdAt: 'desc' },
+      take: limit
     });
     res.json({ success: true, data: products });
   } catch (err) {
@@ -769,6 +771,7 @@ export const getRelatedProducts = async (req, res) => {
 export const getProductsAll = async (req, res) => {
     try {
         const products = await prisma.product.findMany({
+            where: { sellerId: req.user.id },
             include: { 
                 seller: { select: { id: true, name: true, storeName: true } },
                 variations: true 

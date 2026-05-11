@@ -12,10 +12,8 @@ export const getAbonnes = async (req, res) => {
         
         const effectiveSellerId = req.user.role === 'cashier' ? req.user.managedById : req.user.id;
         
-        // If not admin/owner, only show own abonnes
-        if (req.user.role !== 'admin' && req.user.role !== 'owner') {
-            where.sellerId = effectiveSellerId;
-        }
+        // All users (including admins) see only their own abonnes by default
+        where.sellerId = effectiveSellerId;
 
         const abonnes = await prisma.clientAbonne.findMany({
             where,

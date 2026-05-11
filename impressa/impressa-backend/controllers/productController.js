@@ -158,7 +158,7 @@ const attachFlashSaleInfo = async (products) => {
 export const createProduct = async (req, res) => {
   try {
     const body = { ...req.body };
-    const sellerId = req.user.id;
+    const sellerId = req.user.role === 'cashier' ? req.user.managedById : req.user.id;
 
     if (req.user.role === 'admin') {
       body.approvalStatus = 'approved';
@@ -317,8 +317,9 @@ export const createProduct = async (req, res) => {
 export const getSellerProducts = async (req, res) => {
   try {
     const limit = parseInt(req.query.limit) || undefined;
+    const effectiveSellerId = req.user.role === 'cashier' ? req.user.managedById : req.user.id;
     const products = await prisma.product.findMany({
-      where: { sellerId: req.user.id },
+      where: { sellerId: effectiveSellerId },
       include: { 
         seller: { select: { id: true, name: true, storeName: true } },
         categories: { select: { id: true, name: true } },
@@ -327,7 +328,7 @@ export const getSellerProducts = async (req, res) => {
       orderBy: { createdAt: 'desc' },
       take: limit
     });
-    const total = await prisma.product.count({ where: { sellerId: req.user.id } });
+    const total = await prisma.product.count({ where: { sellerId: effectiveSellerId } });
     res.json({ 
       success: true, 
       data: products,

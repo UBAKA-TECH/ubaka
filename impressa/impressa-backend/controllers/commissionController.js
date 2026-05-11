@@ -106,7 +106,7 @@ export const getAllEarnings = async (req, res, next) => {
  */
 export const getSellerEarningsSummary = async (req, res, next) => {
     try {
-        const sellerId = req.user.id;
+        const sellerId = req.user.role === 'cashier' ? req.user.managedById : req.user.id;
 
         const [pendingAgg, paidAgg, settings, pendingPayouts] = await Promise.all([
             prisma.sellerEarning.aggregate({

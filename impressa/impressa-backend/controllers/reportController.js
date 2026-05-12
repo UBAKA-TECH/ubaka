@@ -239,25 +239,32 @@ export const generateReport = async (req, res) => {
                     helpers.table({
                         columns: [
                             { header: "Date", key: "orderDate", width: 60 },
-                            { header: "Item Name", key: "productName", width: 140 },
+                            { header: "Item Name", key: "productName", width: 130 },
                             { header: "Qty", key: "quantity", width: 30, align: "center" },
                             { header: "P/U", key: "price", width: 60, align: "right" },
-                            { header: "Cash (RWF)", key: "cashTotal", width: 80, align: "right" },
-                            { header: "Momo (RWF)", key: "momoTotal", width: 80, align: "right" }
+                            { header: "Cash (RWF)", key: "cashTotal", width: 75, align: "right" },
+                            { header: "Momo (RWF)", key: "momoTotal", width: 75, align: "right" },
+                            { header: "Credit (RWF)", key: "creditTotal", width: 75, align: "right" }
                         ],
                         rows: flattenedItems.map(i => {
-                            const isCash = String(i.paymentMethod || "cash").toLowerCase().includes("cash");
+                            const method = String(i.paymentMethod || "cash").toLowerCase();
+                            const isCash = method.includes("cash");
+                            const isMomo = method.includes("momo") || method.includes("mobile");
+                            const isCredit = method.includes("abonne") || method.includes("credit") || method.includes("debt");
+
                             return {
                                 ...i,
                                 price: (i.price ?? 0).toLocaleString(),
                                 cashTotal: isCash ? (i.subtotal ?? 0).toLocaleString() : "0",
-                                momoTotal: !isCash ? (i.subtotal ?? 0).toLocaleString() : "0"
+                                momoTotal: isMomo ? (i.subtotal ?? 0).toLocaleString() : "0",
+                                creditTotal: isCredit ? (i.subtotal ?? 0).toLocaleString() : "0"
                             }
                         }),
                         totals: {
                             price: "TOTALS",
                             cashTotal: `RWF ${(summary?.cashRevenue ?? 0).toLocaleString()}`,
-                            momoTotal: `RWF ${(summary?.momoRevenue ?? 0).toLocaleString()}`
+                            momoTotal: `RWF ${(summary?.momoRevenue ?? 0).toLocaleString()}`,
+                            creditTotal: `RWF ${(summary?.creditRevenue ?? 0).toLocaleString()}`
                         }
                     });
                 }

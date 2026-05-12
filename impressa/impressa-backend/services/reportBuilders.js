@@ -63,6 +63,7 @@ const getRangeReport = async (start, end, sellerId) => {
   let totalExpenses = 0;
   let cashRevenue = 0;
   let momoRevenue = 0;
+  let creditRevenue = 0;
 
   expenses.forEach(exp => {
     totalExpenses += (exp.amount || 0);
@@ -82,7 +83,9 @@ const getRangeReport = async (start, end, sellerId) => {
                           product.name?.toLowerCase().includes("printing") ||
                           product.name?.toLowerCase().includes("service");
 
-        if (isService) return;
+        // Services are still products for performance/revenue purposes, 
+        // they just don't have stock deductions (handled above)
+        // If we skip here, they won't show up in revenue/drawer totals.
 
         const name = product.name || item.productName;
         if (name) productCount[name] = (productCount[name] || 0) + item.quantity;
@@ -97,6 +100,7 @@ const getRangeReport = async (start, end, sellerId) => {
         const method = (order.paymentMethod || "cash").toLowerCase();
         if (method.includes("cash")) orderCash += itemRevenue;
         else if (method.includes("momo") || method.includes("mobile")) orderMomo += itemRevenue;
+        else if (method.includes("abonne") || method.includes("credit") || method.includes("debt")) creditRevenue += itemRevenue;
 
         const cust = item.customizations || {};
         if (cust.customText) customizationCount.customText++;
@@ -115,7 +119,9 @@ const getRangeReport = async (start, end, sellerId) => {
     cashRevenue += amount;
   });
 
-  totalRevenue += totalDebtCollected;
+  // totalRevenue already contains the subtotal of all items (including debt ones)
+  // totalDebtCollected is a CASH IN event, not a new REVENUE event.
+  // totalRevenue += totalDebtCollected;
 
   const topProduct = Object.entries(productCount).sort((a, b) => b[1] - a[1])[0]?.[0] || "N/A";
   const topCustomization = Object.entries(customizationCount).sort((a, b) => b[1] - a[1])[0]?.[0] || "N/A";
@@ -137,6 +143,7 @@ const getRangeReport = async (start, end, sellerId) => {
     totalRevenue,
     cashRevenue,
     momoRevenue,
+    creditRevenue,
     totalDebtCollected,
     totalExpenses,
     totalStartingCash,

@@ -316,8 +316,7 @@ export const generateReport = async (req, res) => {
                 pdfDoc.moveDown(3);
                 pdfDoc.save().moveTo(pdfDoc.page.margins.left, pdfDoc.y).lineTo(pdfDoc.page.width - pdfDoc.page.margins.right, pdfDoc.y).strokeColor("#E2E8F0").lineWidth(0.5).stroke().restore();
                 pdfDoc.moveDown(1);
-                pdfDoc.fillColor("#1E293B").fontSize(10).font("Helvetica-Bold").text(`Prepared by: `, { align: "right", continued: true });
-                pdfDoc.font("Helvetica").fillColor("#475569").text(user.name);
+                pdfDoc.fillColor("#1E293B").fontSize(10).font("Helvetica-Bold").text(`Prepared by: ${user.name}`, { align: "right" });
             },
             logoPath: logoBuffer
         });

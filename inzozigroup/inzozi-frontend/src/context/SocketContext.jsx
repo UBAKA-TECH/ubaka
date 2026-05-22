@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { io } from 'socket.io-client';
-import { useAuth } from './AuthContext';
+import { useAuth, BACKEND_URL } from './AuthContext';
 
 const SocketContext = createContext();
 
@@ -17,7 +17,7 @@ export const SocketProvider = ({ children }) => {
       return;
     }
 
-    const newSocket = io(import.meta.env.VITE_API_URL || 'http://localhost:5000', {
+    const newSocket = io(BACKEND_URL, {
       transports: ['websocket'],
       upgrade: false
     });

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { BACKEND_URL } from '../context/AuthContext';
 import { 
   Sparkles, 
   Clock, 
@@ -156,7 +157,7 @@ const Landing = ({ onEnterPortal }) => {
   useEffect(() => {
     const fetchShowcase = async () => {
       try {
-        const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/projects/public/showcase`);
+        const res = await fetch(`${BACKEND_URL}/api/projects/public/showcase`);
         if (res.ok) {
           const data = await res.json();
           if (Array.isArray(data) && data.length > 0) {

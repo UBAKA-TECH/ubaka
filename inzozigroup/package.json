@@ -1,0 +1,15 @@
+{
+  "name": "inzozi-group-mis",
+  "version": "1.0.0",
+  "description": "Monorepo workspace for INZOZI Group MIS and Control Plane",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently \"npm run dev --prefix inzozi-backend\" \"npm run dev --prefix inzozi-frontend\"",
+    "install-all": "npm install --prefix inzozi-backend && npm install --prefix inzozi-frontend",
+    "prisma:generate": "npm run prisma:generate --prefix inzozi-backend",
+    "prisma:migrate": "npm run prisma:migrate --prefix inzozi-backend"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

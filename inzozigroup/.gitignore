@@ -1,0 +1,38 @@
+# Dependency directories
+node_modules/
+inzozi-backend/node_modules/
+inzozi-frontend/node_modules/
+
+# Local env files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+inzozi-backend/.env
+inzozi-backend/.env.local
+inzozi-frontend/.env
+inzozi-frontend/.env.local
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# IDE/Editors
+.vscode/
+.idea/
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Build outputs
+inzozi-frontend/dist/
+inzozi-frontend/dist-ssr/

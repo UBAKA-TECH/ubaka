@@ -1,0 +1,189 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum ProjectStatus {
+  planning
+  development
+  testing
+  active
+  archived
+}
+
+enum TaskStatus {
+  todo
+  in_progress
+  review
+  done
+}
+
+enum TaskPriority {
+  low
+  medium
+  high
+  critical
+}
+
+model Role {
+  id          String           @id @default(uuid())
+  name        String           @unique
+  code        String           @unique
+  description String?
+  isTechnical Boolean          @default(false)
+  createdAt   DateTime         @default(now())
+
+  // Relations
+  employees   Employee[]
+  permissions RolePermission[]
+  delegations Delegation[]     @relation("DelegatedRole")
+}
+
+model Permission {
+  id          String           @id @default(uuid())
+  name        String           @unique
+  code        String           @unique
+  description String?
+  createdAt   DateTime         @default(now())
+
+  // Relations
+  roles       RolePermission[]
+}
+
+model RolePermission {
+  roleId       String
+  role         Role        @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permissionId String
+  permission   Permission  @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  @@id([roleId, permissionId])
+}
+
+model Employee {
+  id            String      @id @default(uuid())
+  name          String
+  email         String      @unique
+  password      String
+  roleId        String?
+  role          Role?       @relation(fields: [roleId], references: [id])
+  title         String?     // e.g. "Lead React Dev", "UX/UI Designer"
+  avatar        String?     // URL or color code
+  isActive      Boolean     @default(true)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  // Relations
+  assignedTasks Task[]      @relation("AssignedTasks")
+  createdTasks  Task[]      @relation("CreatedTasks")
+  messages      Message[]
+  timeEntries   TimeEntry[]
+  
+  // Delegations
+  delegations   Delegation[] @relation("UserDelegations")
+  authorized    Delegation[] @relation("AuthorizedDelegations")
+}
+
+model Delegation {
+  id             String    @id @default(uuid())
+  startDate      DateTime
+  endDate        DateTime
+  reason         String?
+  isActive       Boolean   @default(true)
+  createdAt      DateTime  @default(now())
+
+  // Relations
+  employeeId     String
+  employee       Employee  @relation("UserDelegations", fields: [employeeId], references: [id], onDelete: Cascade)
+
+  targetRoleId   String
+  targetRole     Role      @relation("DelegatedRole", fields: [targetRoleId], references: [id], onDelete: Cascade)
+
+  authorizerId   String
+  authorizer     Employee  @relation("AuthorizedDelegations", fields: [authorizerId], references: [id])
+
+  @@index([employeeId])
+  @@index([targetRoleId])
+  @@index([authorizerId])
+}
+
+model Project {
+  id            String        @id @default(uuid())
+  name          String        @unique // e.g. Impressa, Linker, Homland, Gesture to Speech
+  slug          String        @unique // e.g. impressa, linker, homland, gesture-to-speech
+  description   String?
+  status        ProjectStatus @default(planning)
+  repositoryUrl String?
+  liveUrl       String?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  // Relations
+  tasks         Task[]
+  timeEntries   TimeEntry[]
+}
+
+model Task {
+  id          String       @id @default(uuid())
+  title       String
+  description String?
+  status      TaskStatus   @default(todo)
+  priority    TaskPriority @default(medium)
+  dueDate     DateTime?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  // Relations
+  projectId   String
+  project     Project      @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  
+  assigneeId  String?
+  assignee    Employee?    @relation("AssignedTasks", fields: [assigneeId], references: [id])
+  
+  creatorId   String
+  creator     Employee     @relation("CreatedTasks", fields: [creatorId], references: [id])
+
+  @@index([projectId])
+  @@index([assigneeId])
+}
+
+model Message {
+  id          String   @id @default(uuid())
+  content     String
+  channel     String   @default("general") // e.g. "general", "impressa", "linker"
+  isDirect    Boolean  @default(false)
+  recipientId String?  // ID of the target employee if isDirect = true
+  createdAt   DateTime @default(now())
+
+  // Relations
+  senderId    String
+  sender      Employee @relation(fields: [senderId], references: [id], onDelete: Cascade)
+
+  @@index([senderId])
+  @@index([channel])
+}
+
+model TimeEntry {
+  id          String   @id @default(uuid())
+  description String
+  startTime   DateTime @default(now())
+  endTime     DateTime?
+  minutes     Int      @default(0)
+  createdAt   DateTime @default(now())
+
+  // Relations
+  employeeId  String
+  employee    Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  
+  projectId   String
+  project     Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@index([employeeId])
+  @@index([projectId])
+}

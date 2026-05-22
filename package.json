@@ -1,15 +1,29 @@
 {
-  "name": "workspace",
+  "name": "inzozi-ecosystem-monorepo",
   "version": "1.0.0",
-  "description": "Full‑stack MERN app for customizable product orders with admin analytics, reporting and other features. This repo contains both apps: - impressa/impressa-frontend: React admin + dashboards - impressa/impressa-backend: Node/Express API + reporting",
-  "main": "index.js",
+  "description": "Unified monorepo workspace for INZOZI Group ecosystem applications",
+  "private": true,
+  "workspaces": [
+    "impressa/impressa-backend",
+    "impressa/impressa-frontend",
+    "inzozigroup/inzozi-backend",
+    "inzozigroup/inzozi-frontend"
+  ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "install:all": "npm install",
+    "dev:inzozi": "concurrently \"npm run dev -w inzozigroup/inzozi-backend\" \"npm run dev -w inzozigroup/inzozi-frontend\"",
+    "dev:impressa": "concurrently \"npm run dev -w impressa/impressa-backend\" \"npm run dev -w impressa/impressa-frontend\"",
+    "build:inzozi": "npm run build -w inzozigroup/inzozi-frontend",
+    "build:impressa": "npm run build -w impressa/impressa-frontend"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "http-proxy-middleware": "^3.0.5"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
   }
 }

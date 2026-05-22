@@ -5,13 +5,21 @@ inzozi-frontend/node_modules/
 
 # Local env files
 .env
+.env.*
+!.env.example
+!.env.production.example
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
 inzozi-backend/.env
+inzozi-backend/.env.*
+!inzozi-backend/.env.example
+!inzozi-backend/.env.production.example
 inzozi-backend/.env.local
 inzozi-frontend/.env
+inzozi-frontend/.env.*
+!inzozi-frontend/.env.example
 inzozi-frontend/.env.local
 
 # Logs

@@ -16,6 +16,7 @@ export const isDbConnected = async () => {
     await prisma.$queryRaw`SELECT 1`;
     return true;
   } catch (err) {
+    console.error("❌ Database connection check failed:", err);
     return false;
   }
 };

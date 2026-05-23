@@ -1,4 +1,26 @@
 import prisma, { isDbConnected } from '../config/db.js';
+import pg from 'pg';
+const { Pool } = pg;
+
+let impressaPool = null;
+
+const queryImpressa = async (text, params) => {
+  if (!process.env.IMPRESSA_DATABASE_URL) {
+    return null;
+  }
+  if (!impressaPool) {
+    impressaPool = new Pool({
+      connectionString: process.env.IMPRESSA_DATABASE_URL
+    });
+  }
+  const client = await impressaPool.connect();
+  try {
+    const res = await client.query(text, params);
+    return res.rows;
+  } finally {
+    client.release();
+  }
+};
 
 // Hardcoded initial list of Inzozi Group projects
 const INITIAL_PROJECTS = [
@@ -141,9 +163,24 @@ export const getProjectBySlug = async (req, res) => {
 
 // IMPRESSA Admin Activities: List products pending approval
 export const getPendingImpressaApprovals = async (req, res) => {
-  // In a real environment, this controller would query the Impressa database
-  // e.g. using `impressaPrismaClient.product.findMany({ where: { approvalStatus: 'pending' } })`
-  // For now, we simulate this integration with mock approval data.
+  try {
+    const realProducts = await queryImpressa(`
+      SELECT p.id, p.name, p.price, p."approvalStatus" as status, p."createdAt", p.image, 
+             COALESCE(u."storeName", u.name) as "sellerName", c.name as category 
+      FROM "Product" p
+      LEFT JOIN "User" u ON p."sellerId" = u.id
+      LEFT JOIN "_ProductToCategory" pc ON p.id = pc."B"
+      LEFT JOIN "Category" c ON pc."A" = c.id
+      WHERE p."approvalStatus" = 'pending'
+      ORDER BY p."createdAt" DESC
+    `);
+    
+    if (realProducts) {
+      return res.json(realProducts);
+    }
+  } catch (err) {
+    console.error("⚠️ Failed to fetch pending products from real Impressa DB, falling back to mock:", err.message);
+  }
   res.json(MOCK_IMPRESSA_APPROVALS);
 };
 
@@ -154,6 +191,35 @@ export const updateImpressaProductStatus = async (req, res) => {
 
   if (!['approved', 'rejected'].includes(status)) {
     return res.status(400).json({ error: 'Status must be approved or rejected' });
+  }
+
+  try {
+    if (process.env.IMPRESSA_DATABASE_URL) {
+      const visibility = status === 'approved' ? 'public' : 'hidden';
+      const approvedBy = req.user?.id || 'inzozi-admin';
+      const approvedAt = new Date();
+
+      const result = await queryImpressa(`
+        UPDATE "Product" 
+        SET "approvalStatus" = $1, "approvalNote" = $2, "approvedBy" = $3, "approvedAt" = $4, "visibility" = $5
+        WHERE id = $6
+        RETURNING id, name, "approvalStatus"
+      `, [status, note || '', approvedBy, approvedAt, visibility, id]);
+
+      if (result && result.length > 0) {
+        console.log(`[ProjectController] Real Impressa Product ID ${id} set to ${status}. Note: ${note || 'None'}`);
+        return res.json({
+          success: true,
+          message: `Product successfully ${status} in real Impressa database.`,
+          product: result[0]
+        });
+      } else {
+        return res.status(404).json({ error: 'Product not found in real Impressa database.' });
+      }
+    }
+  } catch (err) {
+    console.error("⚠️ Failed to update product in real Impressa DB:", err.message);
+    return res.status(500).json({ error: `Failed to update product in database: ${err.message}` });
   }
 
   // Update in mock store
@@ -187,7 +253,21 @@ export const updateImpressaProductStatus = async (req, res) => {
 
 // IMPRESSA Admin Activities: Get Support Tickets
 export const getImpressaTickets = async (req, res) => {
-  // Only return tickets that are NOT resolved to keep the support queue focused
+  try {
+    const realTickets = await queryImpressa(`
+      SELECT t.id, t.subject, t.description, t.status, t.priority, t."createdAt", u.email as "userEmail"
+      FROM "Ticket" t
+      LEFT JOIN "User" u ON t."userId" = u.id
+      WHERE t.status != 'resolved' AND t.status != 'closed'
+      ORDER BY t."createdAt" DESC
+    `);
+    
+    if (realTickets) {
+      return res.json(realTickets);
+    }
+  } catch (err) {
+    console.error("⚠️ Failed to fetch tickets from real Impressa DB, falling back to mock:", err.message);
+  }
   res.json(MOCK_IMPRESSA_TICKETS.filter(t => t.status !== 'resolved'));
 };
 
@@ -195,6 +275,31 @@ export const getImpressaTickets = async (req, res) => {
 export const updateImpressaTicketStatus = async (req, res) => {
   const { id } = req.params;
   const { status } = req.body; // 'open', 'in_progress', 'resolved'
+
+  try {
+    if (process.env.IMPRESSA_DATABASE_URL) {
+      const result = await queryImpressa(`
+        UPDATE "Ticket"
+        SET status = $1
+        WHERE id = $2
+        RETURNING id, subject, status
+      `, [status, id]);
+
+      if (result && result.length > 0) {
+        console.log(`[ProjectController] Real Impressa Ticket ID ${id} status updated to ${status}`);
+        return res.json({
+          success: true,
+          message: `Ticket successfully updated to ${status} in real Impressa database.`,
+          ticket: result[0]
+        });
+      } else {
+        return res.status(404).json({ error: 'Ticket not found in real Impressa database.' });
+      }
+    }
+  } catch (err) {
+    console.error("⚠️ Failed to update ticket in real Impressa DB:", err.message);
+    return res.status(500).json({ error: `Failed to update ticket in database: ${err.message}` });
+  }
 
   const ticketIndex = MOCK_IMPRESSA_TICKETS.findIndex(t => t.id === id);
   if (ticketIndex === -1) {
@@ -220,6 +325,10 @@ export const updateImpressaTicketStatus = async (req, res) => {
 
 // Background simulation to add products and tickets dynamically for real-time demonstration
 export const startImpressaSimulation = (io) => {
+  if (process.env.ENABLE_SIMULATION !== 'true') {
+    console.log('ℹ️ Real-time background simulation disabled (ENABLE_SIMULATION is not set to "true").');
+    return;
+  }
   let productCounter = 4;
   let ticketCounter = 3;
 

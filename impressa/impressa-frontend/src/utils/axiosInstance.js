@@ -17,6 +17,11 @@ instance.interceptors.request.use(async (config) => {
     config.headers.Authorization = `Bearer ${session.access_token}`;
   }
   
+  const cartSession = localStorage.getItem("cartSession");
+  if (cartSession) {
+    config.headers["x-cart-session"] = cartSession;
+  }
+  
   return config;
 });
 
@@ -24,7 +29,12 @@ instance.interceptors.request.use(async (config) => {
  * Response Interceptor: Handle Authentication Errors
  */
 instance.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    if (response?.data?.sessionToken) {
+      localStorage.setItem("cartSession", response.data.sessionToken);
+    }
+    return response;
+  },
   async (error) => {
     // If we get a 401, it means the session is likely invalid or expired
     if (error.response?.status === 401) {

@@ -183,9 +183,10 @@ export const addToCart = async (req, res, next) => {
 
     // To handle customization equality, let's pull items and check in JS
     const allItems = await prisma.cartItem.findMany({ where: { cartId: cart.id, productId } });
+    const normalizedCustomizations = customizations || {};
     const exactMatch = allItems.find(i => 
-        i.variationId === variationId && 
-        JSON.stringify(i.customizations) === JSON.stringify(customizations || {})
+        (i.variationId || null) === (variationId || null) && 
+        JSON.stringify(i.customizations || {}) === JSON.stringify(normalizedCustomizations)
     );
 
     if (exactMatch) {
@@ -200,7 +201,7 @@ export const addToCart = async (req, res, next) => {
                 productId,
                 quantity,
                 variationId,
-                customizations: customizations || {}
+                customizations: normalizedCustomizations
             }
         });
     }
@@ -219,6 +220,7 @@ export const addToCart = async (req, res, next) => {
       success: true,
       message: "Item added to cart",
       data: formatCartResponse(updatedCart),
+      sessionToken,
     });
   } catch (error) {
     next(error);
@@ -286,6 +288,7 @@ export const updateCartItem = async (req, res, next) => {
       success: true,
       message: "Cart updated",
       data: formatCartResponse(updatedCart),
+      sessionToken: userId ? sessionToken : cart.id,
     });
   } catch (error) {
     next(error);
@@ -307,6 +310,7 @@ export const removeFromCart = async (req, res, next) => {
       success: true,
       message: "Item removed from cart",
       data: formatCartResponse(updatedCart),
+      sessionToken: userId ? sessionToken : cart.id,
     });
   } catch (error) {
     next(error);
@@ -331,6 +335,7 @@ export const clearCart = async (req, res, next) => {
       success: true,
       message: "Cart cleared",
       data: formatCartResponse(updatedCart),
+      sessionToken: userId ? sessionToken : cart.id,
     });
   } catch (error) {
     next(error);
@@ -393,6 +398,7 @@ export const applyCoupon = async (req, res, next) => {
       success: true,
       message: "Coupon applied successfully",
       data: formatCartResponse(populatedCart, coupon.code, discountAmount),
+      sessionToken: userId ? sessionToken : cart.id,
     });
   } catch (error) {
     next(error);
@@ -410,6 +416,7 @@ export const removeCoupon = async (req, res, next) => {
       success: true,
       message: "Coupon removed",
       data: formatCartResponse(populatedCart),
+      sessionToken: userId ? sessionToken : cart.id,
     });
   } catch (error) {
     next(error);
@@ -441,8 +448,8 @@ export const mergeCarts = async (req, res, next) => {
         for (const guestItem of guestCart.items) {
             const existingItem = userCart.items.find(i => 
                 i.productId === guestItem.productId && 
-                i.variationId === guestItem.variationId &&
-                JSON.stringify(i.customizations) === JSON.stringify(guestItem.customizations)
+                (i.variationId || null) === (guestItem.variationId || null) &&
+                JSON.stringify(i.customizations || {}) === JSON.stringify(guestItem.customizations || {})
             );
 
             if (existingItem) {

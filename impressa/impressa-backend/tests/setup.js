@@ -6,13 +6,22 @@ vi.mock('../prisma.js', () => ({
   default: {
     cart: {
       findUnique: vi.fn(),
+      create: vi.fn(),
+      update: vi.fn(),
     },
     cartItem: {
       deleteMany: vi.fn(),
+      findFirst: vi.fn(),
+      findMany: vi.fn(),
+      update: vi.fn(),
+      create: vi.fn(),
     },
     product: {
       findUnique: vi.fn(),
       updateMany: vi.fn(),
+    },
+    flashSale: {
+      findFirst: vi.fn(),
     },
     order: {
       create: vi.fn(),

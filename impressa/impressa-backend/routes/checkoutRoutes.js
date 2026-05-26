@@ -1,18 +1,9 @@
 import express from "express";
 import * as checkoutController from "../controllers/checkoutController.js";
 import { checkoutLimiter } from "../middleware/rateLimiter.js";
+import { optionalAuth } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
-
-// Optional auth middleware
-const optionalAuth = (req, res, next) => {
-  const token = req.headers.authorization?.split(" ")[1];
-  if (token) {
-    const { authMiddleware } = require("../middleware/authMiddleware.js");
-    return authMiddleware(["customer", "admin"])(req, res, next);
-  }
-  next();
-};
 
 // Checkout routes
 router.post("/order", checkoutLimiter, optionalAuth, checkoutController.createOrderFromCart);

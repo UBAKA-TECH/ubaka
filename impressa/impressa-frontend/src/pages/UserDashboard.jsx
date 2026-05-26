@@ -5,6 +5,7 @@ import Header from "../components/Header";
 import { getProvinces, getDistricts, getSectors, getCells } from "../utils/locationHelpers";
 import { FaBox, FaMapMarkerAlt, FaUser, FaSignOutAlt } from "react-icons/fa";
 import { useToast } from "../context/ToastContext";
+import { useAuth } from "../context/AuthContext";
 
 
 function UserDashboard() {
@@ -18,6 +19,7 @@ function UserDashboard() {
   const [profileForm, setProfileForm] = useState({ name: "", email: "", password: "", profileImage: null });
   const { showSuccess, showError } = useToast();
   const [isSaving, setIsSaving] = useState(false);
+  const { updateUser } = useAuth();
   // Add detailed fields
   const [billingAddress, setBillingAddress] = useState({
     street: "", city: "", state: "", zip: "", country: "Rwanda", phone: "",
@@ -44,6 +46,7 @@ function UserDashboard() {
       ]);
 
       setUser(profileRes.data);
+      updateUser(profileRes.data);
       setOrders(ordersRes.data.data || []);
 
       // Init forms

@@ -48,7 +48,11 @@ export default function CheckoutPage() {
     if (user) {
       const shipping = user.shippingAddress || {};
       const billing = user.billingAddress || {};
-      const targetAddress = shipping.province ? shipping : (billing.province ? billing : null);
+      
+      // Prefer shipping address if it has any populated values, otherwise fall back to billing
+      const hasShipping = Object.values(shipping).some(v => v !== "" && v !== null && v !== undefined);
+      const hasBilling = Object.values(billing).some(v => v !== "" && v !== null && v !== undefined);
+      const targetAddress = hasShipping ? shipping : (hasBilling ? billing : null);
 
       setFormData(prev => ({
         ...prev,

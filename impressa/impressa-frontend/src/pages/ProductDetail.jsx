@@ -235,7 +235,7 @@ export default function ProductDetail() {
           ) : (
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start">
               {/* Image Section */}
-              <div className="bg-white dark:bg-slate-900 rounded-3xl overflow-hidden shadow-xl border border-gray-100 dark:border-slate-800 transition-all duration-300 hover:shadow-2xl aspect-square w-full flex items-center justify-center p-4 md:p-6">
+              <div className="bg-white dark:bg-slate-900 rounded-3xl overflow-hidden shadow-xl border border-gray-100 dark:border-slate-800 transition-all duration-300 hover:shadow-2xl aspect-square w-full max-w-[480px] mx-auto flex items-center justify-center p-4 md:p-6">
                 {product.image ? (
                   <img src={assetUrl(product.image)} alt={product.name} className="max-h-full max-w-full object-contain rounded-2xl" />
                 ) : (

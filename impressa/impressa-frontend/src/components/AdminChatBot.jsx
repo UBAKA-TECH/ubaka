@@ -69,8 +69,8 @@ function AdminChatbot({ storageKey = "adminChatMessages", title = "AI Assistant"
       {/* Expanding Chat Panel */}
       <div
         className={`
-          fixed sm:absolute bottom-24 sm:bottom-20 left-4 right-4 sm:left-auto sm:right-0 w-auto sm:w-[400px] 
-          bg-white/80 dark:bg-charcoal-800/90 backdrop-blur-xl 
+          fixed bottom-24 left-4 right-4 sm:left-auto sm:right-6 w-auto sm:w-[400px] max-w-[calc(100vw-2rem)] max-h-[calc(100vh-120px)]
+          bg-white/80 dark:bg-charcoal-800/90 backdrop-blur-xl flex flex-col
           rounded-[2rem] shadow-2xl border border-white/20 dark:border-charcoal-700 
           overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.19,1,0.22,1)] origin-bottom-right
           ${showChat ? 'scale-100 opacity-100 translate-y-0' : 'scale-75 opacity-0 translate-y-12 pointer-events-none'}
@@ -102,7 +102,7 @@ function AdminChatbot({ storageKey = "adminChatMessages", title = "AI Assistant"
         {/* Messages Information */}
         <div
           ref={listRef}
-          className="h-[55vh] sm:h-[450px] overflow-y-auto p-6 space-y-6 bg-cream-50/50 dark:bg-charcoal-900/50 scrollbar-thin scrollbar-thumb-terracotta-200 dark:scrollbar-thumb-charcoal-600"
+          className="flex-grow min-h-[150px] h-[50vh] sm:h-[450px] overflow-y-auto p-6 space-y-6 bg-cream-50/50 dark:bg-charcoal-900/50 scrollbar-thin scrollbar-thumb-terracotta-200 dark:scrollbar-thumb-charcoal-600"
         >
           {messages.length === 0 && (
             <div className="flex flex-col items-center justify-center h-full text-center opacity-50 space-y-4">
@@ -122,7 +122,7 @@ function AdminChatbot({ storageKey = "adminChatMessages", title = "AI Assistant"
             <div key={i} className={`flex w-full ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
               <div
                 className={`
-                  relative max-w-[85%] px-5 py-3.5 text-sm leading-relaxed shadow-sm
+                  relative max-w-[85%] px-5 py-3.5 text-sm leading-relaxed shadow-sm break-words
                   ${msg.role === "user"
                     ? "bg-gradient-to-br from-terracotta-500 to-terracotta-600 text-white rounded-[1.5rem] rounded-br-sm"
                     : "bg-white dark:bg-charcoal-700 text-charcoal-800 dark:text-gray-100 rounded-[1.5rem] rounded-bl-sm border border-black/5 dark:border-white/10"

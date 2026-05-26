@@ -3,9 +3,14 @@
   "name": "impressa Premium Market",
   "icons": [
     {
-      "src": "images/logo.png",
+      "src": "images/logo192.png",
       "type": "image/png",
-      "sizes": "192x192 512x512"
+      "sizes": "192x192"
+    },
+    {
+      "src": "images/logo512.png",
+      "type": "image/png",
+      "sizes": "512x512"
     }
   ],
   "start_url": ".",

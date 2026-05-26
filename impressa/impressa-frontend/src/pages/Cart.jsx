@@ -55,7 +55,7 @@ export default function CartPage() {
       <FlashSaleBanner />
 
       <main>
-        <section className="relative py-20 overflow-hidden bg-white dark:bg-slate-900 border-b border-gray-100 dark:border-slate-800">
+        <section className="relative py-10 md:py-12 overflow-hidden bg-white dark:bg-slate-900 border-b border-gray-100 dark:border-slate-800">
           <div className="absolute inset-0 overflow-hidden pointer-events-none">
             <div className="absolute top-10 left-10 w-72 h-72 bg-violet-200 dark:bg-violet-900/20 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob"></div>
             <div className="absolute top-20 right-20 w-72 h-72 bg-fuchsia-200 dark:bg-fuchsia-900/20 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-2000"></div>
@@ -71,7 +71,7 @@ export default function CartPage() {
           </div>
         </section>
 
-        <section className="py-12 md:py-20">
+        <section className="py-8 md:py-12">
           <div className="mx-auto max-w-7xl px-4">
             {items.length === 0 ? (
               <div className="bg-white dark:bg-slate-900 rounded-3xl p-12 text-center shadow-sm border border-gray-100 dark:border-slate-800 animate-fade-in">

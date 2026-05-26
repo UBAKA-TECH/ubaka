@@ -557,8 +557,8 @@ export default function CheckoutPage() {
                     {items.map((item, idx) => (
                       <div key={idx} className="flex gap-4 items-center bg-gray-50/50 dark:bg-slate-800/30 p-3 rounded-xl border border-gray-100 dark:border-slate-800/50 transition-all hover:bg-white dark:hover:bg-slate-800 shadow-sm hover:shadow-md group">
                         <div className="w-16 h-16 bg-white dark:bg-slate-950 rounded-lg overflow-hidden shadow-inner flex-shrink-0 flex items-center justify-center">
-                          {item.image ? (
-                            <img src={assetUrl(item.image)} alt={item.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                          {item.product?.image || item.image ? (
+                            <img src={assetUrl(item.product?.image || item.image)} alt={item.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
                           ) : (
                             <div className="w-full h-full flex items-center justify-center text-gray-300 dark:text-slate-700 bg-gray-100 dark:bg-slate-800 text-base font-bold">IMP</div>
                           )}

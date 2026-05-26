@@ -3,10 +3,12 @@ import { useParams, Link } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import api from "../utils/axiosInstance";
 import { FaArrowLeft, FaBox, FaMapMarkerAlt, FaUser, FaCreditCard } from "react-icons/fa";
+import { useToast } from "../context/ToastContext";
 
 const SellerOrderDetails = () => {
     const { id } = useParams();
     const queryClient = useQueryClient();
+    const { showSuccess, showError } = useToast();
     const [updating, setUpdating] = useState(false);
     const [noteText, setNoteText] = useState("");
     const [addingNote, setAddingNote] = useState(false);
@@ -29,9 +31,9 @@ const SellerOrderDetails = () => {
             await api.put(`/orders/${id}/status`, { status: newStatus });
             queryClient.invalidateQueries(['order-details', id]);
             queryClient.invalidateQueries(['seller-orders']);
-            alert(`Order status updated to ${newStatus}`);
+            showSuccess(`Order status updated to ${newStatus}`);
         } catch (error) {
-            alert("Failed to update status");
+            showError("Failed to update status");
         } finally {
             setUpdating(false);
         }
@@ -49,9 +51,9 @@ const SellerOrderDetails = () => {
             });
             queryClient.invalidateQueries(['order-details', id]);
             setNoteText("");
-            alert("Update added successfully");
+            showSuccess("Update added successfully");
         } catch (error) {
-            alert("Failed to add note");
+            showError("Failed to add note");
         } finally {
             setAddingNote(false);
         }

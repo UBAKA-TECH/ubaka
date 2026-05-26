@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import api from "../utils/axiosInstance";
 import { supabase } from "../utils/supabaseClient";
+import { useToast } from "../context/ToastContext";
 import {
     FaUser, FaEnvelope, FaLock, FaArrowRight, FaArrowLeft, FaStore, FaPhone,
     FaInfoCircle, FaGoogle, FaIdCard, FaBuilding, FaFileUpload,
@@ -11,6 +12,7 @@ import TrendingProductsSidebar from "../components/TrendingProductsSidebar";
 
 function Register() {
     const navigate = useNavigate();
+    const { showSuccess } = useToast();
     const [isSeller, setIsSeller] = useState(false);
     const [step, setStep] = useState(1);
     const [loading, setLoading] = useState(false);
@@ -263,7 +265,7 @@ function Register() {
                 setSuccess(true);
             } else {
                 // Customer registration successful
-                alert("Registration successful! Please check your email if confirmation is required, then login.");
+                showSuccess("Registration successful! Please check your email if confirmation is required, then login.");
                 navigate("/login");
             }
         } catch (err) {

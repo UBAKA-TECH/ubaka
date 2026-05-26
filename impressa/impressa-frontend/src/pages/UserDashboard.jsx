@@ -4,6 +4,7 @@ import api from "../utils/axiosInstance";
 import Header from "../components/Header";
 import { getProvinces, getDistricts, getSectors, getCells } from "../utils/locationHelpers";
 import { FaBox, FaMapMarkerAlt, FaUser, FaSignOutAlt } from "react-icons/fa";
+import { useToast } from "../context/ToastContext";
 
 
 function UserDashboard() {
@@ -15,6 +16,8 @@ function UserDashboard() {
 
   // Form states
   const [profileForm, setProfileForm] = useState({ name: "", email: "", password: "", profileImage: null });
+  const { showSuccess, showError } = useToast();
+  const [isSaving, setIsSaving] = useState(false);
   // Add detailed fields
   const [billingAddress, setBillingAddress] = useState({
     street: "", city: "", state: "", zip: "", country: "Rwanda", phone: "",
@@ -87,6 +90,7 @@ function UserDashboard() {
 
   const updateProfile = async (e) => {
     e.preventDefault();
+    setIsSaving(true);
     try {
       const formData = new FormData();
       formData.append("name", profileForm.name);
@@ -112,10 +116,12 @@ function UserDashboard() {
       await api.put("/auth/me", formData, {
         headers: { "Content-Type": "multipart/form-data" }
       });
-      alert("Profile updated successfully!");
+      showSuccess("Profile updated successfully!");
       fetchData(); // refresh
     } catch (error) {
-      alert("Failed to update profile.");
+      showError("Failed to update profile.");
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -376,7 +382,20 @@ function UserDashboard() {
                     </div>
                   </div>
                   <div className="mt-6 text-right">
-                    <button type="submit" className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition-all active:scale-95 duration-150">Save Addresses</button>
+                    <button
+                      type="submit"
+                      disabled={isSaving}
+                      className="bg-blue-600 disabled:bg-blue-400 text-white px-6 py-2 rounded hover:bg-blue-700 transition-all active:scale-95 duration-150 inline-flex items-center justify-center gap-2"
+                    >
+                      {isSaving ? (
+                        <>
+                          <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+                          <span>Saving...</span>
+                        </>
+                      ) : (
+                        "Save Addresses"
+                      )}
+                    </button>
                   </div>
                 </form>
               </div>
@@ -404,7 +423,20 @@ function UserDashboard() {
                       <input type="file" className="w-full border dark:border-charcoal-600 p-2 rounded bg-white dark:bg-charcoal-700 text-gray-900 dark:text-white file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 dark:file:bg-blue-900/30 dark:file:text-blue-400 hover:file:bg-blue-100" accept="image/*" onChange={e => setProfileForm({ ...profileForm, profileImage: e.target.files[0] })} />
                     </div>
                     <div className="pt-4">
-                      <button type="submit" className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition-all active:scale-95 duration-150">Save Changes</button>
+                      <button
+                        type="submit"
+                        disabled={isSaving}
+                        className="bg-blue-600 disabled:bg-blue-400 text-white px-6 py-2 rounded hover:bg-blue-700 transition-all active:scale-95 duration-150 inline-flex items-center justify-center gap-2"
+                      >
+                        {isSaving ? (
+                          <>
+                            <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+                            <span>Saving...</span>
+                          </>
+                        ) : (
+                          "Save Changes"
+                        )}
+                      </button>
                     </div>
                   </div>
                 </form>

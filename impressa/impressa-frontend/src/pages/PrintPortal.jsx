@@ -7,12 +7,14 @@ import api from "../utils/axiosInstance";
 import Header from "../components/Header";
 import LandingFooter from "../components/LandingFooter";
 import { useTranslation } from "react-i18next";
+import { useToast } from "../context/ToastContext";
 
 // Configure PDF.js worker
 pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.mjs`;
 
 const PrintPortal = () => {
     const { t } = useTranslation();
+    const { showWarning, showError } = useToast();
     const [searchParams] = useSearchParams();
     const sellerId = searchParams.get("seller");
     
@@ -86,8 +88,14 @@ const PrintPortal = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!selectedService || files.length === 0) return alert("Please select a service and upload at least one file.");
-        if (!contactName || !contactPhone) return alert("Please provide your name and phone number so the shop can contact you.");
+        if (!selectedService || files.length === 0) {
+            showWarning("Please select a service and upload at least one file.");
+            return;
+        }
+        if (!contactName || !contactPhone) {
+            showWarning("Please provide your name and phone number so the shop can contact you.");
+            return;
+        }
 
         setSubmitting(true);
         try {
@@ -109,7 +117,7 @@ const PrintPortal = () => {
             
             setSuccess(true);
         } catch (err) {
-            alert(err.response?.data?.message || "Failed to send inquiry");
+            showError(err.response?.data?.message || "Failed to send inquiry");
         } finally {
             setSubmitting(false);
         }

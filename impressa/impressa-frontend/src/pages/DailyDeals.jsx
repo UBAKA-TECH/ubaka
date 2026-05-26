@@ -122,7 +122,7 @@ export default function DailyDeals() {
 
             {/* Hero Section with Countdown */}
             <section
-                className="relative py-16 md:py-24 overflow-hidden"
+                className="relative py-10 md:py-14 overflow-hidden"
                 style={{
                     background: activeSale
                         ? `linear-gradient(135deg, ${activeSale.bannerColor?.split(' ')[1] || '#ef4444'} 0%, ${activeSale.bannerColor?.split(' ')[3] || '#f97316'} 100%)`
@@ -131,13 +131,13 @@ export default function DailyDeals() {
             >
                 <div className="absolute inset-0 opacity-10 bg-[url('data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')]"></div>
                 <div className="relative mx-auto max-w-7xl px-4 text-center">
-                    <div className="inline-flex items-center gap-2 px-6 py-2 bg-white/20 backdrop-blur-md rounded-full text-white font-bold text-sm mb-8 animate-bounce">
+                    <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-white/20 backdrop-blur-md rounded-full text-white font-bold text-xs mb-5 animate-bounce">
                         <FaFire /> <span>{t('daily_deals.sale_badge')}</span>
                     </div>
-                    <h1 className="text-5xl md:text-7xl font-black text-white mb-6 tracking-tight">
+                    <h1 className="text-3xl md:text-5xl font-black text-white mb-4 tracking-tight">
                         {activeSale ? activeSale.name : t('daily_deals.title')}
                     </h1>
-                    <p className="text-xl md:text-2xl text-white/90 max-w-3xl mx-auto mb-12 font-medium leading-relaxed">
+                    <p className="text-sm md:text-base text-white/90 max-w-2xl mx-auto mb-8 font-medium leading-relaxed">
                         {activeSale
                             ? activeSale.description || t('daily_deals.default_desc')
                             : t('daily_deals.subtitle')
@@ -147,23 +147,23 @@ export default function DailyDeals() {
                     {/* Countdown Timer */}
                     {activeSale && (
                         <div className="space-y-8">
-                            <div className="flex justify-center flex-wrap gap-4 md:gap-8 mb-12">
+                            <div className="flex justify-center flex-wrap gap-3 md:gap-5 mb-8">
                                 {[
                                     { label: t('home.flash_sale.days'), value: timeLeft.days },
                                     { label: t('home.flash_sale.hours'), value: timeLeft.hours },
                                     { label: t('home.flash_sale.mins'), value: timeLeft.minutes },
                                     { label: t('home.flash_sale.secs'), value: timeLeft.seconds }
                                 ].map((box, i) => (
-                                    <div key={i} className="bg-white dark:bg-charcoal-800 rounded-3xl p-6 md:p-8 min-w-[100px] md:min-w-[140px] shadow-2xl transform hover:scale-105 transition-transform duration-300 border border-white/50 dark:border-charcoal-700">
-                                        <div className="text-4xl md:text-6xl font-black text-terracotta-500 dark:text-terracotta-400 leading-none mb-2">
+                                    <div key={i} className="bg-white dark:bg-charcoal-800 rounded-2xl p-4 md:p-5 min-w-[72px] md:min-w-[96px] shadow-lg transform hover:scale-105 transition-transform duration-300 border border-white/50 dark:border-charcoal-700">
+                                        <div className="text-2xl md:text-4xl font-black text-terracotta-500 dark:text-terracotta-400 leading-none mb-1">
                                             {String(box.value).padStart(2, '0')}
                                         </div>
-                                        <div className="text-xs md:text-sm font-bold text-charcoal-400 dark:text-charcoal-500 uppercase tracking-widest">{box.label}</div>
+                                        <div className="text-[10px] md:text-xs font-bold text-charcoal-400 dark:text-charcoal-500 uppercase tracking-widest">{box.label}</div>
                                     </div>
                                 ))}
                             </div>
 
-                            <div className="flex items-center justify-center gap-3 text-white/90 font-bold bg-black/10 backdrop-blur-sm inline-flex px-8 py-3 rounded-2xl mx-auto border border-white/10">
+                            <div className="flex items-center justify-center gap-2 text-white/90 font-bold text-xs bg-black/10 backdrop-blur-sm inline-flex px-5 py-2 rounded-xl mx-auto border border-white/10">
                                 <FaClock className="animate-pulse" />
                                 <span>{t('daily_deals.hurry_ends')} {new Date(activeSale.endDate).toLocaleDateString()}</span>
                             </div>
@@ -173,14 +173,14 @@ export default function DailyDeals() {
             </section>
 
             {/* Deals Grid */}
-            <section className="mx-auto max-w-7xl px-4 py-20">
+            <section className="mx-auto max-w-7xl px-4 py-10">
                 {loading ? (
-                    <div className="py-20 text-center">
-                        <div className="w-20 h-20 border-4 border-terracotta-500 border-t-transparent rounded-full animate-spin mx-auto mb-6"></div>
-                        <p className="text-xl font-bold text-charcoal-500 dark:text-charcoal-400">{t('daily_deals.loading')}</p>
+                    <div className="py-12 text-center">
+                        <div className="w-12 h-12 border-4 border-terracotta-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                        <p className="text-sm font-bold text-charcoal-500 dark:text-charcoal-400">{t('daily_deals.loading')}</p>
                     </div>
                 ) : allProducts.length > 0 ? (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
                         {allProducts.map((product, index) => {
                             const isAvailable = product.isAvailable;
                             const imageUrl = assetUrl(product.image || product.images?.[0]);
@@ -189,21 +189,21 @@ export default function DailyDeals() {
                                 <div key={`${product.id}-${index}`} className="group bg-white dark:bg-charcoal-800 rounded-3xl shadow-sm hover:shadow-2xl border border-cream-200 dark:border-charcoal-700 transition-all duration-500 overflow-hidden flex flex-col h-full transform hover:-translate-y-2">
                                     <div className="relative">
                                         {product.discount > 0 && (
-                                            <div className="absolute top-4 left-4 z-10 bg-red-600 text-white px-4 py-2 rounded-xl text-sm font-black flex items-center gap-1 shadow-lg shadow-red-500/20">
+                                            <div className="absolute top-3 left-3 z-10 bg-red-600 text-white px-2.5 py-1 rounded-lg text-xs font-black flex items-center gap-1 shadow-lg shadow-red-500/20">
                                                 <FaPercent className="text-[10px]" />
                                                 {product.discount}% {t('daily_deals.sale_tag')}
                                             </div>
                                         )}
 
                                         {product.remaining !== null && product.remaining > 0 && isAvailable && (
-                                            <div className="absolute top-4 right-4 z-10 bg-amber-500 text-white px-3 py-1.5 rounded-lg text-xs font-bold shadow-lg shadow-amber-500/20">
+                                            <div className="absolute top-3 right-3 z-10 bg-amber-500 text-white px-2.5 py-1 rounded-lg text-[10px] font-bold shadow-lg shadow-amber-500/20">
                                                 {t('daily_deals.only_left', { count: product.remaining })}
                                             </div>
                                         )}
 
                                         {!isAvailable && (
-                                            <div className="absolute inset-0 z-20 bg-gray-900/40 backdrop-blur-[2px] flex items-center justify-center p-6">
-                                                <span className="bg-white/90 dark:bg-charcoal-800/90 text-charcoal-800 dark:text-white px-10 py-4 rounded-2xl font-black text-2xl uppercase tracking-widest shadow-2xl rotate-[-10deg]">{t('daily_deals.sold_out')}</span>
+                                            <div className="absolute inset-0 z-20 bg-gray-900/40 backdrop-blur-[2px] flex items-center justify-center p-4">
+                                                <span className="bg-white/90 dark:bg-charcoal-800/90 text-charcoal-800 dark:text-white px-6 py-2.5 rounded-xl font-black text-base uppercase tracking-widest shadow-xl rotate-[-10deg]">{t('daily_deals.sold_out')}</span>
                                             </div>
                                         )}
 
@@ -223,7 +223,7 @@ export default function DailyDeals() {
                                             </Link>
                                     </div>
 
-                                    <div className="p-6 flex flex-col flex-grow">
+                                    <div className="p-4 flex flex-col flex-grow">
                                         <div className="flex items-center gap-1 mb-2">
                                             {[...Array(5)].map((_, i) => (
                                                 <FaStar key={i} className={`${i < getRating(product.averageRating) ? "text-sand-400" : "text-charcoal-200 dark:text-charcoal-700"} text-xs`} />
@@ -231,24 +231,24 @@ export default function DailyDeals() {
                                             <span className="text-xs text-charcoal-400 ml-1">({getRating(product.averageRating).toFixed(1)})</span>
                                         </div>
 
-                                        <Link to={`/product/${product.id}`} className="block mb-2 group/title">
-                                            <h3 className="text-xl font-bold text-gray-900 dark:text-white line-clamp-1 group-hover/title:text-red-500 transition-colors">{product.name}</h3>
+                                        <Link to={`/product/${product.id}`} className="block mb-1.5 group/title">
+                                            <h3 className="text-sm font-bold text-gray-900 dark:text-white line-clamp-1 group-hover/title:text-red-500 transition-colors">{product.name}</h3>
                                         </Link>
 
-                                        <div className="flex items-center gap-3 mb-6">
-                                            <span className="text-3xl font-black text-terracotta-500 dark:text-terracotta-400">{formatRwf(product.flashSalePrice)}</span>
+                                        <div className="flex items-center gap-2 mb-3">
+                                            <span className="text-base font-black text-terracotta-500 dark:text-terracotta-400">{formatRwf(product.flashSalePrice)}</span>
                                             {product.originalPrice && product.originalPrice > product.flashSalePrice && (
-                                                <span className="text-lg text-charcoal-400 dark:text-charcoal-500 line-through font-bold">{formatRwf(product.originalPrice)}</span>
+                                                <span className="text-xs text-charcoal-400 dark:text-charcoal-500 line-through font-bold">{formatRwf(product.originalPrice)}</span>
                                             )}
                                         </div>
 
                                         {product.remaining !== null && (
-                                            <div className="space-y-2 mb-8">
-                                                <div className="flex justify-between text-xs font-bold uppercase tracking-widest text-charcoal-400 dark:text-charcoal-500">
+                                            <div className="space-y-1.5 mb-4">
+                                                <div className="flex justify-between text-[10px] font-bold uppercase tracking-widest text-charcoal-400 dark:text-charcoal-500">
                                                     <span>{product.soldCount} {t('daily_deals.sold')}</span>
                                                     <span>{product.remaining} {t('daily_deals.left')}</span>
                                                 </div>
-                                                <div className="h-2 w-full bg-cream-200 dark:bg-charcoal-700 rounded-full overflow-hidden">
+                                                <div className="h-1.5 w-full bg-cream-200 dark:bg-charcoal-700 rounded-full overflow-hidden">
                                                     <div
                                                         className="h-full bg-gradient-to-r from-terracotta-500 to-sand-400"
                                                         style={{ width: `${(product.soldCount / (product.soldCount + product.remaining)) * 100}%` }}
@@ -261,13 +261,13 @@ export default function DailyDeals() {
                                             {isAvailable ? (
                                                 <button
                                                     onClick={() => handleAddToCart(product)}
-                                                    className="w-full py-5 bg-charcoal-800 dark:bg-white text-white dark:text-charcoal-800 rounded-2xl font-black flex items-center justify-center gap-3 transition-all hover:bg-terracotta-500 dark:hover:bg-terracotta-500 hover:text-white shadow-xl group/btn active:scale-95"
+                                                    className="w-full py-2.5 bg-charcoal-800 dark:bg-white text-white dark:text-charcoal-800 rounded-xl font-black text-xs flex items-center justify-center gap-2 transition-all hover:bg-terracotta-500 dark:hover:bg-terracotta-500 hover:text-white shadow-md group/btn active:scale-95"
                                                 >
-                                                    <FaShoppingCart className="transition-transform group-hover/btn:-translate-y-1" />
+                                                    <FaShoppingCart className="transition-transform group-hover/btn:-translate-y-0.5" />
                                                     {t('shop.add_to_cart')}
                                                 </button>
                                             ) : (
-                                                <button className="w-full py-5 bg-cream-200 dark:bg-charcoal-700 text-charcoal-400 dark:text-charcoal-500 rounded-2xl font-black cursor-not-allowed" disabled>
+                                                <button className="w-full py-2.5 bg-cream-200 dark:bg-charcoal-700 text-charcoal-400 dark:text-charcoal-500 rounded-xl font-black text-xs cursor-not-allowed" disabled>
                                                     {t('daily_deals.sold_out')}
                                                 </button>
                                             )}
@@ -278,17 +278,17 @@ export default function DailyDeals() {
                         })}
                     </div>
                 ) : (
-                    <div className="max-w-xl mx-auto text-center py-20 px-6 bg-white dark:bg-charcoal-800 rounded-[40px] shadow-2xl border border-cream-200 dark:border-charcoal-700">
-                        <div className="w-24 h-24 bg-terracotta-50 dark:bg-terracotta-900/10 rounded-3xl flex items-center justify-center mx-auto mb-8 text-terracotta-500 shadow-inner">
-                            <FaFire className="text-4xl" />
+                    <div className="max-w-md mx-auto text-center py-12 px-6 bg-white dark:bg-charcoal-800 rounded-3xl shadow-xl border border-cream-200 dark:border-charcoal-700">
+                        <div className="w-16 h-16 bg-terracotta-50 dark:bg-terracotta-900/10 rounded-2xl flex items-center justify-center mx-auto mb-5 text-terracotta-500 shadow-inner">
+                            <FaFire className="text-2xl" />
                         </div>
-                        <h2 className="text-4xl font-black text-charcoal-800 dark:text-white mb-4">{t('daily_deals.no_deals_title')}</h2>
-                        <p className="text-charcoal-500 dark:text-charcoal-400 mb-10 text-lg leading-relaxed">
+                        <h2 className="text-2xl font-black text-charcoal-800 dark:text-white mb-3">{t('daily_deals.no_deals_title')}</h2>
+                        <p className="text-charcoal-500 dark:text-charcoal-400 mb-6 text-sm leading-relaxed">
                             {t('daily_deals.no_deals_desc')}
                         </p>
                         <Link
                             to="/shop"
-                            className="inline-flex items-center gap-4 bg-charcoal-800 dark:bg-white text-white dark:text-charcoal-800 px-10 py-5 rounded-2xl font-black text-lg transition-all hover:bg-terracotta-500 dark:hover:bg-terracotta-500 hover:text-white shadow-2xl"
+                            className="inline-flex items-center gap-2 bg-charcoal-800 dark:bg-white text-white dark:text-charcoal-800 px-6 py-3 rounded-xl font-black text-sm transition-all hover:bg-terracotta-500 dark:hover:bg-terracotta-500 hover:text-white shadow-lg"
                         >
                             {t('daily_deals.browse_all')}
                         </Link>

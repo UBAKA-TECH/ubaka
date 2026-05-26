@@ -191,26 +191,26 @@ function UserDashboard() {
               <nav className="space-y-2">
                 <button
                   onClick={() => setActiveTab("orders")}
-                  className={`w-full flex items-center gap-3 px-4 py-2 rounded-md transition-colors ${activeTab === "orders" ? "bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400" : "text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-charcoal-700"}`}
+                  className={`w-full flex items-center gap-3 px-4 py-2 rounded-md transition-all active:scale-[0.97] duration-150 ${activeTab === "orders" ? "bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400" : "text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-charcoal-700"}`}
                 >
                   <FaBox /> Orders
                 </button>
                 <button
                   onClick={() => setActiveTab("addresses")}
-                  className={`w-full flex items-center gap-3 px-4 py-2 rounded-md transition-colors ${activeTab === "addresses" ? "bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400" : "text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-charcoal-700"}`}
+                  className={`w-full flex items-center gap-3 px-4 py-2 rounded-md transition-all active:scale-[0.97] duration-150 ${activeTab === "addresses" ? "bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400" : "text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-charcoal-700"}`}
                 >
                   <FaMapMarkerAlt /> Addresses
                 </button>
                 <button
                   onClick={() => setActiveTab("account")}
-                  className={`w-full flex items-center gap-3 px-4 py-2 rounded-md transition-colors ${activeTab === "account" ? "bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400" : "text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-charcoal-700"}`}
+                  className={`w-full flex items-center gap-3 px-4 py-2 rounded-md transition-all active:scale-[0.97] duration-150 ${activeTab === "account" ? "bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400" : "text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-charcoal-700"}`}
                 >
                   <FaUser /> Account Details
                 </button>
 
                 <button
                   onClick={handleLogout}
-                  className="w-full flex items-center gap-3 px-4 py-2 rounded-md text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors mt-4"
+                  className="w-full flex items-center gap-3 px-4 py-2 rounded-md text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all active:scale-[0.97] duration-150 mt-4"
                 >
                   <FaSignOutAlt /> Logout
                 </button>
@@ -376,7 +376,7 @@ function UserDashboard() {
                     </div>
                   </div>
                   <div className="mt-6 text-right">
-                    <button type="submit" className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">Save Addresses</button>
+                    <button type="submit" className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition-all active:scale-95 duration-150">Save Addresses</button>
                   </div>
                 </form>
               </div>
@@ -404,7 +404,7 @@ function UserDashboard() {
                       <input type="file" className="w-full border dark:border-charcoal-600 p-2 rounded bg-white dark:bg-charcoal-700 text-gray-900 dark:text-white file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 dark:file:bg-blue-900/30 dark:file:text-blue-400 hover:file:bg-blue-100" accept="image/*" onChange={e => setProfileForm({ ...profileForm, profileImage: e.target.files[0] })} />
                     </div>
                     <div className="pt-4">
-                      <button type="submit" className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">Save Changes</button>
+                      <button type="submit" className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition-all active:scale-95 duration-150">Save Changes</button>
                     </div>
                   </div>
                 </form>

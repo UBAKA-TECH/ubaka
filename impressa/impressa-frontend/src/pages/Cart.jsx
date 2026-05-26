@@ -146,7 +146,7 @@ export default function CartPage() {
                               <td className="px-6 py-5 text-right">
                                 <button
                                   onClick={() => removeItem(idx)}
-                                  className="p-2 text-gray-300 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/10 rounded-full transition-all"
+                                  className="p-2 text-gray-300 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/10 rounded-full transition-all active:scale-90 duration-150"
                                 >
                                   <FaTrashAlt className="text-sm" />
                                 </button>
@@ -164,7 +164,7 @@ export default function CartPage() {
                       <div key={idx} className="bg-white dark:bg-slate-900 rounded-2xl p-4 border border-gray-100 dark:border-slate-800/80 shadow-sm relative space-y-4">
                         <button
                           onClick={() => removeItem(idx)}
-                          className="absolute top-4 right-4 p-2 text-gray-300 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/10 rounded-full transition-all"
+                          className="absolute top-4 right-4 p-2 text-gray-300 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/10 rounded-full transition-all active:scale-90 duration-150"
                         >
                           <FaTrashAlt className="text-sm" />
                         </button>
@@ -244,7 +244,7 @@ export default function CartPage() {
                       {coupon ? (
                         <div className="flex items-center justify-between bg-violet-50 dark:bg-violet-900/10 border border-violet-100 dark:border-violet-900/30 rounded-xl p-3 animate-fade-in">
                           <span className="text-violet-750 dark:text-violet-400 font-bold text-xs">PROMO: {coupon}</span>
-                          <button onClick={handleRemoveCoupon} className="p-1 text-violet-450 hover:text-red-500 transition-colors">
+                          <button onClick={handleRemoveCoupon} className="p-1 text-violet-450 hover:text-red-500 transition-all active:scale-90 duration-150">
                             <FaTimes />
                           </button>
                         </div>
@@ -259,7 +259,7 @@ export default function CartPage() {
                           />
                           <button
                             onClick={handleApplyCoupon}
-                            className="bg-slate-900 dark:bg-slate-800 text-white px-4 py-2 rounded-xl text-xs font-bold hover:bg-violet-650 transition-all active:scale-[0.97]"
+                            className="bg-slate-900 dark:bg-slate-800 text-white px-4 py-2 rounded-xl text-xs font-bold hover:bg-violet-650 transition-all active:scale-95 duration-150"
                           >
                             Apply
                           </button>
@@ -274,7 +274,7 @@ export default function CartPage() {
 
                     <button
                       onClick={() => nav("/checkout")}
-                      className="w-full bg-violet-600 hover:bg-violet-700 text-white py-3.5 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all shadow-md shadow-violet-500/20 hover:shadow-violet-500/30 active:scale-[0.98] mb-3"
+                      className="w-full bg-violet-600 hover:bg-violet-700 text-white py-3.5 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all shadow-md shadow-violet-500/20 hover:shadow-violet-500/35 active:scale-95 duration-150 mb-3"
                     >
                       Proceed to Checkout <FaArrowRight className="text-xs" />
                     </button>

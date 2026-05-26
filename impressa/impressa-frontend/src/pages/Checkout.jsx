@@ -632,7 +632,7 @@ export default function CheckoutPage() {
                           <button
                             type="button"
                             onClick={removeGiftCard}
-                            className="text-xs font-bold text-red-500 hover:text-red-700 uppercase tracking-tighter"
+                            className="text-xs font-bold text-red-500 hover:text-red-700 uppercase tracking-tighter transition-all active:scale-95 duration-150"
                           >
                             Remove
                           </button>
@@ -650,7 +650,7 @@ export default function CheckoutPage() {
                             type="button"
                             disabled={isApplyingGC || !giftCardCode}
                             onClick={handleApplyGiftCard}
-                            className="bg-slate-900 dark:bg-white dark:text-slate-900 text-white px-4 rounded-xl font-bold text-xs hover:bg-violet-700 transition-all disabled:opacity-50"
+                            className="bg-slate-900 dark:bg-white dark:text-slate-900 text-white px-4 rounded-xl font-bold text-xs hover:bg-violet-700 transition-all active:scale-95 duration-150 disabled:opacity-50 disabled:active:scale-100"
                           >
                             {isApplyingGC ? "..." : "Apply"}
                           </button>
@@ -668,7 +668,7 @@ export default function CheckoutPage() {
                   <button
                     type="submit"
                     disabled={!selectedMethod || isProcessing}
-                    className="mt-6 w-full bg-violet-600 hover:bg-violet-700 disabled:bg-gray-200 dark:disabled:bg-slate-800 text-white py-4 rounded-xl font-bold text-lg flex items-center justify-center gap-3 transition-all shadow-md shadow-violet-500/20 hover:shadow-violet-500/35 active:scale-[0.98] group"
+                    className="mt-6 w-full bg-violet-600 hover:bg-violet-700 disabled:bg-gray-200 dark:disabled:bg-slate-800 text-white py-4 rounded-xl font-bold text-lg flex items-center justify-center gap-3 transition-all shadow-md shadow-violet-500/20 hover:shadow-violet-500/35 active:scale-95 duration-150 disabled:opacity-50 disabled:active:scale-100 group"
                   >
                     {isProcessing ? (
                       <>

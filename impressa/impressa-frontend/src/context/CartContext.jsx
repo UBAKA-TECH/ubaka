@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState, useCallback } from "react";
+import { createContext, useContext, useEffect, useState, useCallback, useRef } from "react";
 import * as api from "../services/api";
 import { useToast } from "./ToastContext";
 
@@ -9,6 +9,39 @@ export function CartProvider({ children }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const { showSuccess } = useToast();
+  const updateTimeouts = useRef({});
+
+  const updateLocalCartQty = (productId, newQty) => {
+    setCart(prev => {
+      if (!prev) return prev;
+      const updatedItems = prev.items.map(it => {
+        const itId = it.product?.id || it.product || it.productId;
+        if (itId === productId) {
+          const updatedQty = Math.max(1, newQty);
+          return {
+            ...it,
+            quantity: updatedQty,
+            subtotal: (it.price || it.product?.price || 0) * updatedQty
+          };
+        }
+        return it;
+      });
+
+      const newSubtotal = updatedItems.reduce((sum, it) => sum + (it.subtotal || 0), 0);
+      let newDiscount = prev.totals?.discount || 0;
+      const newTotal = Math.max(0, newSubtotal - newDiscount);
+
+      return {
+        ...prev,
+        items: updatedItems,
+        totals: {
+          ...prev.totals,
+          subtotal: newSubtotal,
+          total: newTotal
+        }
+      };
+    });
+  };
 
 
 
@@ -81,13 +114,30 @@ export function CartProvider({ children }) {
   };
 
   const updateItem = async (productId, quantity, variationId = null) => {
-    try {
-      const payload = await api.updateCartItem(productId, quantity, variationId);
-      setCartSafe(payload.data || null);
-      return payload;
-    } catch (err) {
-      throw err;
+    // 1. Optimistic Update in Frontend State
+    updateLocalCartQty(productId, quantity);
+
+    // 2. Debounce Backend Sync
+    const key = `${productId}-${variationId || ""}`;
+    if (updateTimeouts.current[key]) {
+      clearTimeout(updateTimeouts.current[key]);
     }
+
+    return new Promise((resolve, reject) => {
+      updateTimeouts.current[key] = setTimeout(async () => {
+        try {
+          const payload = await api.updateCartItem(productId, quantity, variationId);
+          setCartSafe(payload.data || null);
+          resolve(payload);
+        } catch (err) {
+          // Rollback to actual server state on error
+          fetchCart();
+          reject(err);
+        } finally {
+          delete updateTimeouts.current[key];
+        }
+      }, 350);
+    });
   };
 
   const removeItem = async (productIdOrIndex) => {

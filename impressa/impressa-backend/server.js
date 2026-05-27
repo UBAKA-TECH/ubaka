@@ -97,7 +97,7 @@ app.use(cors({
   },
   credentials: true,
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With", "Accept", "X-Refresh-Token", "Origin"],
+  allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With", "Accept", "X-Refresh-Token", "Origin", "x-cart-session"],
   exposedHeaders: ["Set-Cookie"],
   optionsSuccessStatus: 204
 }));

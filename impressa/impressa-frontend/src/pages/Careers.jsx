@@ -129,7 +129,7 @@ export default function Careers() {
                         🚀 Join Kuri Macye Ecosystem
                     </div>
                     <h1 className="text-4xl md:text-5xl font-black tracking-tight leading-tight">
-                        Build the Future of Local Commerce in East Africa
+                        Build the Future of Local Commerce in Rwanda
                     </h1>
                     <p className="text-terracotta-100 text-lg max-w-2xl mx-auto font-medium">
                         We are a mission-driven team empowering local designers, print specialists, and merchants. Explore our open roles and grow with us.

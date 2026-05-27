@@ -54,6 +54,7 @@ const SellerProducts = lazy(() => import("./pages/SellerProducts"));
 const SellerReports = lazy(() => import("./pages/SellerReports"));
 const SellerTeam = lazy(() => import("./pages/SellerTeam"));
 const PrintPortal = lazy(() => import("./pages/PrintPortal"));
+const Careers = lazy(() => import("./pages/Careers"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -102,6 +103,7 @@ function App() {
                     <Route path="/terms" element={<TermsOfService />} />
                     <Route path="/faq" element={<FAQ />} />
                     <Route path="/print-portal" element={<PrintPortal />} />
+                    <Route path="/careers" element={<Careers />} />
                     <Route path="/orders" element={
                       <ProtectedRoute allowedRoles={['customer', 'seller', 'admin', 'cashier', 'owner']}>
                         <OrderHistory />

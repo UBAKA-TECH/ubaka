@@ -1,19 +1,96 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Header from "../components/Header";
 import LandingFooter from "../components/LandingFooter";
 import { useTranslation } from 'react-i18next';
 import { FaChevronDown } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
+import api from "../utils/axiosInstance";
 
 const FAQ = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [activeIndex, setActiveIndex] = useState(null);
+  const [faqs, setFaqs] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const faqs = t('faq.items', { returnObjects: true });
+  // Load fallback FAQs from local translation dictionary
+  const fallbackFaqs = t('faq.items', { returnObjects: true }) || [];
+
+  useEffect(() => {
+    let isMounted = true;
+    const fetchFaqs = async () => {
+      try {
+        const response = await api.get('/faqs/active');
+        if (isMounted) {
+          if (response.data && response.data.success && Array.isArray(response.data.data) && response.data.data.length > 0) {
+            setFaqs(response.data.data);
+          } else {
+            // Fallback if success but data empty
+            setFaqs(fallbackFaqs);
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching FAQs:", error);
+        if (isMounted) {
+          // Fallback on API error
+          setFaqs(fallbackFaqs);
+        }
+      } finally {
+        if (isMounted) {
+          setLoading(false);
+        }
+      }
+    };
+
+    fetchFaqs();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const toggleAccordion = (index) => {
     setActiveIndex(activeIndex === index ? null : index);
   };
+
+  const getFaqContent = (faq, lang) => {
+    // If it's a fallback local translation FAQ (has 'q' and 'a')
+    if (faq.q && faq.a) {
+      return { question: faq.q, answer: faq.a };
+    }
+    // If it's a backend FAQ (has 'question', 'answer', and potentially 'Rw' versions)
+    if (lang === 'rw') {
+      return {
+        question: faq.questionRw || faq.question,
+        answer: faq.answerRw || faq.answer
+      };
+    }
+    return {
+      question: faq.question,
+      answer: faq.answer
+    };
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-cream-100 dark:bg-charcoal-900 transition-colors duration-300">
+        <Header />
+        <main className="mx-auto max-w-3xl px-4 py-20">
+          <div className="animate-pulse text-center">
+            <div className="h-9 w-64 bg-cream-300 dark:bg-charcoal-700 rounded mx-auto mb-3"></div>
+            <div className="h-4 w-96 bg-cream-300 dark:bg-charcoal-700 rounded mx-auto mb-14"></div>
+            <div className="bg-white dark:bg-charcoal-800 rounded-2xl border border-cream-200 dark:border-charcoal-700 overflow-hidden divide-y divide-cream-200 dark:divide-charcoal-700">
+              {[1, 2, 3, 4, 5, 6].map((n) => (
+                <div key={n} className="p-6 flex justify-between items-center">
+                  <div className="h-5 w-2/3 bg-cream-200 dark:bg-charcoal-700 rounded"></div>
+                  <div className="h-7 w-7 bg-cream-200 dark:bg-charcoal-700 rounded-lg"></div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </main>
+        <LandingFooter />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-cream-100 dark:bg-charcoal-900 transition-colors duration-300">
@@ -41,36 +118,39 @@ const FAQ = () => {
         <section className="mx-auto max-w-3xl px-4 py-10 md:py-14">
           <div className="bg-white dark:bg-charcoal-800 rounded-2xl shadow-sm border border-cream-200 dark:border-charcoal-700 overflow-hidden">
             <div className="divide-y divide-cream-200 dark:divide-charcoal-700">
-              {Array.isArray(faqs) && faqs.map((faq, index) => (
-                <div key={index}>
-                  <button
-                    className="w-full flex items-center justify-between text-left px-6 py-4 group transition-all"
-                    onClick={() => toggleAccordion(index)}
-                  >
-                    <span className={`text-sm font-bold pr-4 transition-colors leading-snug ${
-                      activeIndex === index
-                        ? 'text-terracotta-500 dark:text-terracotta-400'
-                        : 'text-charcoal-800 dark:text-white group-hover:text-terracotta-500 dark:group-hover:text-terracotta-400'
+              {Array.isArray(faqs) && faqs.map((item, index) => {
+                const { question, answer } = getFaqContent(item, i18n.language);
+                return (
+                  <div key={item.id || index}>
+                    <button
+                      className="w-full flex items-center justify-between text-left px-6 py-4 group transition-all"
+                      onClick={() => toggleAccordion(index)}
+                    >
+                      <span className={`text-sm font-bold pr-4 transition-colors leading-snug ${
+                        activeIndex === index
+                          ? 'text-terracotta-500 dark:text-terracotta-400'
+                          : 'text-charcoal-800 dark:text-white group-hover:text-terracotta-500 dark:group-hover:text-terracotta-400'
+                      }`}>
+                        {question}
+                      </span>
+                      <div className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 transition-all duration-300 ${
+                        activeIndex === index
+                          ? 'bg-terracotta-500 text-white rotate-180'
+                          : 'bg-cream-100 dark:bg-charcoal-700 text-charcoal-500 dark:text-charcoal-400'
+                      }`}>
+                        <FaChevronDown className="text-xs" />
+                      </div>
+                    </button>
+                    <div className={`overflow-hidden transition-all duration-400 ease-in-out ${
+                      activeIndex === index ? 'max-h-60 opacity-100' : 'max-h-0 opacity-0'
                     }`}>
-                      {faq.q}
-                    </span>
-                    <div className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 transition-all duration-300 ${
-                      activeIndex === index
-                        ? 'bg-terracotta-500 text-white rotate-180'
-                        : 'bg-cream-100 dark:bg-charcoal-700 text-charcoal-500 dark:text-charcoal-400'
-                    }`}>
-                      <FaChevronDown className="text-xs" />
+                      <p className="text-sm text-charcoal-600 dark:text-charcoal-400 leading-relaxed px-6 pb-5 pt-0 border-l-4 border-terracotta-400/30 ml-6">
+                        {answer}
+                      </p>
                     </div>
-                  </button>
-                  <div className={`overflow-hidden transition-all duration-400 ease-in-out ${
-                    activeIndex === index ? 'max-h-60 opacity-100' : 'max-h-0 opacity-0'
-                  }`}>
-                    <p className="text-sm text-charcoal-600 dark:text-charcoal-400 leading-relaxed px-6 pb-5 pt-0 border-l-4 border-terracotta-400/30 ml-6">
-                      {faq.a}
-                    </p>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
 
@@ -105,3 +185,4 @@ const FAQ = () => {
 };
 
 export default FAQ;
+

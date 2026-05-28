@@ -6,8 +6,10 @@ import { checkGiftCardBalance, getGiftCardProducts } from "../services/api";
 import { useToast } from "../context/ToastContext";
 import { useCart } from "../context/CartContext";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const GiftCards = () => {
+    const { t } = useTranslation();
     const [code, setCode] = useState("");
     const [balanceResult, setBalanceResult] = useState(null);
     const [loading, setLoading] = useState(false);
@@ -49,10 +51,10 @@ const GiftCards = () => {
             const res = await checkGiftCardBalance(code);
             if (res.success) {
                 setBalanceResult(res.data);
-                showSuccess("Balance fetched successfully");
+                showSuccess(t("gift_cards.toast_balance_success"));
             }
         } catch (err) {
-            showError(err.response?.data?.message || "Failed to check balance");
+            showError(err.response?.data?.message || t("gift_cards.toast_balance_fail"));
         } finally {
             setLoading(false);
         }
@@ -70,7 +72,7 @@ const GiftCards = () => {
         e.preventDefault();
 
         if (!recipientEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(recipientEmail)) {
-            showError("Please enter a valid recipient email");
+            showError(t("gift_cards.modal_err_email"));
             return;
         }
 
@@ -78,7 +80,7 @@ const GiftCards = () => {
         if (selectedOption.isCustom) {
             amount = parseInt(customAmount);
             if (isNaN(amount) || amount <= 0) {
-                showError("Please enter a valid amount");
+                showError(t("gift_cards.modal_err_amount"));
                 return;
             }
         }
@@ -92,9 +94,9 @@ const GiftCards = () => {
             setIsModalOpen(false);
             setRecipientEmail("");
             setCustomAmount("5000");
-            showSuccess("Gift Card added to cart!");
+            showSuccess(t("gift_cards.toast_cart_success"));
         } catch (err) {
-            showError("Failed to add gift card to cart");
+            showError(t("gift_cards.toast_cart_fail"));
         } finally {
             setIsSubmitting(false);
         }
@@ -117,13 +119,13 @@ const GiftCards = () => {
                     </div>
                     <div className="container mx-auto px-4 relative z-10 text-center">
                         <FaGift className="text-4xl text-amber-400 mx-auto mb-4 animate-bounce" />
-                        <h1 className="text-3xl md:text-4xl font-bold mb-3 tracking-tight">The Perfect Gift for <span className="text-amber-400">Everyone</span></h1>
+                        <h1 className="text-3xl md:text-4xl font-bold mb-3 tracking-tight">{t("gift_cards.hero_title")}<span className="text-amber-400">{t("gift_cards.hero_highlight")}</span></h1>
                         <p className="text-sm text-charcoal-300 max-w-xl mx-auto mb-6 leading-relaxed">
-                            Give the gift of choice with an Kuri Macye Gift Card. Deliver instantly via email or schedule for the perfect moment.
+                            {t("gift_cards.hero_desc")}
                         </p>
                         <div className="flex flex-wrap justify-center gap-3">
-                            <a href="#buy-cards" className="bg-terracotta-500 hover:bg-terracotta-600 text-white px-6 py-2.5 rounded-full font-bold text-sm transition-all shadow-lg hover:shadow-terracotta-500/20">Buy Now</a>
-                            <a href="#check-balance" className="bg-white/10 hover:bg-white/20 text-white px-6 py-2.5 rounded-full font-bold text-sm backdrop-blur-sm transition-all border border-white/30">Check Balance</a>
+                            <a href="#buy-cards" className="bg-terracotta-500 hover:bg-terracotta-600 text-white px-6 py-2.5 rounded-full font-bold text-sm transition-all shadow-lg hover:shadow-terracotta-500/20">{t("gift_cards.cta_buy")}</a>
+                            <a href="#check-balance" className="bg-white/10 hover:bg-white/20 text-white px-6 py-2.5 rounded-full font-bold text-sm backdrop-blur-sm transition-all border border-white/30">{t("gift_cards.cta_balance")}</a>
                         </div>
                     </div>
                 </section>
@@ -131,21 +133,21 @@ const GiftCards = () => {
                 {/* Gift Card Grid */}
                 <section id="buy-cards" className="py-10 container mx-auto px-4">
                     <div className="text-center mb-8">
-                        <h2 className="text-2xl md:text-3xl font-bold text-charcoal-900 dark:text-white mb-2">Choose Your Amount</h2>
-                        <p className="text-sm text-charcoal-500 dark:text-charcoal-400">Select a preset amount or choose your own</p>
+                        <h2 className="text-2xl md:text-3xl font-bold text-charcoal-900 dark:text-white mb-2">{t("gift_cards.choose_amount")}</h2>
+                        <p className="text-sm text-charcoal-500 dark:text-charcoal-400">{t("gift_cards.choose_amount_desc")}</p>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
                         {giftCardOptions.map((opt) => (
-                            <div key={opt.id || opt.id} className="group relative bg-white dark:bg-slate-900 rounded-2xl p-1 shadow-sm hover:shadow-xl transition-all duration-500 border border-gray-100 dark:border-slate-800">
+                            <div key={opt.id} className="group relative bg-white dark:bg-slate-900 rounded-2xl p-1 shadow-sm hover:shadow-xl transition-all duration-500 border border-gray-100 dark:border-slate-800">
                                 <div className={`aspect-[1.6/1] rounded-xl bg-gradient-to-br ${opt.color} p-4 flex flex-col justify-between text-white relative overflow-hidden`}>
                                     <div className="absolute top-0 right-0 w-24 h-24 bg-white/10 rounded-full blur-3xl -mr-12 -mt-12"></div>
                                     <div className="z-10">
-                                        <div className="text-xs font-medium opacity-80 uppercase tracking-widest">{opt.label}</div>
-                                        <div className="text-xl font-black mt-0.5">Kuri Macye</div>
+                                        <div className="text-xs font-medium opacity-80 uppercase tracking-widest">{opt.label === "Custom" ? t("gift_cards.custom") : opt.label}</div>
+                                        <div className="text-xl font-black mt-0.5">{t("gift_cards.card_title")}</div>
                                     </div>
                                     <div className="z-10 flex justify-between items-end">
-                                        <div className="text-base font-bold">{opt.isCustom ? "Custom" : formatRwf(opt.amount)}</div>
+                                        <div className="text-base font-bold">{opt.isCustom ? t("gift_cards.custom") : formatRwf(opt.amount)}</div>
                                         <FaGift className="text-xl opacity-30" />
                                     </div>
                                 </div>
@@ -155,7 +157,7 @@ const GiftCards = () => {
                                         className="w-full bg-charcoal-900 dark:bg-white dark:text-charcoal-900 text-white py-2 rounded-lg font-bold text-xs flex items-center justify-center gap-2 hover:bg-terracotta-500 dark:hover:bg-terracotta-500 hover:text-white transition-all transform active:scale-95 shadow-sm"
                                     >
                                         <FaShoppingCart className="text-sm" />
-                                        Buy Card
+                                        {t("gift_cards.buy_card")}
                                     </button>
                                 </div>
                             </div>
@@ -171,23 +173,23 @@ const GiftCards = () => {
                                 <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none overflow-hidden">
                                     <FaGift className="text-[12rem] absolute -bottom-10 -left-10 rotate-12" />
                                 </div>
-                                <h2 className="text-xl font-bold mb-3">Manage Your Card</h2>
-                                <p className="text-sm text-charcoal-400 leading-relaxed mb-5">Enter your unique code to check your remaining balance or view its status.</p>
+                                <h2 className="text-xl font-bold mb-3">{t("gift_cards.manage_card")}</h2>
+                                <p className="text-sm text-charcoal-400 leading-relaxed mb-5">{t("gift_cards.manage_card_desc")}</p>
                                 <div className="space-y-3">
                                     <div className="flex items-center gap-3 text-sm text-charcoal-300">
                                         <FaCheckCircle className="text-emerald-500 shrink-0" />
-                                        <span>Instant verification</span>
+                                        <span>{t("gift_cards.instant_verify")}</span>
                                     </div>
                                     <div className="flex items-center gap-3 text-sm text-charcoal-300">
                                         <FaCheckCircle className="text-emerald-500 shrink-0" />
-                                        <span>Safe and secure</span>
+                                        <span>{t("gift_cards.safe_secure")}</span>
                                     </div>
                                 </div>
                             </div>
                             <div className="md:w-1/2 p-7">
                                 <form onSubmit={handleCheckBalance} className="space-y-4">
                                     <div>
-                                        <label className="block text-xs font-bold text-charcoal-800 dark:text-white uppercase tracking-wider mb-1.5">Gift Card Code</label>
+                                        <label className="block text-xs font-bold text-charcoal-800 dark:text-white uppercase tracking-wider mb-1.5">{t("gift_cards.code_label")}</label>
                                         <div className="relative">
                                             <input
                                                 type="text"
@@ -202,18 +204,18 @@ const GiftCards = () => {
                                                 className="absolute right-1.5 top-1.5 bottom-1.5 bg-charcoal-900 dark:bg-white dark:text-charcoal-900 text-white px-4 rounded-lg font-bold text-xs flex items-center gap-1.5 hover:bg-terracotta-500 dark:hover:bg-terracotta-500 hover:text-white transition-all disabled:opacity-50"
                                             >
                                                 {loading ? <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div> : <FaSearch />}
-                                                Check
+                                                {t("gift_cards.btn_check")}
                                             </button>
                                         </div>
                                     </div>
 
                                     {balanceResult && (
                                         <div className="p-4 bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-100 dark:border-emerald-800 rounded-xl animate-fade-in-up">
-                                            <div className="text-xs text-emerald-600 dark:text-emerald-400 font-bold uppercase tracking-wider mb-1">Available Balance</div>
+                                            <div className="text-xs text-emerald-600 dark:text-emerald-400 font-bold uppercase tracking-wider mb-1">{t("gift_cards.available_balance")}</div>
                                             <div className="text-2xl font-black text-charcoal-900 dark:text-white mb-3">{formatRwf(balanceResult.balance)}</div>
                                             <div className="flex justify-between items-center text-xs text-charcoal-500 dark:text-charcoal-400 border-t border-emerald-100 dark:border-emerald-800 pt-3">
-                                                <span>Expires: {new Date(balanceResult.expiryDate).toLocaleDateString()}</span>
-                                                <Link to="/shop" className="text-terracotta-500 font-bold flex items-center gap-1 hover:underline">Shop Now <FaChevronRight className="text-[10px]" /></Link>
+                                                <span>{t("gift_cards.expires")} {new Date(balanceResult.expiryDate).toLocaleDateString()}</span>
+                                                <Link to="/shop" className="text-terracotta-500 font-bold flex items-center gap-1 hover:underline">{t("gift_cards.shop_now")} <FaChevronRight className="text-[10px]" /></Link>
                                             </div>
                                         </div>
                                     )}
@@ -247,15 +249,15 @@ const GiftCards = () => {
                                 <FaGift className="text-base" />
                             </div>
                             <div>
-                                <h3 className="text-lg font-bold text-charcoal-900 dark:text-white">Customize Gift Card</h3>
-                                <p className="text-xs text-gray-500 dark:text-gray-400">{selectedOption?.label} Edition</p>
+                                <h3 className="text-lg font-bold text-charcoal-900 dark:text-white">{t("gift_cards.modal_title")}</h3>
+                                <p className="text-xs text-gray-500 dark:text-gray-400">{selectedOption?.label === "Custom" ? t("gift_cards.custom") : selectedOption?.label} {t("gift_cards.modal_edition")}</p>
                             </div>
                         </div>
 
                         <form onSubmit={confirmAddToCart} className="space-y-4">
                             {selectedOption?.isCustom && (
                                 <div className="space-y-1.5">
-                                    <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest px-1">Amount (RWF)</label>
+                                    <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest px-1">{t("gift_cards.modal_amount")}</label>
                                     <div className="relative">
                                         <FaCoins className="absolute left-3 top-1/2 -translate-y-1/2 text-terracotta-500 text-sm" />
                                         <input
@@ -272,7 +274,7 @@ const GiftCards = () => {
                             )}
 
                             <div className="space-y-1.5">
-                                <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest px-1">Recipient Email</label>
+                                <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest px-1">{t("gift_cards.modal_recipient")}</label>
                                 <div className="relative">
                                     <FaEnvelope className="absolute left-3 top-1/2 -translate-y-1/2 text-terracotta-500 text-sm" />
                                     <input
@@ -284,7 +286,7 @@ const GiftCards = () => {
                                         placeholder="friend@example.com"
                                     />
                                 </div>
-                                <p className="text-[10px] text-gray-400 px-1">We'll send the digital card to this email after purchase.</p>
+                                <p className="text-[10px] text-gray-400 px-1">{t("gift_cards.modal_recipient_helper")}</p>
                             </div>
 
                             <button
@@ -295,11 +297,11 @@ const GiftCards = () => {
                                 {isSubmitting ? (
                                     <>
                                         <div className="w-4 h-4 border-2 border-gray-400 border-t-transparent rounded-full animate-spin"></div>
-                                        <span>Adding to Cart...</span>
+                                        <span>{t("gift_cards.modal_btn_adding")}</span>
                                     </>
                                 ) : (
                                     <>
-                                        <span>Add {selectedOption?.isCustom ? formatRwf(customAmount) : formatRwf(selectedOption?.amount)} to Cart</span>
+                                        <span>{t("gift_cards.modal_btn_add", { amount: selectedOption?.isCustom ? formatRwf(customAmount) : formatRwf(selectedOption?.amount) })}</span>
                                         <FaShoppingCart />
                                     </>
                                 )}

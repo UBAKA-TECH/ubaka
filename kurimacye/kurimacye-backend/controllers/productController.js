@@ -557,8 +557,9 @@ export const getTrendingProducts = async (req, res) => {
 
 export const getProductById = async (req, res) => {
   try {
-    const product = await prisma.product.findUnique({
-      where: { id: req.params.id },
+    const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(req.params.id);
+    const product = await prisma.product.findFirst({
+      where: isUuid ? { id: req.params.id } : { slug: req.params.id },
       include: {
         seller: { select: { id: true, name: true, storeName: true, storeDescription: true, storeLogo: true, sellerStatus: true } },
         categories: true,
@@ -766,8 +767,9 @@ export const deleteProduct = async (req, res) => {
 
 export const getRelatedProducts = async (req, res) => {
   try {
-    const product = await prisma.product.findUnique({ 
-      where: { id: req.params.id },
+    const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(req.params.id);
+    const product = await prisma.product.findFirst({ 
+      where: isUuid ? { id: req.params.id } : { slug: req.params.id },
       include: { categories: true }
     });
     

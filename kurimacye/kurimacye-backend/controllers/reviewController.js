@@ -30,14 +30,15 @@ const recalculateProductRating = async (productId) => {
 export const addReview = async (req, res) => {
     try {
         const { rating, comment } = req.body;
-        const productId = req.params.id;
-
-        const product = await prisma.product.findUnique({ 
-            where: { id: productId } 
+        const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(req.params.id);
+        
+        const product = await prisma.product.findFirst({ 
+            where: isUuid ? { id: req.params.id } : { slug: req.params.id } 
         });
         if (!product) {
             return res.status(404).json({ message: "Product not found" });
         }
+        const productId = product.id;
 
         // Check if user already reviewed
         const existingReview = await prisma.review.findFirst({
@@ -98,8 +99,19 @@ export const addReview = async (req, res) => {
  */
 export const getProductReviews = async (req, res) => {
     try {
+        const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(req.params.id);
+        let productId = req.params.id;
+        if (!isUuid) {
+            const prod = await prisma.product.findUnique({
+                where: { slug: req.params.id },
+                select: { id: true }
+            });
+            if (!prod) return res.json([]);
+            productId = prod.id;
+        }
+
         const reviews = await prisma.review.findMany({
-            where: { productId: req.params.id },
+            where: { productId },
             include: { user: { select: { name: true } } },
             orderBy: { createdAt: 'desc' }
         });

@@ -401,5 +401,40 @@
     "label_address": "Address",
     "label_phone": "Phone",
     "label_email_info": "Email"
+  },
+  "faq": {
+    "hero_title": "Frequently Asked ",
+    "hero_highlight": "Questions",
+    "hero_desc": "Everything you need to know about our products and services.",
+    "still_title": "Still have questions?",
+    "still_desc": "If you couldn't find the answer you're looking for, our friendly support team is here to help.",
+    "btn_contact": "Contact Support",
+    "btn_email": "Email Us",
+    "items": [
+      {
+        "q": "How long does delivery take?",
+        "a": "Standard delivery typically takes 3-5 business days within Rwanda. Please contact us for delivery to other locations."
+      },
+      {
+        "q": "What is your return policy?",
+        "a": "We accept returns within 30 days of purchase. The item must be unused and in its original packaging. Please contact our support team to initiate a return."
+      },
+      {
+        "q": "How can I track my order?",
+        "a": "Once your order is shipped, you will receive a tracking number via email. You can also use the 'Track Order' link in the footer to check your status."
+      },
+      {
+        "q": "Do you offer international delivery?",
+        "a": "Yes, we deliver to most countries worldwide. Delivery costs and times vary based on location."
+      },
+      {
+        "q": "How can I contact customer support?",
+        "a": "You can reach our support team via email at ishfabzele2@gmail.com or by calling +250 789 079 978 during business hours."
+      },
+      {
+        "q": "How do I become a seller on Kuri Macye?",
+        "a": "You can register as a seller by clicking 'Become a Seller' in the navigation menu. Our team will review your application and get back to you within 48 hours."
+      }
+    ]
   }
 }

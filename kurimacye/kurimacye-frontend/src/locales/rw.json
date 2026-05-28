@@ -401,5 +401,40 @@
     "label_address": "Aderesi",
     "label_phone": "Telefoni",
     "label_email_info": "Imeli"
+  },
+  "faq": {
+    "hero_title": "Ibibazo Bikunze ",
+    "hero_highlight": "Kubazwa",
+    "hero_desc": "Ibyerekeye ibicuruzwa na serivisi zacu byose uzabona hano.",
+    "still_title": "Ugikomeje gutuza?",
+    "still_desc": "Niba utabonanye igisubizo washakaga, itsinda ryacu ry'inkunga iri hano kukufasha.",
+    "btn_contact": "Twandikire",
+    "btn_email": "Tuhohereze Imeli",
+    "items": [
+      {
+        "q": "Itangwa ry'ibicuruzwa rigenda ringana gute?",
+        "a": "Itangwa risanzwe rifata iminsi 3-5 y'akazi mu Rwanda. Watwandikira kugira ngo tubone hamwe ibirebana n'aho uri."
+      },
+      {
+        "q": "Politiki yanyu yo gusubiza ibicuruzwa ni iyihe?",
+        "a": "Twakira gusubiza ibicuruzwa mu minsi 30 nyuma yo kugura. Igicuruzwa ntikigomba gukoreshwa kandi gihuze n'agashya. Twandikire itsinda ryacu kugira ngo utangire gusubiza."
+      },
+      {
+        "q": "Nakurikirana nte ikomande yanjye?",
+        "a": "Nyuma yo kohereza ikomande yawe, uzahabwa numero yo gukurikirana kuri imeli. Ukoreshe kandi urunigi 'Kurikirana Ikomande' uri munsi w'urupapuro."
+      },
+      {
+        "q": "Mugeza ibicuruzwa mu mahanga?",
+        "a": "Yego, tugeza ibicuruzwa mu bihugu byinshi ku isi. Igiciro n'igihe bigenda binyuranye ukurikije aho uri."
+      },
+      {
+        "q": "Nakumana na serivisi y'inkunga ite?",
+        "a": "Ushobora kugera ku tsinda ryacu kuri imeli: ishfabzele2@gmail.com cyangwa uhamagare +250 789 079 978 mu masaha y'akazi."
+      },
+      {
+        "q": "Nabyaza ute umuguzi kuri Kuri Macye?",
+        "a": "Ushobora kwiyandikisha nk'umugurisha binyuze ku rugero 'Bwera Umugurisha' mu gikubitiro. Itsinda ryacu rizasuzuma inyandiko yawe rikasubize mu masaha 48."
+      }
+    ]
   }
 }

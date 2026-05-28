@@ -100,6 +100,7 @@ function App() {
                     <Route path="/blog" element={<Blog />} />
                     <Route path="/blog/:id" element={<BlogPost />} />
                     <Route path="/privacy" element={<PrivacyPolicy />} />
+                    <Route path="/cookies" element={<PrivacyPolicy />} />
                     <Route path="/terms" element={<TermsOfService />} />
                     <Route path="/faq" element={<FAQ />} />
                     <Route path="/print-portal" element={<PrintPortal />} />

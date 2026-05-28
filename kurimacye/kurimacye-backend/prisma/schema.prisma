@@ -966,13 +966,19 @@ model EmailTemplate {
 model JobListing {
   id           String           @id @default(uuid())
   title        String
+  titleRw      String?
   department   String
+  departmentRw String?
   location     String
+  locationRw   String?
   type         String
   icon         String
   description  String
+  descriptionRw String?
   requirements String[]
+  requirementsRw String[]       @default([])
   benefits     String[]
+  benefitsRw   String[]         @default([])
   isActive     Boolean          @default(true)
   applications JobApplication[]
 

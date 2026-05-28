@@ -71,7 +71,16 @@ export const submitJobApplication = async (req, res, next) => {
 // 💼 POST /api/careers (admin)
 export const createJobListing = async (req, res, next) => {
     try {
-        const { title, department, location, type, icon, description, requirements, benefits, isActive } = req.body;
+        const { 
+            title, titleRw, 
+            department, departmentRw, 
+            location, locationRw, 
+            type, icon, 
+            description, descriptionRw, 
+            requirements, requirementsRw, 
+            benefits, benefitsRw, 
+            isActive 
+        } = req.body;
 
         if (!title || !department || !location || !type || !icon || !description) {
             return res.status(400).json({ success: false, message: "Missing required fields" });
@@ -80,13 +89,19 @@ export const createJobListing = async (req, res, next) => {
         const newJob = await prisma.jobListing.create({
             data: {
                 title,
+                titleRw,
                 department,
+                departmentRw,
                 location,
+                locationRw,
                 type,
                 icon,
                 description,
+                descriptionRw,
                 requirements: requirements || [],
+                requirementsRw: requirementsRw || [],
                 benefits: benefits || [],
+                benefitsRw: benefitsRw || [],
                 isActive: isActive !== undefined ? isActive : true
             }
         });
@@ -101,19 +116,34 @@ export const createJobListing = async (req, res, next) => {
 export const updateJobListing = async (req, res, next) => {
     try {
         const { id } = req.params;
-        const { title, department, location, type, icon, description, requirements, benefits, isActive } = req.body;
+        const { 
+            title, titleRw, 
+            department, departmentRw, 
+            location, locationRw, 
+            type, icon, 
+            description, descriptionRw, 
+            requirements, requirementsRw, 
+            benefits, benefitsRw, 
+            isActive 
+        } = req.body;
 
         const updatedJob = await prisma.jobListing.update({
             where: { id },
             data: {
                 title,
+                titleRw,
                 department,
+                departmentRw,
                 location,
+                locationRw,
                 type,
                 icon,
                 description,
+                descriptionRw,
                 requirements,
+                requirementsRw,
                 benefits,
+                benefitsRw,
                 isActive
             }
         });

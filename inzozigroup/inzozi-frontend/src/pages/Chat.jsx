@@ -17,7 +17,7 @@ const Chat = () => {
 
   const [channels] = useState([
     { id: 'general', label: 'general', desc: 'Global announcement and team discussions' },
-    { id: 'impressa', label: 'impressa', desc: 'Impressa e-commerce tracking & support sync' },
+    { id: 'impressa', label: 'kuri-macye', desc: 'Kuri Macye e-commerce tracking & support sync' },
     { id: 'gesture-to-speech', label: 'gesture-to-speech', desc: 'Rwandan sign language translator development' },
     { id: 'linker', label: 'linker', desc: 'Smart ticket booking operations & support' },
     { id: 'homland', label: 'homland', desc: 'Homland rental portal verification discussions' }

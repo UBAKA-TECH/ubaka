@@ -46,9 +46,9 @@ const getStatusLabelAndColor = (status) => {
 const DEFAULT_PRODUCTS = [
   {
     id: 'impressa',
-    name: 'Impressa',
-    tagline: 'Unified E-Commerce & Hybrid Retail POS',
-    shortDesc: 'Sustaining local vendors and micro-businesses through modern hybrid e-commerce. Bridging storefronts and streetfronts.',
+    name: 'Kuri Macye',
+    tagline: 'Premium Multivendor E-Commerce Marketplace',
+    shortDesc: 'Empowering local sellers and micro-businesses through a modern digital marketplace. Connecting vendors to customers across Rwanda.',
     iconName: 'Smartphone',
     gradient: 'from-purple-500 via-indigo-500 to-blue-500',
     shadow: 'shadow-purple-500/10',

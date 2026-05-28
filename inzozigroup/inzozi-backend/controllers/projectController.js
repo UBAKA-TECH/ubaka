@@ -34,7 +34,7 @@ const INITIAL_PROJECTS = [
     description: 'Unified commerce and multi-vendor marketplace platform with hybrid POS and shift reconciliation.',
     status: 'active',
     repositoryUrl: 'https://github.com/Benitgilbert/impressa.git',
-    liveUrl: 'https://impressa-ecom.ubakatech.com',
+    liveUrl: 'https://kurimacye.vercel.app',
     metrics: {
       uptime: '99.94%',
       activeUsers: 1420,
@@ -237,8 +237,8 @@ export const updateImpressaTicketStatus = async (req, res) => {
 // UI showcase metadata mapping for public landing page
 const SHOWCASE_METADATA = {
   impressa: {
-    tagline: 'Unified E-Commerce & Hybrid Retail POS',
-    shortDesc: 'Sustaining local vendors and micro-businesses through modern hybrid e-commerce. Bridging storefronts and streetfronts.',
+    tagline: 'Premium Multivendor E-Commerce Marketplace',
+    shortDesc: 'Empowering local sellers and micro-businesses through a modern digital marketplace. Connecting vendors to customers across Rwanda.',
     icon: 'Smartphone',
     gradient: 'from-purple-500 via-indigo-500 to-blue-500',
     shadow: 'shadow-purple-500/10',
@@ -249,10 +249,10 @@ const SHOWCASE_METADATA = {
       { label: 'System Uptime', value: '99.98%' }
     ],
     details: {
-      mission: 'To empower Rwandan SMEs and retail shops by merging their brick-and-mortar sales with a powerful digital marketplace. No vendor is left behind.',
+      mission: 'To empower Rwandan SMEs and local vendors by connecting them to customers through a vibrant digital marketplace. No vendor is left behind.',
       tech: ['React 19', 'Node.js Express', 'Supabase', 'PostgreSQL', 'Prisma ORM'],
       features: [
-        'Unified POS cashier interface with strict shift cash management.',
+        'Premium multivendor marketplace connecting local sellers to buyers.',
         'Multi-vendor inventory synchronization and attributes catalog.',
         'Secure credit tracking system ("Abonne tracking") for loyal local customers.',
         'Audit-ready financial report PDF generation.'

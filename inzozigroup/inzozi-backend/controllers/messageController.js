@@ -24,7 +24,7 @@ let MOCK_MESSAGES = [
   },
   {
     id: 'msg-3',
-    content: 'Team, I\'ve uploaded 3 new products to Impressa. Can the Content Controller review and approve them?',
+    content: 'Team, I\'ve uploaded 3 new products to Kuri Macye. Can the Content Controller review and approve them?',
     channel: 'impressa',
     isDirect: false,
     recipientId: null,
@@ -34,7 +34,7 @@ let MOCK_MESSAGES = [
   },
   {
     id: 'msg-4',
-    content: 'On it! I will review the descriptions and images right now through our Impressa Admin viewport here.',
+    content: 'On it! I will review the descriptions and images right now through our Kuri Macye Admin viewport here.',
     channel: 'impressa',
     isDirect: false,
     recipientId: null,

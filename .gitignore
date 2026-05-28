@@ -1,4 +1,4 @@
-# Root ignores for impressa monorepo
+# Root ignores for kurimacye monorepo
 
 # Node modules and caches
 **/node_modules/
@@ -11,8 +11,8 @@
 # Build outputs
 **/dist/
 **/build/
-impressa-frontend/.next/
-impressa-frontend/out/
+kurimacye-frontend/.next/
+kurimacye-frontend/out/
 
 # Env and secrets
 **/.env

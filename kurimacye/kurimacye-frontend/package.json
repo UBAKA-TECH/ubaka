@@ -1,5 +1,5 @@
 {
-  "name": "impressa-frontend",
+  "name": "kurimacye-frontend",
   "version": "0.1.0",
   "private": true,
   "proxy": "http://localhost:5000",

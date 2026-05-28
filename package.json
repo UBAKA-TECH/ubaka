@@ -4,8 +4,8 @@
   "description": "Unified monorepo workspace for Ubaka Tech ecosystem applications",
   "private": true,
   "workspaces": [
-    "impressa/impressa-backend",
-    "impressa/impressa-frontend",
+    "kurimacye/kurimacye-backend",
+    "kurimacye/kurimacye-frontend",
     "inzozigroup/inzozi-backend",
     "inzozigroup/inzozi-frontend"
   ],
@@ -13,9 +13,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "install:all": "npm install",
     "dev:ubaka": "concurrently \"npm run dev -w inzozigroup/inzozi-backend\" \"npm run dev -w inzozigroup/inzozi-frontend\"",
-    "dev:impressa": "concurrently \"npm run dev -w impressa/impressa-backend\" \"npm run dev -w impressa/impressa-frontend\"",
+    "dev:kurimacye": "concurrently \"npm run dev -w kurimacye/kurimacye-backend\" \"npm run dev -w kurimacye/kurimacye-frontend\"",
     "build:ubaka": "npm run build -w inzozigroup/inzozi-frontend",
-    "build:impressa": "npm run build -w impressa/impressa-frontend"
+    "build:kurimacye": "npm run build -w kurimacye/kurimacye-frontend"
   },
   "keywords": [],
   "author": "",

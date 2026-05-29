@@ -101,12 +101,70 @@ export const validateCoupon = async (req, res, next) => {
     const { subtotal, userId, userEmail } = req.body;
 
     const coupon = await findValidCoupon(code);
+    let finalSubtotal = subtotal;
 
-    if (coupon.minSpend && subtotal < coupon.minSpend) {
+    if (coupon.sellerId) {
+      const sessionToken = req.cookies?.cartSession || req.headers["x-cart-session"];
+      const cartUserId = userId || req.user?.id;
+      
+      let cart = null;
+      if (cartUserId) {
+        cart = await prisma.cart.findUnique({
+          where: { userId: cartUserId },
+          include: { items: { include: { product: { include: { variations: true } } } } }
+        });
+      }
+      if (!cart && sessionToken) {
+        const isUUID = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(sessionToken);
+        if (isUUID) {
+          cart = await prisma.cart.findUnique({
+            where: { id: sessionToken },
+            include: { items: { include: { product: { include: { variations: true } } } } }
+          });
+        }
+      }
+
+      if (!cart || cart.items.length === 0) {
+        return res.json({
+          success: false,
+          valid: false,
+          reason: "Cart is empty or not found",
+        });
+      }
+
+      let sellerSubtotal = 0;
+      let hasSellerItems = false;
+      
+      cart.items.forEach(item => {
+        if (item.product && item.product.sellerId === coupon.sellerId) {
+          let price = item.product.price;
+          if (item.variationId && item.product.variations) {
+            const variation = item.product.variations.find(v => v.id === item.variationId || v.sku === item.variationId);
+            if (variation) price = variation.price;
+          }
+          sellerSubtotal += price * item.quantity;
+          hasSellerItems = true;
+        }
+      });
+
+      if (!hasSellerItems) {
+        return res.json({
+          success: false,
+          valid: false,
+          reason: "This coupon is only valid for items from a specific seller, which are not in your cart.",
+        });
+      }
+
+      finalSubtotal = sellerSubtotal;
+    }
+
+    if (coupon.minSpend && finalSubtotal < coupon.minSpend) {
       return res.json({
         success: false,
         valid: false,
-        reason: `Minimum spend of ${coupon.minSpend} required`,
+        reason: coupon.sellerId
+          ? `Minimum spend of ${coupon.minSpend} on this seller's products required`
+          : `Minimum spend of ${coupon.minSpend} required`,
       });
     }
 
@@ -121,7 +179,7 @@ export const validateCoupon = async (req, res, next) => {
       }
     }
 
-    const discount = calculateDiscount(coupon, subtotal);
+    const discount = calculateDiscount(coupon, finalSubtotal);
 
     res.json({
       success: true,

@@ -78,7 +78,7 @@ const getCartPopulated = async (cartId) => {
             items: {
                 include: {
                     product: {
-                        select: { id: true, name: true, price: true, image: true, stock: true, visibility: true, weight: true }
+                        select: { id: true, name: true, price: true, image: true, stock: true, visibility: true, weight: true, sellerId: true }
                     }
                 }
             }
@@ -371,8 +371,25 @@ export const applyCoupon = async (req, res, next) => {
 
     const cartResp = formatCartResponse(populatedCart);
     
-    if (coupon.minSpend && cartResp.totals.subtotal < coupon.minSpend) {
-      const error = new Error(`Minimum spend of ${coupon.minSpend} required`);
+    let applicableSubtotal = 0;
+    let hasApplicableItems = false;
+    
+    cartResp.items.forEach(item => {
+      const itemSellerId = item.product?.sellerId;
+      if (!coupon.sellerId || itemSellerId === coupon.sellerId) {
+        applicableSubtotal += item.subtotal;
+        hasApplicableItems = true;
+      }
+    });
+
+    if (coupon.sellerId && !hasApplicableItems) {
+      const error = new Error("This promo code is not applicable to any items in your cart");
+      error.statusCode = 400;
+      return next(error);
+    }
+
+    if (coupon.minSpend && applicableSubtotal < coupon.minSpend) {
+      const error = new Error(coupon.sellerId ? `Minimum spend of ${coupon.minSpend} on qualifying items required` : `Minimum spend of ${coupon.minSpend} required`);
       error.statusCode = 400;
       return next(error);
     }
@@ -386,9 +403,9 @@ export const applyCoupon = async (req, res, next) => {
     // Calculate discount
     let discountAmount = 0;
     if (coupon.type === "fixed") {
-        discountAmount = coupon.value;
+        discountAmount = Math.min(coupon.value, applicableSubtotal);
     } else if (coupon.type === "percentage") {
-        discountAmount = cartResp.totals.subtotal * (coupon.value / 100);
+        discountAmount = applicableSubtotal * (coupon.value / 100);
         if (coupon.maxDiscount && discountAmount > coupon.maxDiscount) {
             discountAmount = coupon.maxDiscount;
         }

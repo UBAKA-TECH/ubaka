@@ -89,19 +89,37 @@ export const createOrderFromCart = async (req, res, next) => {
       
       if (couponCode) {
           const coupon = await tx.coupon.findUnique({ where: { code: couponCode } });
-          if (coupon && coupon.isActive && new Date() <= new Date(coupon.expiresAt)) {
-              let tempSubtotal = 0;
-              cart.items.forEach(i => {
-                  let price = i.product?.price || 0;
-                  tempSubtotal += price * i.quantity;
+          const now = new Date();
+          const isValidWindow = coupon && coupon.isActive && now <= new Date(coupon.expiresAt) && (!coupon.validFrom || now >= new Date(coupon.validFrom));
+          
+          if (isValidWindow) {
+              let applicableSubtotal = 0;
+              let hasApplicableItems = false;
+
+              cart.items.forEach(item => {
+                  const product = item.product;
+                  if (product) {
+                      let price = product.price;
+                      if (item.variationId && product.variations) {
+                          const variation = product.variations.find(v => v.id === item.variationId || v.sku === item.variationId);
+                          if (variation) price = variation.price;
+                      }
+
+                      if (!coupon.sellerId || product.sellerId === coupon.sellerId) {
+                          applicableSubtotal += price * item.quantity;
+                          hasApplicableItems = true;
+                      }
+                  }
               });
-              
-              if (!coupon.minSpend || tempSubtotal >= coupon.minSpend) {
+
+              if (hasApplicableItems && (!coupon.minSpend || applicableSubtotal >= coupon.minSpend)) {
                   if (coupon.type === "fixed") {
-                      discountAmount = coupon.value;
+                      discountAmount = Math.min(coupon.value, applicableSubtotal);
                   } else if (coupon.type === "percentage") {
-                      discountAmount = tempSubtotal * (coupon.value / 100);
-                      if (coupon.maxDiscount && discountAmount > coupon.maxDiscount) discountAmount = coupon.maxDiscount;
+                      discountAmount = applicableSubtotal * (coupon.value / 100);
+                      if (coupon.maxDiscount && discountAmount > coupon.maxDiscount) {
+                          discountAmount = coupon.maxDiscount;
+                      }
                   }
                   validCouponCode = coupon.code;
               }
@@ -125,6 +143,7 @@ export const createOrderFromCart = async (req, res, next) => {
           price: price,
           subtotal: price * item.quantity,
           customizations: item.customizations || {},
+          sellerId: item.product.sellerId,
         };
       });
 

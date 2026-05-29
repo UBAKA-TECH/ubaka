@@ -102,6 +102,8 @@ model User {
   rraIntrlKey       String?
   rraSignKey        String?
   dpoMerchantToken  String?
+  shippingConfig    Json?        @default("{}")
+  paymentConfig     Json?        @default("{}")
 
   createdAt         DateTime     @default(now())
   updatedAt         DateTime     @updatedAt
@@ -113,6 +115,7 @@ model User {
   shifts            Shift[]
   earnings          SellerEarning[]
   violations        Violation[]
+  coupons           Coupon[]
   abonneTransactions AbonneTransaction[]
   processedPayouts  Payout[]     @relation("ProcessedPayouts")
   payouts           Payout[]     @relation("SellerPayouts")
@@ -544,6 +547,9 @@ model Coupon {
   isActive        Boolean  @default(true)
 
   usedBy          Json[]   @default([]) // Array of { userId, email, usedAt, orderId }
+
+  sellerId        String?
+  seller          User?    @relation(fields: [sellerId], references: [id])
 
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt

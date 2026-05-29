@@ -77,6 +77,13 @@ export const getMe = async (req, res) => {
         storeLogo: true,
         billingAddress: true,
         shippingAddress: true,
+        rraTin: true,
+        rraSdcId: true,
+        rraMrcNo: true,
+        rraIntrlKey: true,
+        rraSignKey: true,
+        shippingConfig: true,
+        paymentConfig: true,
         createdAt: true
       }
     });
@@ -98,7 +105,12 @@ export const getMe = async (req, res) => {
 export const updateProfile = async (req, res) => {
   try {
     const userId = req.user.id;
-    const { name, email, storeName, storeDescription, storePhone, billingAddress, shippingAddress } = req.body;
+    const {
+      name, email, storeName, storeDescription, storePhone,
+      billingAddress, shippingAddress,
+      rraTin, rraSdcId, rraMrcNo, rraIntrlKey, rraSignKey,
+      shippingConfig, paymentConfig
+    } = req.body;
 
     const updateData = {};
     if (name) updateData.name = name;
@@ -106,6 +118,32 @@ export const updateProfile = async (req, res) => {
     if (storeName) updateData.storeName = storeName;
     if (storeDescription) updateData.storeDescription = storeDescription;
     if (storePhone) updateData.storePhone = storePhone;
+
+    if (rraTin !== undefined) updateData.rraTin = rraTin;
+    if (rraSdcId !== undefined) updateData.rraSdcId = rraSdcId;
+    if (rraMrcNo !== undefined) updateData.rraMrcNo = rraMrcNo;
+    if (rraIntrlKey !== undefined) updateData.rraIntrlKey = rraIntrlKey;
+    if (rraSignKey !== undefined) updateData.rraSignKey = rraSignKey;
+
+    if (shippingConfig) {
+      try {
+        updateData.shippingConfig = typeof shippingConfig === 'string'
+          ? JSON.parse(shippingConfig)
+          : shippingConfig;
+      } catch (e) {
+        console.error("Failed to parse shippingConfig:", e);
+      }
+    }
+
+    if (paymentConfig) {
+      try {
+        updateData.paymentConfig = typeof paymentConfig === 'string'
+          ? JSON.parse(paymentConfig)
+          : paymentConfig;
+      } catch (e) {
+        console.error("Failed to parse paymentConfig:", e);
+      }
+    }
 
     if (billingAddress) {
       try {

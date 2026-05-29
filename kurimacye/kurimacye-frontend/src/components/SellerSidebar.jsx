@@ -1,4 +1,4 @@
-import { FaChartBar, FaBox, FaSignOutAlt, FaStore, FaList, FaShoppingCart, FaPlus, FaMoneyBillWave, FaTimes, FaUserFriends, FaUserShield, FaPrint, FaHistory } from "react-icons/fa";
+import { FaChartBar, FaBox, FaSignOutAlt, FaStore, FaList, FaShoppingCart, FaPlus, FaMoneyBillWave, FaTimes, FaUserFriends, FaUserShield, FaPrint, FaHistory, FaTag, FaStar } from "react-icons/fa";
 import { Link, useLocation } from "react-router-dom";
 
 function SellerSidebar({ isOpen, onClose }) {
@@ -89,7 +89,7 @@ function SellerSidebar({ isOpen, onClose }) {
                         </Link>
                         <Link to="/seller/abonnes" className={getLinkClass('/seller/abonnes')} onClick={onClose}>
                             <FaUserFriends className="text-lg opacity-70 group-hover:opacity-100" />
-                            <span>Client Abonnés</span>
+                            <span>Customers</span>
                         </Link>
                         <Link to="/seller/shifts" className={getLinkClass('/seller/shifts')} onClick={onClose}>
                             <FaHistory className="text-lg opacity-70 group-hover:opacity-100 text-indigo-400" />
@@ -109,6 +109,20 @@ function SellerSidebar({ isOpen, onClose }) {
                                 <Link to="/seller/reports" className={getLinkClass('/seller/reports')} onClick={onClose}>
                                     <FaChartBar className="text-lg opacity-70 group-hover:opacity-100" />
                                     <span>Reports</span>
+                                </Link>
+                                
+                                <div className="px-3 pt-4 text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-2 border-t border-white/5">Settings & Extensions</div>
+                                <Link to="/seller/discounts" className={getLinkClass('/seller/discounts')} onClick={onClose}>
+                                    <FaTag className="text-lg opacity-70 group-hover:opacity-100 text-terracotta-400" />
+                                    <span className="text-terracotta-400">Discounts</span>
+                                </Link>
+                                <Link to="/seller/reviews" className={getLinkClass('/seller/reviews')} onClick={onClose}>
+                                    <FaStar className="text-lg opacity-70 group-hover:opacity-100 text-sand-400" />
+                                    <span className="text-sand-400">Reviews</span>
+                                </Link>
+                                <Link to="/seller/settings" className={getLinkClass('/seller/settings')} onClick={onClose}>
+                                    <FaUserShield className="text-lg opacity-70 group-hover:opacity-100 text-sage-400" />
+                                    <span className="text-sage-400">Settings</span>
                                 </Link>
                             </>
                         )}

@@ -53,6 +53,9 @@ const SellerPOS = lazy(() => import("./pages/SellerPOS"));
 const SellerProducts = lazy(() => import("./pages/SellerProducts"));
 const SellerReports = lazy(() => import("./pages/SellerReports"));
 const SellerTeam = lazy(() => import("./pages/SellerTeam"));
+const SellerSettings = lazy(() => import("./pages/SellerSettings"));
+const SellerDiscounts = lazy(() => import("./pages/SellerDiscounts"));
+const SellerReviews = lazy(() => import("./pages/SellerReviews"));
 const PrintPortal = lazy(() => import("./pages/PrintPortal"));
 const Careers = lazy(() => import("./pages/Careers"));
 
@@ -136,6 +139,9 @@ function App() {
                       <Route path="/seller/abonnes" element={<SellerAbonne />} />
                       <Route path="/seller/reports" element={<SellerReports />} />
                       <Route path="/seller/team" element={<SellerTeam />} />
+                      <Route path="/seller/settings" element={<SellerSettings />} />
+                      <Route path="/seller/discounts" element={<SellerDiscounts />} />
+                      <Route path="/seller/reviews" element={<SellerReviews />} />
                       <Route path="/seller/notifications" element={<SellerNotifications />} />
                       <Route path="/seller/shifts" element={<SellerShifts />} />
                     </Route>

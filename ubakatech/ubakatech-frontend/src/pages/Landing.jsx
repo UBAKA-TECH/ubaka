@@ -328,49 +328,49 @@ const Landing = ({ onEnterPortal }) => {
     }
   };
 
-  // FAQ List
+  // FAQ List (Human-first explanations)
   const FAQ_DATA = [
     {
       q: 'Do you design MTN Mobile Money and Airtel Money integrations?',
-      a: 'Yes. Ubaka Tech specializes in building direct merchant payment flows using MTN MoMo API and Airtel Money gateways, including automated checkout push notifications, direct webhook listeners, and merchant wallet reconciliation reports.'
+      a: 'Yes, we integrate local mobile money payment options seamlessly. We understand that in Rwanda, MTN MoMo and Airtel Money are how most people run their daily lives. We make it easy for your customers to check out and for you to track payments instantly.'
     },
     {
       q: 'Is your point-of-sale system RRA EBM v2 tax compliant?',
-      a: 'Absolutely. We design and integrate Electronic Billing Machine (EBM) middleware systems that strictly connect transactions directly to the Rwanda Revenue Authority (RRA) invoicing gateway, automatically reporting VAT receipts per line-item and generating compliant audit PDFs.'
+      a: 'Absolutely. We handle all the compliance details so you don\'t have to. We connect your platform directly with the Rwanda Revenue Authority (RRA) EBM invoicing system. When an item is sold, it registers with the tax gateway automatically, keeping your business legal and audit-ready.'
     },
     {
       q: 'Can you build offline-first applications for rural areas?',
-      a: 'We do. We design applications optimized for low-bandwidth environments. For example, our custom POS features local IndexedDB database sync, offline cache recovery, and queue management systems that push data automatically to PostgreSQL once network becomes active.'
+      a: 'Yes. Internet connections in Kigali or upcountry can fluctuate. We build systems that cache data on the user\'s phone or computer. Cashiers can continue registering sales offline, and the system automatically syncs up when the network returns.'
     },
     {
-      q: 'What is your typical software development lifecycle (SDLC) timeline?',
-      a: 'A typical project ranges between 4 to 12 weeks. We utilize active community co-design sprints, providing active prototype reviews every fortnight so that clients test interactive features immediately as development takes place.'
+      q: 'What is your typical software development lifecycle timeline?',
+      a: 'Most custom software takes between 4 to 12 weeks from our first conversation to launch. We don\'t hide in a room coding for months—every two weeks, we show you working features to get your feedback and make sure we are building exactly what you envisioned.'
     },
     {
       q: 'Do you offer ongoing technical maintenance after product launch?',
-      a: 'Yes, we provide dedicated support plans containing automated server telemetry audits, daily secure database backups, framework security patches, and direct support SLAs to ensure continuous system uptime.'
+      a: 'Yes, we stay by your side after launch. We monitor servers to prevent crashes, run secure database backups daily, and provide quick support when you have questions or want to add new updates.'
     }
   ];
 
-  // Core Capabilities details
+  // Core Capabilities details (Humanized)
   const SERVICES_LIST = [
     {
       icon: Cpu,
-      title: 'Full-Stack Software Engineering',
-      desc: 'We engineer robust digital architectures built on fast frameworks (React 19, Vite, Express, PostgreSQL) designed to scale alongside transaction volumes without performance degradation.',
-      features: ['API Gateway Design & Security', 'Prisma Database Schema Optimization', 'Server-Sent Events & Real-time WebSockets', 'Dockerized Cloud Orchestrations']
+      title: 'Custom Software Engineering',
+      desc: 'We build digital tools that solve your exact business needs. Whether you need a web portal, mobile app, or a secure server database, we write clean, fast code that fits your operations like a custom-made suit.',
+      features: ['Custom Web Platforms & Dashboards', 'Fast Mobile Apps (Android/iOS)', 'Secure Database Architecture', 'API Development & Integrations']
     },
     {
       icon: Smartphone,
-      title: 'Responsive Product UI/UX Design',
-      desc: 'We map clean user journeys. Emphasizing touch targets, visual hierarchies, and high readability, we design products that citizens can operate on smartphones of any size.',
-      features: ['Interactive Figma Prototyping', 'Mobile Usability Field Testing', 'Harmonious Color Palette Tokens', 'Low-Bandwidth Render Optimization']
+      title: 'Thoughtful Product UI/UX Design',
+      desc: 'We design screens that make sense to the people using them. We sit down with real users—like market traders and commuters—to design layouts with clean visual patterns, readable fonts, and clear touch targets.',
+      features: ['User Research & Field Usability Testing', 'Interactive Screen Prototypes', 'Fast & Light Layout Renders', 'High-Contrast Mobile Optimization']
     },
     {
       icon: ShieldCheck,
-      title: 'Regulatory & Billing Compliance',
-      desc: 'We connect application logs to tax compliance databases and digital money networks, making retail stores fully legal and audit-ready from day one.',
-      features: ['RRA EBM v2 Tax Middleware Integration', 'MTN MoMo & Airtel Money Merchant Portals', 'Automated Daily Sales Reconciliation Logs', 'Secure Financial Audit PDF Generators']
+      title: 'Local Payments & Compliance',
+      desc: 'We bridge the gap between your software and local regulations. We make it simple for you to accept Mobile Money payments and automatically file VAT transactions with the RRA EBM system.',
+      features: ['RRA EBM Invoicing Integration', 'MTN MoMo & Airtel Money Checkouts', 'Automated Daily Sales Reconciliation', 'Audit-Ready Balance Sheet PDF Exports']
     }
   ];
 
@@ -379,19 +379,19 @@ const Landing = ({ onEnterPortal }) => {
     {
       name: 'Gilbert Benit',
       role: 'Founder & Lead Systems Developer',
-      focus: 'Cares deeply about EBM compliance, POS execution speed, and database locks protection.',
+      focus: 'A developer who believes code should serve people. You\'ll find him testing databases, talking with local shop owners, or looking for ways to speed up cashier screens.',
       bgGradient: 'from-purple-500 to-indigo-500'
     },
     {
       name: 'Elsa Keza',
       role: 'Head of Product Experience & Design',
-      focus: 'Cares about pixel-perfect screens layout, local usability research, and clean mobile touch targets.',
+      focus: 'A designer who spends time in the field. She designs interfaces that anyone can use easily, even under the bright Kigali sun on a small smartphone screen.',
       bgGradient: 'from-rose-500 to-orange-500'
     },
     {
       name: 'David Mugisha',
       role: 'Principal Backend Systems Architect',
-      focus: 'Cares about microsecond latency queries, WebSocket stability, and container orchestration.',
+      focus: 'Our backend and server architect. He makes sure your databases stay secure and up, ensuring scans and payments go through instantly.',
       bgGradient: 'from-emerald-500 to-teal-500'
     }
   ];
@@ -588,10 +588,10 @@ const Landing = ({ onEnterPortal }) => {
           <div className="space-y-12 w-full animate-fade-in-up">
             {/* Header info */}
             <div className="text-center space-y-3 max-w-2xl mx-auto">
-              <span className="text-[9px] font-black uppercase tracking-widest text-purple-400 bg-purple-950/30 px-3 py-1 rounded-full border border-purple-500/15">Project Showcase</span>
-              <h3 className="text-3xl font-black text-white">Proven Software, Built & Deployed</h3>
+              <span className="text-[9px] font-black uppercase tracking-widest text-purple-400 bg-purple-950/30 px-3 py-1 rounded-full border border-purple-500/15">Completed Projects</span>
+              <h3 className="text-3xl font-black text-white">Real Software, Real Impact</h3>
               <p className="text-gray-400 text-xs md:text-sm">
-                We believe in showing real results. Below is a deep dive into the flagship completed commerce engine we built and launched.
+                We focus on building software that solves actual challenges. Here is a deep dive into the flagship platform we designed, built, and launched.
               </p>
             </div>
 
@@ -619,39 +619,39 @@ const Landing = ({ onEnterPortal }) => {
 
                   {/* Description */}
                   <p className="text-gray-300 text-xs md:text-sm leading-relaxed">
-                    Kuri Macye is a custom multi-tenant digital marketplace. We designed and developed the platform to empower local shopkeepers, enabling them to merge brick-and-mortar operations with a powerful online store catalog. 
+                    Kuri Macye is a multivendor e-commerce platform that connects local shopkeepers to buyers across Rwanda. We sat down with local vendors to build a system that manages their store inventory online while keeping daily cashier cash operations completely stress-free.
                   </p>
 
                   {/* Core Completed Modules Grid */}
                   <div className="space-y-3">
-                    <h5 className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Built Technical Capabilities</h5>
+                    <h5 className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Built Features for Real People</h5>
                     <div className="grid sm:grid-cols-2 gap-3 text-xs text-gray-400">
                       <div className="flex gap-2.5 items-start bg-gray-950/40 p-3 rounded-xl border border-gray-900">
                         <Smartphone className="w-4 h-4 text-purple-400 shrink-0 mt-0.5" />
                         <div>
                           <strong className="text-gray-300 block">POS Cashier Interface</strong>
-                          Strict terminal drawer tracking and shift cash-flow reconciliation.
+                          A simple screen built for cashiers, making drawer checkout and shifts cash counting stress-free.
                         </div>
                       </div>
                       <div className="flex gap-2.5 items-start bg-gray-950/40 p-3 rounded-xl border border-gray-900">
                         <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
                         <div>
-                          <strong className="text-gray-300 block">RRA EBM v2 Tax Receipting</strong>
-                          Direct server compliance integrations for automated line-item invoicing.
+                          <strong className="text-gray-300 block">RRA EBM Compliance</strong>
+                          Automatically registers VAT receipts with the RRA, keeping your shop legal without extra paperwork.
                         </div>
                       </div>
                       <div className="flex gap-2.5 items-start bg-gray-950/40 p-3 rounded-xl border border-gray-900">
                         <Users className="w-4 h-4 text-indigo-400 shrink-0 mt-0.5" />
                         <div>
-                          <strong className="text-gray-300 block">Abonné Credit Ledger</strong>
-                          Tracks loyal local customers credit lines and repayments.
+                          <strong className="text-gray-300 block">Loyal Customer Credit</strong>
+                          Digitizes the traditional way local shops give credit ("Abonné") to trust-worthy regular buyers.
                         </div>
                       </div>
                       <div className="flex gap-2.5 items-start bg-gray-950/40 p-3 rounded-xl border border-gray-900">
                         <FileText className="w-4 h-4 text-rose-400 shrink-0 mt-0.5" />
                         <div>
-                          <strong className="text-gray-300 block">Financial Auditing PDFs</strong>
-                          Instantly compiles compliant PDF reports for daily store earnings and audits.
+                          <strong className="text-gray-300 block">One-Click PDF Reports</strong>
+                          Instantly creates simple daily sales reports and PDFs so you always know how much your business earned.
                         </div>
                       </div>
                     </div>
@@ -771,10 +771,10 @@ const Landing = ({ onEnterPortal }) => {
           <div className="space-y-12 w-full animate-fade-in-up">
             {/* Header info */}
             <div className="text-center space-y-3 max-w-2xl mx-auto">
-              <span className="text-[9px] font-black uppercase tracking-widest text-purple-400 bg-purple-950/30 px-3 py-1 rounded-full border border-purple-500/15">Our Offerings</span>
-              <h3 className="text-3xl font-black text-white">Services Tailored for Impact</h3>
+              <span className="text-[9px] font-black uppercase tracking-widest text-purple-400 bg-purple-950/30 px-3 py-1 rounded-full border border-purple-500/15">How We Can Help You</span>
+              <h3 className="text-3xl font-black text-white">We Build What Fits Your Workflow</h3>
               <p className="text-gray-400 text-xs md:text-sm">
-                We combine modern backend architectures with beautiful, highly readable UI designs and strict regulatory tax integrations.
+                We design and build systems from scratch, ensuring they look great, load fast, and connect seamlessly with your team's everyday operations.
               </p>
             </div>
 
@@ -839,10 +839,10 @@ const Landing = ({ onEnterPortal }) => {
           <div className="space-y-12 w-full animate-fade-in-up">
             {/* Header info */}
             <div className="text-center space-y-3 max-w-2xl mx-auto">
-              <span className="text-[9px] font-black uppercase tracking-widest text-purple-400 bg-purple-950/30 px-3 py-1 rounded-full border border-purple-500/15">We're Hiring</span>
-              <h3 className="text-3xl font-black text-white">Code With Empathy</h3>
+              <span className="text-[9px] font-black uppercase tracking-widest text-purple-400 bg-purple-950/30 px-3 py-1 rounded-full border border-purple-500/15">Come Build With Us</span>
+              <h3 className="text-3xl font-black text-white">Code That Solves Real Life Challenges</h3>
               <p className="text-gray-400 text-xs md:text-sm">
-                Join our team at Kigali Innovation City. We value deep empathy for users, technical speed, and inclusive work environment standards.
+                We are always looking for passionate engineers and designers. If you care about writing clean code that helps real people run businesses or simplify daily tasks, we'd love to work with you.
               </p>
             </div>
 
@@ -913,10 +913,10 @@ const Landing = ({ onEnterPortal }) => {
             {/* Left side: Contact cards & Team */}
             <div className="lg:col-span-5 space-y-8">
               <div className="space-y-3">
-                <span className="text-[9px] font-black uppercase tracking-widest text-purple-400 bg-purple-950/30 px-3 py-1 rounded-full border border-purple-500/15">Contact Desk</span>
-                <h3 className="text-3xl font-black text-white">Let's Connect</h3>
+                <span className="text-[9px] font-black uppercase tracking-widest text-purple-400 bg-purple-950/30 px-3 py-1 rounded-full border border-purple-500/15">Get In Touch</span>
+                <h3 className="text-3xl font-black text-white">Say Hello</h3>
                 <p className="text-gray-400 text-xs leading-relaxed font-medium">
-                  Have questions about our development flows, timeline estimation, or need advice on EBM tax compliance? Hit us up.
+                  We are always ready to discuss new projects, explain EBM compliance details, or just chat about how we can help your business grow. Reach out anytime.
                 </p>
               </div>
 

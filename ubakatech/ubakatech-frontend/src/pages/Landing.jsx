@@ -428,7 +428,7 @@ const Landing = ({ onEnterPortal }) => {
         </div>
 
         {/* Dynamic Tab Navigation Links */}
-        <nav className="flex items-center gap-1.5 p-1 bg-gray-900/30 border border-gray-900 rounded-full backdrop-blur-md overflow-x-auto max-w-full">
+        <nav className="flex flex-wrap items-center justify-center gap-1 sm:gap-1.5 p-1 bg-gray-900/30 border border-gray-900 rounded-full backdrop-blur-md max-w-full">
           {[
             { id: 'home', label: 'Home' },
             { id: 'portfolio', label: 'Portfolio' },
@@ -442,7 +442,7 @@ const Landing = ({ onEnterPortal }) => {
                 setActiveTab(tab.id);
                 setIntakeStep(1); // reset intake state
               }}
-              className={`text-xs font-semibold px-4 py-2 rounded-full cursor-pointer transition-all duration-300 ${
+              className={`text-[10px] sm:text-xs font-semibold px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-full cursor-pointer transition-all duration-300 ${
                 activeTab === tab.id 
                   ? 'bg-purple-600 text-white shadow-lg shadow-purple-500/20' 
                   : 'text-gray-400 hover:text-white hover:bg-gray-800/40'

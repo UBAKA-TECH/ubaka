@@ -340,7 +340,7 @@ const Landing = ({ onEnterPortal }) => {
     },
     {
       q: 'Can you build offline-first applications for rural areas?',
-      a: 'Yes. Internet connections in Kigali or upcountry can fluctuate. We build systems that cache data on the user\'s phone or computer. Cashiers can continue registering sales offline, and the system automatically syncs up when the network returns.'
+      a: 'Yes. Internet connections in upcountry areas like Gicumbi can fluctuate. We build systems that cache data on the user\'s phone or computer. Cashiers can continue registering sales offline, and the system automatically syncs up when the network returns.'
     },
     {
       q: 'What is your typical software development lifecycle timeline?',
@@ -385,7 +385,7 @@ const Landing = ({ onEnterPortal }) => {
     {
       name: 'Elsa Keza',
       role: 'Head of Product Experience & Design',
-      focus: 'A designer who spends time in the field. She designs interfaces that anyone can use easily, even under the bright Kigali sun on a small smartphone screen.',
+      focus: 'A designer who spends time in the field. She designs interfaces that anyone can use easily, even under the bright Gicumbi sun on a small smartphone screen.',
       bgGradient: 'from-rose-500 to-orange-500'
     },
     {
@@ -462,7 +462,7 @@ const Landing = ({ onEnterPortal }) => {
               <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
             </span>
             <div className="text-left shrink-0">
-              <div className="text-[9px] text-gray-500 uppercase font-bold tracking-wider leading-none">Kigali Local Time</div>
+              <div className="text-[9px] text-gray-500 uppercase font-bold tracking-wider leading-none">Rwanda Local Time</div>
               <div className="text-xs font-bold text-gray-300 font-mono mt-0.5">{kigaliTime || '--:--:--'}</div>
             </div>
             <div className="border-l border-gray-800 h-6"></div>
@@ -730,7 +730,7 @@ const Landing = ({ onEnterPortal }) => {
                   {
                     title: 'Linker Bus Booking',
                     tagline: 'Commuter Bus terminal Ticketing',
-                    desc: 'Digital seat reservations and queuing optimizer matching Kigali operators to rural routes with SMS payment triggers.',
+                    desc: 'Digital seat reservations and queuing optimizer matching bus operators to local rural routes with SMS payment triggers.',
                     stack: ['React Native', 'Redis Queue', 'Twilio'],
                     status: 'Planning / Requirement Gathering'
                   },
@@ -948,7 +948,7 @@ const Landing = ({ onEnterPortal }) => {
                   </div>
                   <div>
                     <div className="text-[10px] text-gray-500 font-extrabold uppercase tracking-wide">Headquarters</div>
-                    <div className="text-xs font-bold text-gray-300 mt-0.5">Kigali Innovation City, Gasabo District, Rwanda</div>
+                    <div className="text-xs font-bold text-gray-300 mt-0.5">Byumba, Gicumbi District, Rwanda</div>
                   </div>
                 </div>
               </div>
@@ -1485,7 +1485,7 @@ const Landing = ({ onEnterPortal }) => {
               We design digital infrastructure that supports local merchants, maps transit, and breaks accessibility barriers in Rwanda. Built by people, for people.
             </p>
             <div className="text-[10px] text-gray-500 font-bold uppercase tracking-wider">
-              Kigali Innovation City, Rwanda
+              Byumba, Gisuna, Gicumbi, Rwanda
             </div>
           </div>
 

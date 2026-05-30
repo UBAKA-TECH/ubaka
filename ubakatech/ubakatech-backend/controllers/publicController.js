@@ -12,7 +12,7 @@ const STATIC_JOBS = [
     id: 'role-senior-frontend',
     title: 'Senior Frontend Engineer',
     department: 'Engineering',
-    location: 'Kigali, Rwanda (Hybrid)',
+    location: 'Gicumbi, Rwanda (Byumba / Hybrid)',
     type: 'Full-time',
     description: 'Lead the design and development of our next-generation responsive dashboard interfaces and client web portals using React 19, Vite, and Tailwind CSS v4.',
     requirements: [
@@ -23,7 +23,7 @@ const STATIC_JOBS = [
     ],
     benefits: [
       'Competitive salary in RWF/USD.',
-      'Work at Kigali Innovation City with top-tier equipment.',
+      'Work in our office in Byumba with top-tier equipment.',
       'Flexible hours and hybrid work options (3 days office, 2 days remote).',
       'Full health insurance coverage & annual learning stipend.'
     ]
@@ -32,7 +32,7 @@ const STATIC_JOBS = [
     id: 'role-uiux-designer',
     title: 'UI/UX Product Designer',
     department: 'Product & Design',
-    location: 'Kigali, Rwanda (Hybrid / Remote)',
+    location: 'Gicumbi, Rwanda (Byumba / Remote)',
     type: 'Full-time',
     description: 'Shape the visual language and user flows of civic and merchant tools. Design interfaces that feel human, fast, and accessible to low-bandwidth mobile users.',
     requirements: [
@@ -52,7 +52,7 @@ const STATIC_JOBS = [
     id: 'role-backend-developer',
     title: 'Backend Systems Engineer',
     department: 'Engineering',
-    location: 'Kigali, Rwanda (Full Office)',
+    location: 'Gicumbi, Rwanda (Gisuna / Office)',
     type: 'Full-time',
     description: 'Design robust database schemas, secure API gateways, and manage external integrations (EBM invoicing compliance, Mobile Money checkout triggers).',
     requirements: [

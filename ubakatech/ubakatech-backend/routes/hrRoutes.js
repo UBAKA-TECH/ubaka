@@ -7,6 +7,7 @@ import {
   getSaas, createSaas, updateSaas,
   getCertifications, createCertification,
   getAnalytics,
+  getHrStats,
   getInquiries, updateInquiryStatus,
   getApplications, updateApplicationStatus
 } from '../controllers/hrController.js';
@@ -41,8 +42,9 @@ router.put('/saas/:id', updateSaas);
 router.get('/certifications', getCertifications);
 router.post('/certifications', createCertification);
 
-// ─── People Analytics ──────────────────────────────────────────────────────
+// ─── People Analytics ────────────────────────────────────────────────
 router.get('/analytics', getAnalytics);
+router.get('/stats', getHrStats);
 
 // ─── Client Inquiries & Job Applications Triage ──────────────────────────────
 router.get('/inquiries', getInquiries);

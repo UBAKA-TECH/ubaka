@@ -1153,6 +1153,7 @@ export const createProject = async (req, res) => {
         totalChecks: 10000
       };
 
+      if (req.auditLog) req.auditLog({ actor: req.user.name, action: `Registered system "${newProject.name}"`, resource: 'project', resourceId: newProject.id });
       return res.status(201).json(newProject);
     } catch (err) {
       console.error('[ProjectController] Error creating project in database:', err.message);
@@ -1227,6 +1228,7 @@ export const updateProject = async (req, res) => {
         data: updateData
       });
 
+      if (req.auditLog) req.auditLog({ actor: req.user.name, action: `Updated system "${updated.name}" → status: ${updated.status}`, resource: 'project', resourceId: id });
       return res.json(updated);
     } catch (err) {
       console.error('[ProjectController] Error updating project in database:', err.message);
@@ -1267,6 +1269,7 @@ export const deleteProject = async (req, res) => {
       }
 
       await prisma.project.delete({ where: { id } });
+      if (req.auditLog) req.auditLog({ actor: req.user.name, action: `Deleted system "${exists.name}"`, resource: 'project', resourceId: id });
       return res.json({ success: true, message: 'Project successfully deleted' });
     } catch (err) {
       console.error('[ProjectController] Error deleting project from database:', err.message);

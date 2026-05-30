@@ -23,7 +23,28 @@ app.use((req, res, next) => {
   next();
 });
 
-// Attach socket.io server instance to request object
+// ─── In-Memory Audit Log (ring buffer, last 50 events) ──────────────────────────
+const auditBuffer = [];
+const MAX_AUDIT = 50;
+
+export function pushAuditEvent({ actor, action, resource, resourceId }) {
+  auditBuffer.unshift({
+    actor: actor || 'System',
+    action,
+    resource: resource || '',
+    resourceId: resourceId || null,
+    createdAt: new Date().toISOString()
+  });
+  if (auditBuffer.length > MAX_AUDIT) auditBuffer.length = MAX_AUDIT;
+}
+
+// Attach audit pusher to request object
+app.use((req, res, next) => {
+  req.auditLog = pushAuditEvent;
+  next();
+});
+
+// Attach socket.io instance
 app.use((req, res, next) => {
   req.io = io;
   next();
@@ -37,6 +58,13 @@ app.get('/api/health', (req, res) => {
     timestamp: new Date().toISOString(),
     env: process.env.NODE_ENV || 'development'
   });
+});
+
+// Audit log endpoint (authenticated)
+import { protect as _protect } from './middleware/authMiddleware.js';
+app.get('/api/audit', _protect, (req, res) => {
+  const limit = Math.min(parseInt(req.query.limit) || 15, 50);
+  res.json(auditBuffer.slice(0, limit));
 });
 
 // Import routers

@@ -614,6 +614,43 @@ export const getAnalytics = async (req, res) => {
   });
 };
 
+// ─── DASHBOARD STATS SUMMARY ────────────────────────────────────────────────
+
+export const getHrStats = async (req, res) => {
+  const dbActive = await isDbConnected();
+
+  if (dbActive) {
+    try {
+      const [total, active, onLeave, openPositions, pendingOnboarding] = await Promise.all([
+        prisma.employee.count(),
+        prisma.employee.count({ where: { isActive: true } }),
+        prisma.approvalRequest.count({ where: { type: 'time_off', status: 'approved' } }),
+        prisma.approvalRequest.count({ where: { type: 'job_opening', status: 'pending' } }),
+        prisma.onboardingChecklist.count({ where: { isComplete: false } })
+      ]);
+      return res.json({
+        totalEmployees: total,
+        activeEmployees: active,
+        onLeave,
+        openPositions,
+        pendingOnboarding
+      });
+    } catch (err) {
+      console.warn('[HRController] DB error in getHrStats:', err.message);
+    }
+  }
+
+  // Mock fallback
+  return res.json({
+    totalEmployees: 2,
+    activeEmployees: 2,
+    onLeave: 0,
+    openPositions: 1,
+    pendingOnboarding: MOCK_ONBOARDING.filter(t => !t.isComplete).length
+  });
+};
+
+
 // Get all client inquiries
 export const getInquiries = async (req, res) => {
   if (!isHRAdmin(req)) return res.status(403).json({ error: 'Forbidden: manage_hr permission required.' });

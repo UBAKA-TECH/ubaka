@@ -431,7 +431,7 @@ const Landing = ({ onEnterPortal }) => {
         <nav className="flex flex-wrap items-center justify-center gap-1 sm:gap-1.5 p-1 bg-gray-900/30 border border-gray-900 rounded-full backdrop-blur-md max-w-full">
           {[
             { id: 'home', label: 'Home' },
-            { id: 'portfolio', label: 'Portfolio' },
+            { id: 'portfolio', label: 'Case Studies' },
             { id: 'services', label: 'Services' },
             { id: 'careers', label: 'Careers' },
             { id: 'contact', label: 'Contact' }
@@ -588,7 +588,7 @@ const Landing = ({ onEnterPortal }) => {
           <div className="space-y-12 w-full animate-fade-in-up">
             {/* Header info */}
             <div className="text-center space-y-3 max-w-2xl mx-auto">
-              <span className="text-[9px] font-black uppercase tracking-widest text-purple-400 bg-purple-950/30 px-3 py-1 rounded-full border border-purple-500/15">Completed Projects</span>
+              <span className="text-[9px] font-black uppercase tracking-widest text-purple-400 bg-purple-950/30 px-3 py-1 rounded-full border border-purple-500/15">Case Studies</span>
               <h3 className="text-3xl font-black text-white">Real Software, Real Impact</h3>
               <p className="text-gray-400 text-xs md:text-sm">
                 We focus on building software that solves actual challenges. Here is a deep dive into the flagship platform we designed, built, and launched.
@@ -1491,7 +1491,7 @@ const Landing = ({ onEnterPortal }) => {
 
           {/* Portfolio Links */}
           <div className="col-span-1 md:col-span-2 space-y-3">
-            <h5 className="text-[10px] font-black uppercase tracking-widest text-gray-400">Completed Work</h5>
+            <h5 className="text-[10px] font-black uppercase tracking-widest text-gray-400">Case Studies</h5>
             <ul className="space-y-2 text-xs font-medium">
               <li>
                 <a 

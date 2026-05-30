@@ -46,6 +46,7 @@ import tasksRouter from './routes/taskRoutes.js';
 import messagesRouter from './routes/messageRoutes.js';
 import delegationRouter from './routes/delegationRoutes.js';
 import hrRouter from './routes/hrRoutes.js';
+import publicRouter from './routes/publicRoutes.js';
 import { seedRolesAndPermissions } from './config/roles.js';
 
 // Seed Roles and Permissions
@@ -58,6 +59,7 @@ app.use('/api/tasks', tasksRouter);
 app.use('/api/messages', messagesRouter);
 app.use('/api/delegations', delegationRouter);
 app.use('/api/hr', hrRouter);
+app.use('/api/public', publicRouter);
 
 // WebSocket Connections
 io.on('connection', (socket) => {

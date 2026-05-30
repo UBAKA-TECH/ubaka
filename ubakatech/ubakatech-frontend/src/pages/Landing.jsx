@@ -922,23 +922,23 @@ const Landing = ({ onEnterPortal }) => {
 
               {/* Direct links list */}
               <div className="space-y-3">
-                <a href="mailto:info@ubakatech.co.rw" className="flex gap-4 p-4 bg-gray-900/10 border border-gray-900 hover:border-purple-500/20 rounded-2xl group transition-all">
+                <a href="mailto:byiringirobenitg@gmail.com" className="flex gap-4 p-4 bg-gray-900/10 border border-gray-900 hover:border-purple-500/20 rounded-2xl group transition-all">
                   <div className="w-10 h-10 rounded-xl bg-purple-950/20 border border-purple-900/30 flex items-center justify-center text-purple-400 group-hover:scale-105 transition-transform shrink-0">
                     <Mail className="w-5 h-5" />
                   </div>
                   <div>
                     <div className="text-[10px] text-gray-500 font-extrabold uppercase tracking-wide">Write Email</div>
-                    <div className="text-xs font-bold text-gray-300 mt-0.5">info@ubakatech.co.rw</div>
+                    <div className="text-xs font-bold text-gray-300 mt-0.5">byiringirobenitg@gmail.com</div>
                   </div>
                 </a>
 
-                <a href="tel:+250788398481" className="flex gap-4 p-4 bg-gray-900/10 border border-gray-900 hover:border-purple-500/20 rounded-2xl group transition-all">
+                <a href="tel:+250790479815" className="flex gap-4 p-4 bg-gray-900/10 border border-gray-900 hover:border-purple-500/20 rounded-2xl group transition-all">
                   <div className="w-10 h-10 rounded-xl bg-indigo-950/20 border border-indigo-900/30 flex items-center justify-center text-indigo-400 group-hover:scale-105 transition-transform shrink-0">
                     <Phone className="w-5 h-5" />
                   </div>
                   <div>
                     <div className="text-[10px] text-gray-500 font-extrabold uppercase tracking-wide">Phone Office</div>
-                    <div className="text-xs font-bold text-gray-300 mt-0.5">+250 788 398 481</div>
+                    <div className="text-xs font-bold text-gray-300 mt-0.5">+250 790 479 815</div>
                   </div>
                 </a>
 

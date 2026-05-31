@@ -103,7 +103,7 @@ export const getRooms = async (req, res) => {
 
       if (!room.isGroup) {
         const otherMember = room.members.find(m => m.employeeId !== employeeId);
-        if (otherMember) {
+        if (otherMember && otherMember.employee) {
           roomName = otherMember.employee.name;
           roomAvatar = otherMember.employee.avatar;
         } else {
@@ -123,18 +123,18 @@ export const getRooms = async (req, res) => {
         updatedAt: room.updatedAt,
         createdById: room.createdById,
         members: room.members.map(m => ({
-          id: m.employee.id,
-          name: m.employee.name,
-          avatar: m.employee.avatar,
-          email: m.employee.email,
-          title: m.employee.title,
+          id: m.employee?.id || m.employeeId,
+          name: m.employee?.name || "Unknown Member",
+          avatar: m.employee?.avatar || null,
+          email: m.employee?.email || "",
+          title: m.employee?.title || "",
           role: m.role
         })),
         lastMessage: room.messages[0] ? {
           id: room.messages[0].id,
           content: room.messages[0].content,
           createdAt: room.messages[0].createdAt,
-          senderName: room.messages[0].sender.name,
+          senderName: room.messages[0].sender?.name || "Unknown",
           senderId: room.messages[0].senderId
         } : null,
         unreadCount
@@ -209,11 +209,11 @@ export const createRoom = async (req, res) => {
         updatedAt: room.updatedAt,
         createdById: room.createdById,
         members: room.members.map(m => ({
-          id: m.employee.id,
-          name: m.employee.name,
-          avatar: m.employee.avatar,
-          email: m.employee.email,
-          title: m.employee.title,
+          id: m.employee?.id || m.employeeId,
+          name: m.employee?.name || "Unknown Member",
+          avatar: m.employee?.avatar || null,
+          email: m.employee?.email || "",
+          title: m.employee?.title || "",
           role: m.role
         })),
         lastMessage: null,
@@ -275,11 +275,11 @@ export const createRoom = async (req, res) => {
           updatedAt: exactRoom.updatedAt,
           createdById: exactRoom.createdById,
           members: exactRoom.members.map(m => ({
-            id: m.employee.id,
-            name: m.employee.name,
-            avatar: m.employee.avatar,
-            email: m.employee.email,
-            title: m.employee.title,
+            id: m.employee?.id || m.employeeId,
+            name: m.employee?.name || "Unknown Member",
+            avatar: m.employee?.avatar || null,
+            email: m.employee?.email || "",
+            title: m.employee?.title || "",
             role: m.role
           })),
           lastMessage: null,
@@ -322,8 +322,8 @@ export const createRoom = async (req, res) => {
       const targetMember = room.members.find(m => m.employeeId !== creatorId) || room.members[0];
       const formattedRoom = {
         id: room.id,
-        name: creatorId === targetId ? "Saved Messages" : targetMember.employee.name,
-        avatar: creatorId === targetId ? req.user.avatar : targetMember.employee.avatar,
+        name: creatorId === targetId ? "Saved Messages" : (targetMember.employee?.name || "Unknown Member"),
+        avatar: creatorId === targetId ? req.user.avatar : (targetMember.employee?.avatar || null),
         isGroup: false,
         isEncrypted: false,
         encryptionValidation: null,
@@ -331,11 +331,11 @@ export const createRoom = async (req, res) => {
         updatedAt: room.updatedAt,
         createdById: room.createdById,
         members: room.members.map(m => ({
-          id: m.employee.id,
-          name: m.employee.name,
-          avatar: m.employee.avatar,
-          email: m.employee.email,
-          title: m.employee.title,
+          id: m.employee?.id || m.employeeId,
+          name: m.employee?.name || "Unknown Member",
+          avatar: m.employee?.avatar || null,
+          email: m.employee?.email || "",
+          title: m.employee?.title || "",
           role: m.role
         })),
         lastMessage: null,

@@ -36,11 +36,11 @@ let INITIAL_PROJECTS = [
     repositoryUrl: 'https://github.com/Benitgilbert/impressa.git',
     liveUrl: 'https://kurimacye.vercel.app',
     metrics: {
-      uptime: '99.94%',
-      activeUsers: 1420,
+      uptime: 'N/A',
+      activeUsers: 0,
       apiHealth: 'healthy',
-      serverLoad: '28%',
-      weeklyRevenue: '14,240,000 Rwf'
+      serverLoad: 'N/A',
+      weeklyRevenue: '0 Rwf'
     }
   },
   {
@@ -52,10 +52,10 @@ let INITIAL_PROJECTS = [
     repositoryUrl: 'https://github.com/Benitgilbert/gesture-to-speech.git',
     liveUrl: null,
     metrics: {
-      uptime: '100%',
+      uptime: 'N/A',
       activeUsers: 0,
       apiHealth: 'healthy',
-      serverLoad: '0%',
+      serverLoad: 'N/A',
       weeklyRevenue: '0 Rwf'
     }
   },
@@ -68,10 +68,10 @@ let INITIAL_PROJECTS = [
     repositoryUrl: 'https://github.com/Benitgilbert/linker.git',
     liveUrl: null,
     metrics: {
-      uptime: '100%',
+      uptime: 'N/A',
       activeUsers: 0,
       apiHealth: 'healthy',
-      serverLoad: '0%',
+      serverLoad: 'N/A',
       weeklyRevenue: '0 Rwf'
     }
   },
@@ -84,10 +84,10 @@ let INITIAL_PROJECTS = [
     repositoryUrl: 'https://github.com/Benitgilbert/homland.git',
     liveUrl: null,
     metrics: {
-      uptime: '100%',
+      uptime: 'N/A',
       activeUsers: 0,
       apiHealth: 'healthy',
-      serverLoad: '0%',
+      serverLoad: 'N/A',
       weeklyRevenue: '0 Rwf'
     }
   }
@@ -116,39 +116,54 @@ export const startHealthMonitor = () => {
 
     for (const p of projects) {
       const slug = p.slug;
-      if (!p.liveUrl) {
-        if (!PROJECT_HEALTH_STATE[slug]) {
-          PROJECT_HEALTH_STATE[slug] = {
-            uptime: '100%',
-            activeUsers: 0,
-            apiHealth: 'healthy',
-            serverLoad: '0%',
-            weeklyRevenue: '0 Rwf',
-            latency: 'N/A',
-            successCount: 10000,
-            totalChecks: 10000
-          };
-        }
-        continue;
-      }
-
       if (!PROJECT_HEALTH_STATE[slug]) {
-        const isImpressa = slug === 'impressa';
         PROJECT_HEALTH_STATE[slug] = {
-          uptime: isImpressa ? '99.94%' : '100%',
-          activeUsers: isImpressa ? 1420 : 0,
+          uptime: 'N/A',
+          activeUsers: 0,
           apiHealth: 'healthy',
-          serverLoad: isImpressa ? '28%' : '0%',
-          weeklyRevenue: isImpressa ? '14,240,000 Rwf' : '0 Rwf',
+          serverLoad: 'N/A',
+          weeklyRevenue: '0 Rwf',
           latency: 'N/A',
-          successCount: isImpressa ? 9994 : 10000,
-          totalChecks: 10000
+          successCount: 0,
+          totalChecks: 0
         };
       }
 
       const state = PROJECT_HEALTH_STATE[slug];
-      const startTime = Date.now();
+      const isKuriMacye = slug === 'impressa' || slug.includes('kuri') || (p.liveUrl && p.liveUrl.includes('kurimacye'));
 
+      // If Kuri Macye, fetch real database metrics in real-time
+      if (isKuriMacye) {
+        try {
+          const userCountRows = await queryImpressa('SELECT COUNT(*)::int as count FROM public."User"', []);
+          state.activeUsers = userCountRows && userCountRows[0] ? userCountRows[0].count : 0;
+
+          const revenueRows = await queryImpressa(`
+            SELECT COALESCE(SUM("grandTotal"), 0)::float as revenue 
+            FROM public."Order" 
+            WHERE "createdAt" >= NOW() - INTERVAL '7 days' 
+            AND "paymentStatus" = 'completed'
+          `, []);
+          const revenue = revenueRows && revenueRows[0] ? revenueRows[0].revenue : 0;
+          state.weeklyRevenue = `${revenue.toLocaleString()} Rwf`;
+        } catch (dbErr) {
+          console.error('[HealthMonitor] Kuri Macye database query failed:', dbErr.message);
+        }
+      } else {
+        state.activeUsers = 0;
+        state.weeklyRevenue = '0 Rwf';
+      }
+
+      state.serverLoad = 'N/A'; // No simulation
+
+      if (!p.liveUrl) {
+        state.uptime = 'N/A';
+        state.latency = 'N/A';
+        state.apiHealth = 'healthy';
+        continue;
+      }
+
+      const startTime = Date.now();
       try {
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 5000);
@@ -170,26 +185,11 @@ export const startHealthMonitor = () => {
         state.totalChecks++;
         state.latency = `${latency}ms`;
         state.uptime = `${((state.successCount / state.totalChecks) * 100).toFixed(2)}%`;
-        
-        if (slug === 'impressa') {
-          state.activeUsers = Math.floor(1380 + Math.random() * 80);
-          state.serverLoad = `${Math.floor(20 + Math.random() * 15)}%`;
-        } else {
-          if (p.status === 'active' || p.status === 'testing') {
-            state.activeUsers = Math.floor(10 + Math.random() * 90);
-            state.serverLoad = `${Math.floor(5 + Math.random() * 15)}%`;
-          } else {
-            state.activeUsers = 0;
-            state.serverLoad = '0%';
-          }
-        }
       } catch (err) {
         state.apiHealth = 'inactive';
         state.totalChecks++;
         state.latency = 'Timeout';
         state.uptime = `${((state.successCount / state.totalChecks) * 100).toFixed(2)}%`;
-        state.activeUsers = 0;
-        state.serverLoad = '0%';
         console.warn(`[HealthMonitor] Project ${slug} ping failed:`, err.message);
       }
     }
@@ -210,10 +210,10 @@ export const getProjects = async (req, res) => {
       const projectsWithMetrics = projects.map(p => {
         const slug = p.slug;
         const state = PROJECT_HEALTH_STATE[slug] || {
-          uptime: '100%',
+          uptime: 'N/A',
           activeUsers: 0,
           apiHealth: 'healthy',
-          serverLoad: '0%',
+          serverLoad: 'N/A',
           weeklyRevenue: '0 Rwf',
           latency: 'N/A'
         };
@@ -277,10 +277,10 @@ export const getProjectBySlug = async (req, res) => {
   }
 
   const state = PROJECT_HEALTH_STATE[slug] || {
-    uptime: '100%',
+    uptime: 'N/A',
     activeUsers: 0,
     apiHealth: 'healthy',
-    serverLoad: '0%',
+    serverLoad: 'N/A',
     weeklyRevenue: '0 Rwf',
     latency: 'N/A'
   };

@@ -14,6 +14,7 @@
     "install:all": "npm install",
     "dev:ubaka": "concurrently \"npm run dev -w ubakatech/ubakatech-backend\" \"npm run dev -w ubakatech/ubakatech-frontend\"",
     "dev:kurimacye": "concurrently \"npm run dev -w kurimacye/kurimacye-backend\" \"npm run dev -w kurimacye/kurimacye-frontend\"",
+    "build": "npm run build -w ubakatech/ubakatech-backend && npm run build -w ubakatech/ubakatech-frontend",
     "build:ubaka": "npm run build -w ubakatech/ubakatech-backend && npm run build -w ubakatech/ubakatech-frontend",
     "build:kurimacye": "npm run build -w kurimacye/kurimacye-frontend"
   },

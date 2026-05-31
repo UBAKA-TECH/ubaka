@@ -4,6 +4,45 @@ import prisma from '../config/db.js';
 export const getRooms = async (req, res) => {
   const employeeId = req.user.id;
   try {
+    // 1. Ensure the system "General" chat room exists
+    let generalRoom = await prisma.chatRoom.findFirst({
+      where: {
+        isGroup: true,
+        name: "General"
+      }
+    });
+
+    if (!generalRoom) {
+      generalRoom = await prisma.chatRoom.create({
+        data: {
+          name: "General",
+          isGroup: true,
+          isEncrypted: false
+        }
+      });
+    }
+
+    // 2. Ensure current employee is a member of General room
+    const isGeneralMember = await prisma.chatRoomMember.findUnique({
+      where: {
+        roomId_employeeId: {
+          roomId: generalRoom.id,
+          employeeId: employeeId
+        }
+      }
+    });
+
+    if (!isGeneralMember) {
+      await prisma.chatRoomMember.create({
+        data: {
+          roomId: generalRoom.id,
+          employeeId: employeeId,
+          role: 'member'
+        }
+      });
+    }
+
+    // 3. Find all ChatRooms where this employee is a member
     const rooms = await prisma.chatRoom.findMany({
       where: {
         members: {

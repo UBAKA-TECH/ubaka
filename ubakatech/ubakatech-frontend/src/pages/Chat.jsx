@@ -555,7 +555,6 @@ const Chat = () => {
               </button>
             )}
           </div>
-          <span className="text-[10px] text-slate-500 font-semibold tracking-wider block mt-1 uppercase">WhatsApp Logic MIS Hub</span>
           
           {/* Search Contacts Bar */}
           <div className="mt-3 relative">

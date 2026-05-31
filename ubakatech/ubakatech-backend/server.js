@@ -97,10 +97,16 @@ app.use('/api/public', publicRouter);
 io.on('connection', (socket) => {
   console.log(`[WebSocket] Client connected: ${socket.id}`);
 
-  // Join a specific project room or chat channel
-  socket.on('join_channel', (channelName) => {
-    socket.join(channelName);
-    console.log(`[WebSocket] Client ${socket.id} joined channel: ${channelName}`);
+  // Join a user-specific room for notifications (e.g. room_created)
+  socket.on('join_user', (userId) => {
+    socket.join(`user_${userId}`);
+    console.log(`[WebSocket] Client ${socket.id} joined user channel: user_${userId}`);
+  });
+
+  // Join a specific project room or chat room
+  socket.on('join_channel', (roomId) => {
+    socket.join(roomId);
+    console.log(`[WebSocket] Client ${socket.id} joined room: ${roomId}`);
   });
 
   // Handle task updates (drag and drop)
@@ -113,8 +119,30 @@ io.on('connection', (socket) => {
   // Handle live chat message
   socket.on('send_message', (messageData) => {
     console.log(`[WebSocket] Message received:`, messageData);
-    // Broadcast to the channel
-    io.to(messageData.channel).emit('receive_message', messageData);
+    // Broadcast to the room
+    io.to(messageData.roomId).emit('receive_message', messageData);
+  });
+
+  // Handle typing indicator
+  socket.on('typing', (data) => {
+    // Broadcast typing state to other members in the room
+    socket.to(data.roomId).emit('user_typing', {
+      roomId: data.roomId,
+      employeeId: data.employeeId,
+      name: data.name,
+      isTyping: data.isTyping
+    });
+  });
+
+  // Handle read receipt confirmation
+  socket.on('mark_read', (data) => {
+    // Broadcast message read status to others in the room
+    socket.to(data.roomId).emit('messages_read', {
+      roomId: data.roomId,
+      employeeId: data.employeeId,
+      messageIds: data.messageIds,
+      readAt: new Date()
+    });
   });
 
   socket.on('disconnect', () => {

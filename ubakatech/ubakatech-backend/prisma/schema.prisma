@@ -86,6 +86,9 @@ model Employee {
   createdTasks     Task[]               @relation("CreatedTasks")
   messages         Message[]
   timeEntries      TimeEntry[]
+  chatMembers      ChatRoomMember[]
+  readReceipts     MessageReadReceipt[]
+  createdChatRooms ChatRoom[]           @relation("CreatedChatRooms")
 
   // Delegations
   delegations      Delegation[]         @relation("UserDelegations")
@@ -270,19 +273,56 @@ model Task {
 }
 
 model Message {
-  id          String   @id @default(uuid())
-  content     String
-  channel     String   @default("general") // e.g. "general", "impressa", "linker"
-  isDirect    Boolean  @default(false)
-  recipientId String?  // ID of the target employee if isDirect = true
-  createdAt   DateTime @default(now())
-
+  id           String               @id @default(uuid())
+  content      String
+  createdAt    DateTime             @default(now())
+  
   // Relations
-  senderId    String
-  sender      Employee @relation(fields: [senderId], references: [id], onDelete: Cascade)
+  roomId       String
+  room         ChatRoom             @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  senderId     String
+  sender       Employee             @relation(fields: [senderId], references: [id], onDelete: Cascade)
+  readReceipts MessageReadReceipt[]
 
   @@index([senderId])
-  @@index([channel])
+  @@index([roomId])
+}
+
+model ChatRoom {
+  id                   String           @id @default(uuid())
+  name                 String?          // null for 1-to-1 DMs
+  isGroup              Boolean          @default(false)
+  isEncrypted          Boolean          @default(false)
+  encryptionValidation String?          // Encrypted string "valid" to verify key locally
+  createdAt            DateTime         @default(now())
+  updatedAt            DateTime         @updatedAt
+  
+  // Relations
+  createdById          String?
+  createdBy            Employee?        @relation("CreatedChatRooms", fields: [createdById], references: [id])
+  members              ChatRoomMember[]
+  messages             Message[]
+}
+
+model ChatRoomMember {
+  roomId     String
+  room       ChatRoom @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  employeeId String
+  employee   Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  joinedAt   DateTime @default(now())
+  role       String   @default("member") // "admin" or "member"
+
+  @@id([roomId, employeeId])
+}
+
+model MessageReadReceipt {
+  messageId  String
+  message    Message  @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  employeeId String
+  employee   Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  readAt     DateTime @default(now())
+
+  @@id([messageId, employeeId])
 }
 
 model TimeEntry {

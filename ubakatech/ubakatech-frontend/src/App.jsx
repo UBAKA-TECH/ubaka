@@ -75,26 +75,6 @@ const MainLayout = () => {
     return <LoadingScreen message="Syncing Ubaka Tech Portal..." />;
   }
 
-  // Render active view based on state selection
-  const renderPage = () => {
-    switch (activePage) {
-      case 'dashboard':
-        return <Dashboard />;
-      case 'tasks':
-        return <Kanban />;
-      case 'chat':
-        return <Chat />;
-      case 'impressa-admin':
-        return <ImpressaAdmin />;
-      case 'delegations':
-        return <Delegations />;
-      case 'hr-portal':
-        return <HRPortal />;
-      default:
-        return <Dashboard />;
-    }
-  };
-
   return (
     <div className="flex bg-slate-950 text-slate-100 min-h-screen font-sans">
       <Sidebar activePage={activePage} setActivePage={setActivePage} />
@@ -112,8 +92,25 @@ const MainLayout = () => {
             </div>
           </div>
         )}
-        <main className="flex-1 overflow-hidden">
-          {renderPage()}
+        <main className="flex-1 overflow-hidden relative">
+          <div className={`h-full ${activePage === 'dashboard' ? '' : 'hidden'}`}>
+            <Dashboard />
+          </div>
+          <div className={`h-full ${activePage === 'tasks' ? '' : 'hidden'}`}>
+            <Kanban />
+          </div>
+          <div className={`h-full ${activePage === 'chat' ? '' : 'hidden'}`}>
+            <Chat />
+          </div>
+          <div className={`h-full ${activePage === 'impressa-admin' ? '' : 'hidden'}`}>
+            <ImpressaAdmin />
+          </div>
+          <div className={`h-full ${activePage === 'delegations' ? '' : 'hidden'}`}>
+            <Delegations />
+          </div>
+          <div className={`h-full ${activePage === 'hr-portal' ? '' : 'hidden'}`}>
+            <HRPortal />
+          </div>
         </main>
       </div>
     </div>

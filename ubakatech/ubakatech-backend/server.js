@@ -82,7 +82,7 @@ import { startHealthMonitor } from './controllers/projectController.js';
 seedRolesAndPermissions();
 
 // Start Live Status Health Monitor
-startHealthMonitor();
+startHealthMonitor(io);
 
 // Mount routes
 app.use('/api/auth', authRouter);

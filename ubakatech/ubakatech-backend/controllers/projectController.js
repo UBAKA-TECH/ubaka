@@ -96,9 +96,51 @@ let INITIAL_PROJECTS = [
 // Mock Kuri Macye lists removed for production real-data enforcement
 
 export const PROJECT_HEALTH_STATE = {};
+let ioInstance = null;
+
+export const broadcastProjectsUpdate = async () => {
+  if (!ioInstance) return;
+  let projects = [];
+  const dbActive = await isDbConnected();
+  if (dbActive) {
+    try {
+      projects = await prisma.project.findMany();
+    } catch (err) {
+      projects = INITIAL_PROJECTS;
+    }
+  } else {
+    projects = INITIAL_PROJECTS;
+  }
+
+  const projectsWithMetrics = projects.map(p => {
+    const slug = p.slug;
+    const state = PROJECT_HEALTH_STATE[slug] || {
+      uptime: 'N/A',
+      activeUsers: 0,
+      apiHealth: 'healthy',
+      serverLoad: 'N/A',
+      weeklyRevenue: '0 Rwf',
+      latency: 'N/A'
+    };
+    return {
+      ...p,
+      metrics: {
+        uptime: state.uptime,
+        activeUsers: state.activeUsers,
+        apiHealth: state.apiHealth,
+        serverLoad: state.serverLoad,
+        weeklyRevenue: state.weeklyRevenue,
+        latency: state.latency
+      }
+    };
+  });
+
+  ioInstance.emit('projects_updated', projectsWithMetrics);
+};
 
 // Background Health Monitor service
-export const startHealthMonitor = () => {
+export const startHealthMonitor = (io) => {
+  ioInstance = io;
   console.log('[HealthMonitor] Starting Ubaka Tech MIS Health Checking Service...');
   
   const checkHealth = async () => {
@@ -193,6 +235,9 @@ export const startHealthMonitor = () => {
         console.warn(`[HealthMonitor] Project ${slug} ping failed:`, err.message);
       }
     }
+    
+    // Broadcast the updated metrics via WebSocket
+    await broadcastProjectsUpdate();
   };
 
   checkHealth();
@@ -1129,17 +1174,18 @@ export const createProject = async (req, res) => {
 
       // Initialize health state in memory cache
       PROJECT_HEALTH_STATE[slug] = {
-        uptime: '100%',
+        uptime: 'N/A',
         activeUsers: 0,
         apiHealth: 'healthy',
-        serverLoad: '0%',
+        serverLoad: 'N/A',
         weeklyRevenue: '0 Rwf',
         latency: 'N/A',
-        successCount: 10000,
-        totalChecks: 10000
+        successCount: 0,
+        totalChecks: 0
       };
 
       if (req.auditLog) req.auditLog({ actor: req.user.name, action: `Registered system "${newProject.name}"`, resource: 'project', resourceId: newProject.id });
+      await broadcastProjectsUpdate();
       return res.status(201).json(newProject);
     } catch (err) {
       console.error('[ProjectController] Error creating project in database:', err.message);
@@ -1157,10 +1203,10 @@ export const createProject = async (req, res) => {
     id: `proj-mock-${Date.now()}`,
     ...projectData,
     metrics: {
-      uptime: '100%',
+      uptime: 'N/A',
       activeUsers: 0,
       apiHealth: 'healthy',
-      serverLoad: '0%',
+      serverLoad: 'N/A',
       weeklyRevenue: '0 Rwf'
     }
   };
@@ -1168,16 +1214,17 @@ export const createProject = async (req, res) => {
   INITIAL_PROJECTS.push(mockProject);
   
   PROJECT_HEALTH_STATE[slug] = {
-    uptime: '100%',
+    uptime: 'N/A',
     activeUsers: 0,
     apiHealth: 'healthy',
-    serverLoad: '0%',
+    serverLoad: 'N/A',
     weeklyRevenue: '0 Rwf',
     latency: 'N/A',
-    successCount: 10000,
-    totalChecks: 10000
+    successCount: 0,
+    totalChecks: 0
   };
 
+  await broadcastProjectsUpdate();
   return res.status(201).json(mockProject);
 };
 
@@ -1215,6 +1262,7 @@ export const updateProject = async (req, res) => {
       });
 
       if (req.auditLog) req.auditLog({ actor: req.user.name, action: `Updated system "${updated.name}" → status: ${updated.status}`, resource: 'project', resourceId: id });
+      await broadcastProjectsUpdate();
       return res.json(updated);
     } catch (err) {
       console.error('[ProjectController] Error updating project in database:', err.message);
@@ -1234,6 +1282,7 @@ export const updateProject = async (req, res) => {
   };
 
   INITIAL_PROJECTS[idx] = updated;
+  await broadcastProjectsUpdate();
   return res.json(updated);
 };
 
@@ -1256,6 +1305,7 @@ export const deleteProject = async (req, res) => {
 
       await prisma.project.delete({ where: { id } });
       if (req.auditLog) req.auditLog({ actor: req.user.name, action: `Deleted system "${exists.name}"`, resource: 'project', resourceId: id });
+      await broadcastProjectsUpdate();
       return res.json({ success: true, message: 'Project successfully deleted' });
     } catch (err) {
       console.error('[ProjectController] Error deleting project from database:', err.message);
@@ -1270,6 +1320,7 @@ export const deleteProject = async (req, res) => {
   }
 
   INITIAL_PROJECTS.splice(idx, 1);
+  await broadcastProjectsUpdate();
   return res.json({ success: true, message: 'Project successfully deleted from mock store' });
 };
 

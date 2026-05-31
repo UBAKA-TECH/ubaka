@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { API_BASE_URL } from '../context/AuthContext';
 import { useAuth } from '../context/AuthContext';
+import { useSocket } from '../context/SocketContext';
 import {
   FolderGit2,
   Activity,
@@ -33,6 +34,7 @@ const STATUS_CONFIG = {
 
 const Dashboard = () => {
   const { token, user } = useAuth();
+  const socket = useSocket();
   const isAdmin = user && (user.role === 'sysadmin' || user.role === 'cto');
 
   // ─── Data ───────────────────────────────────────────────────────────────────
@@ -112,6 +114,19 @@ const Dashboard = () => {
   }, [fetchProjects, fetchHrStats, fetchAuditLogs]);
 
   useEffect(() => { refreshAll(); }, [token]);
+
+  // Real-time project updates via WebSocket
+  useEffect(() => {
+    if (!socket) return;
+    const handleProjectsUpdated = (updatedProjects) => {
+      setProjects(updatedProjects);
+      setLastRefresh(new Date());
+    };
+    socket.on('projects_updated', handleProjectsUpdated);
+    return () => {
+      socket.off('projects_updated', handleProjectsUpdated);
+    };
+  }, [socket]);
 
   // ─── Derived stats ───────────────────────────────────────────────────────────
   const activeCount  = projects.filter(p => p.status === 'active').length;

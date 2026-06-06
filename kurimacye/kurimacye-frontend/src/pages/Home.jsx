@@ -58,37 +58,37 @@ const ProductCard = ({ product }) => {
           {isWishlisted ? <FaHeart className="text-terracotta-500" /> : <FaRegHeart />}
         </button>
       </div>
-      <div className="p-4">
+      <div className="p-3 sm:p-4">
         <Link to={`/product/${product.id}`}>
-          <h3 className="font-semibold text-charcoal-800 dark:text-cream-100 line-clamp-2 mb-2 group-hover:text-terracotta-500 dark:group-hover:text-terracotta-400 transition">{product.name}</h3>
+          <h3 className="font-bold text-sm sm:text-base text-charcoal-800 dark:text-cream-100 line-clamp-2 mb-1 group-hover:text-terracotta-500 dark:group-hover:text-terracotta-400 transition">{product.name}</h3>
         </Link>
         {product.seller && (
-          <Link to={`/store/${product.seller.storeSlug || product.seller.id}`} className="text-[11px] text-terracotta-500 hover:text-terracotta-600 dark:text-terracotta-400 font-medium mb-2 flex items-center gap-1 w-fit">
-            <FaStore className="text-[10px]"/> Sold by: {product.seller.storeName || product.seller.name}
+          <Link to={`/store/${product.seller.storeSlug || product.seller.id}`} className="text-[10px] sm:text-xs text-terracotta-500 hover:text-terracotta-600 dark:text-terracotta-400 font-medium mb-1.5 flex items-center gap-1 w-fit line-clamp-1">
+            <FaStore className="text-[10px] shrink-0"/> Sold by: {product.seller.storeName || product.seller.name}
           </Link>
         )}
         <div className="flex items-center gap-1 mb-2">
           {[...Array(5)].map((_, i) => (
             <FaStar key={i} className={`${i < getRating(product.averageRating)
-              ? "text-sand-400" : "text-charcoal-200 dark:text-charcoal-700"} text-xs`} />
+              ? "text-sand-400" : "text-charcoal-200 dark:text-charcoal-700"} text-[10px] sm:text-xs`} />
           ))}
-          <span className="text-xs text-charcoal-400 ml-1">({getRating(product.averageRating).toFixed(1)})</span>
+          <span className="text-[10px] sm:text-xs text-charcoal-400 ml-1">({getRating(product.averageRating).toFixed(1)})</span>
         </div>
-        <div className="flex flex-col gap-1">
+        <div className="flex flex-col gap-0.5">
           {product.flashSaleInfo ? (
             <div className="flex flex-col">
-              <div className="flex items-center gap-2">
-                <span className="text-xl font-bold text-terracotta-500">{formatRwf(product.flashSaleInfo.flashSalePrice)}</span>
-                <span className="text-sm text-charcoal-400 line-through">{formatRwf(product.price)}</span>
+              <div className="flex items-center gap-1.5">
+                <span className="text-lg sm:text-xl font-bold text-terracotta-500">{formatRwf(product.flashSaleInfo.flashSalePrice)}</span>
+                <span className="text-xs text-charcoal-400 line-through">{formatRwf(product.price)}</span>
               </div>
-              <span className="text-[10px] font-bold uppercase tracking-wider text-terracotta-600 bg-terracotta-50 px-1.5 py-0.5 rounded w-fit">Flash Sale</span>
+              <span className="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-terracotta-600 bg-terracotta-50 px-1.5 py-0.5 rounded w-fit mt-0.5">Flash Sale</span>
             </div>
           ) : (
-            <span className="text-xl font-bold text-charcoal-900 dark:text-white">{formatRwf(product.price)}</span>
+            <span className="text-lg sm:text-xl font-bold text-charcoal-900 dark:text-white">{formatRwf(product.price)}</span>
           )}
           <Link
             to={`/product/${product.id}`}
-            className="text-terracotta-500 dark:text-terracotta-400 hover:text-terracotta-600 dark:hover:text-terracotta-300 text-sm font-medium"
+            className="text-terracotta-500 dark:text-terracotta-400 hover:text-terracotta-600 dark:hover:text-terracotta-300 text-[11px] sm:text-sm font-semibold mt-1 inline-block"
           >
             View →
           </Link>
@@ -465,8 +465,8 @@ export default function Home() {
                 <div className="w-8 h-8 border-4 border-terracotta-200 border-t-terracotta-500 rounded-full animate-spin"></div>
               </div>
             ) : (
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                {featured.slice(0, 8).map((product) => (
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4 lg:gap-5">
+                {featured.slice(0, 12).map((product) => (
                   <ProductCard key={product.id} product={product} />
                 ))}
               </div>
@@ -524,8 +524,8 @@ export default function Home() {
                 <div className="w-8 h-8 border-4 border-terracotta-200 border-t-terracotta-500 rounded-full animate-spin"></div>
               </div>
             ) : (
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                {trending.slice(0, 8).map((product) => (
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4 lg:gap-5">
+                {trending.slice(0, 12).map((product) => (
                   <ProductCard key={product.id} product={product} />
                 ))}
               </div>

@@ -184,7 +184,7 @@ export default function Storefront() {
             <p className="text-charcoal-500 dark:text-charcoal-400">This store has not listed any public products.</p>
           </div>
         ) : (
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4 lg:gap-5">
             {products.map(p => (
               <div
                 key={p.id}

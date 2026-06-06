@@ -446,7 +446,10 @@ export const getStorefront = async (req, res, next) => {
 
         const seller = await prisma.user.findFirst({
             where: { 
-                storeSlug: slug,
+                OR: [
+                    { storeSlug: slug },
+                    { id: slug }
+                ],
                 sellerStatus: 'active'
             },
             select: {

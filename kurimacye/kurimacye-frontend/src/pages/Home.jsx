@@ -1,5 +1,5 @@
 // Kuri Macye Home Page - Premium Marketplace Design
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import {
@@ -64,6 +64,7 @@ export default function Home() {
 
   const [promoBanner, setPromoBanner] = useState(null);
   const [hasPrintingServices, setHasPrintingServices] = useState(false);
+  const [lightboxImg, setLightboxImg] = useState(null);
 
   const fetchData = async () => {
     try {
@@ -274,12 +275,21 @@ export default function Home() {
               </div>
               <div className="grid gap-4" style={{gridTemplateColumns: `repeat(${Math.min(sellers.length, 4)}, minmax(0, 200px))`}}>
                 {sellers.map((seller) => (
-                  <Link key={seller.id} to={`/store/${seller.storeSlug || seller.id}`} className="bg-white dark:bg-charcoal-800 rounded-2xl p-6 text-center shadow-sm hover:shadow-xl transition-all border border-cream-200 dark:border-charcoal-700 group flex flex-col h-full">
-                    <div className="w-20 h-20 mx-auto mb-4 rounded-full overflow-hidden border-4 border-cream-100 dark:border-charcoal-700 bg-cream-100 flex items-center justify-center text-2xl font-bold text-terracotta-500 relative shrink-0">
+                  <div key={seller.id} className="bg-white dark:bg-charcoal-800 rounded-2xl p-6 text-center shadow-sm hover:shadow-xl transition-all border border-cream-200 dark:border-charcoal-700 group flex flex-col h-full">
+                    <div
+                      className="w-28 h-28 mx-auto mb-4 rounded-full overflow-hidden border-4 border-cream-100 dark:border-charcoal-700 bg-cream-100 flex items-center justify-center text-3xl font-bold text-terracotta-500 relative shrink-0 cursor-pointer"
+                      onClick={() => seller.storeLogo && setLightboxImg(assetUrl(seller.storeLogo))}
+                      title={seller.storeLogo ? 'Click to enlarge' : ''}
+                    >
                       {seller.storeLogo ? (
                         <img src={assetUrl(seller.storeLogo)} alt={seller.storeName} className="w-full h-full object-cover group-hover:scale-110 transition-transform" />
                       ) : (
                         (seller.storeName || seller.name).charAt(0).toUpperCase()
+                      )}
+                      {seller.storeLogo && (
+                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 flex items-center justify-center transition-all">
+                          <span className="text-white text-xs opacity-0 group-hover:opacity-100 transition-opacity font-semibold">🔍</span>
+                        </div>
                       )}
                       <div className="absolute -bottom-1 -right-1 bg-white rounded-full p-1 shadow-sm">
                         <FaShieldAlt className="text-blue-500 text-sm" title="Verified Seller" />
@@ -287,14 +297,29 @@ export default function Home() {
                     </div>
                     <h3 className="font-bold text-charcoal-800 dark:text-white mb-1 group-hover:text-terracotta-500 transition-colors line-clamp-1">{seller.storeName || seller.name}</h3>
                     <p className="text-xs text-charcoal-500 dark:text-charcoal-400 mb-4 flex-1">{seller.productCount} Products</p>
-                    <span className="inline-block border border-terracotta-500/30 text-terracotta-600 dark:text-terracotta-400 px-4 py-1.5 rounded-full text-xs font-semibold group-hover:bg-terracotta-50 dark:group-hover:bg-charcoal-700 transition-colors">
+                    <Link to={`/store/${seller.storeSlug || seller.id}`} className="inline-block border border-terracotta-500/30 text-terracotta-600 dark:text-terracotta-400 px-4 py-1.5 rounded-full text-xs font-semibold hover:bg-terracotta-50 dark:hover:bg-charcoal-700 transition-colors">
                       Visit Store
-                    </span>
-                  </Link>
+                    </Link>
+                  </div>
                 ))}
               </div>
             </div>
           </section>
+        )}
+        {/* Logo Lightbox */}
+        {lightboxImg && (
+          <div
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm"
+            onClick={() => setLightboxImg(null)}
+          >
+            <div className="relative max-w-sm w-full mx-4" onClick={e => e.stopPropagation()}>
+              <img src={lightboxImg} alt="Store logo" className="w-full rounded-2xl shadow-2xl object-contain max-h-[80vh]" />
+              <button
+                onClick={() => setLightboxImg(null)}
+                className="absolute -top-3 -right-3 bg-white dark:bg-charcoal-800 rounded-full w-8 h-8 flex items-center justify-center shadow-lg text-charcoal-700 dark:text-white font-bold hover:bg-red-500 hover:text-white transition-colors"
+              >✕</button>
+            </div>
+          </div>
         )}
 
         {/* Promotional Banner - Dynamic from Admin */}

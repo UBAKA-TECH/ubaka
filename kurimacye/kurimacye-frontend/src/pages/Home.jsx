@@ -196,23 +196,23 @@ export default function Home() {
           <div className="absolute inset-0 bg-gradient-to-br from-charcoal-700 via-charcoal-800 to-charcoal-900 dark:from-charcoal-900 dark:via-black dark:to-charcoal-900"></div>
           <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1607082349566-187342175e2f?w=1600&auto=format&fit=crop&q=80')] bg-cover bg-center opacity-20"></div>
 
-          <div className="relative mx-auto max-w-7xl px-6 py-12 md:py-24">
-            <div className="max-w-3xl">
-              <span className="inline-block bg-terracotta-500/20 text-terracotta-200 px-3 py-1.5 rounded-full text-xs font-semibold mb-6 backdrop-blur-sm border border-terracotta-500/30 uppercase tracking-wider shadow-lg">
+          <div className="relative mx-auto max-w-7xl px-6 py-10 md:py-16">
+            <div className="max-w-2xl">
+              <span className="inline-block bg-terracotta-500/20 text-terracotta-200 px-3 py-1.5 rounded-full text-xs font-semibold mb-4 backdrop-blur-sm border border-terracotta-500/30 uppercase tracking-wider shadow-lg">
                 {t('home.hero.badge')}
               </span>
-              <h1 className="text-4xl md:text-5xl lg:text-7xl font-black text-white mb-6 leading-[1.1] tracking-tight">
+              <h1 className="text-3xl md:text-5xl lg:text-6xl font-black text-white mb-4 leading-[1.1] tracking-tight">
                 {t('home.hero.title_part1')} <span className="text-transparent bg-clip-text bg-gradient-to-r from-terracotta-300 to-sand-300">{t('home.hero.title_premium')}</span> <br className="hidden md:block" />{t('home.hero.title_part2')}
               </h1>
-              <p className="text-lg md:text-xl text-cream-300 dark:text-cream-400 mb-10 max-w-xl opacity-90 font-medium leading-relaxed">
+              <p className="text-base md:text-lg text-cream-300 dark:text-cream-400 mb-8 max-w-lg opacity-90 font-medium leading-relaxed">
                 {t('home.hero.description')}
               </p>
               
-              <div className="flex flex-wrap gap-4">
-                <Link to="/shop" className="bg-gradient-to-r from-terracotta-500 to-terracotta-600 hover:from-terracotta-600 hover:to-terracotta-700 text-white px-8 py-4 rounded-full font-bold text-lg transition-all shadow-lg shadow-terracotta-500/25 hover:shadow-terracotta-500/40 flex items-center gap-2 active:scale-95">
+              <div className="flex flex-wrap gap-3">
+                <Link to="/shop" className="bg-gradient-to-r from-terracotta-500 to-terracotta-600 hover:from-terracotta-600 hover:to-terracotta-700 text-white px-6 py-3 rounded-full font-bold text-base transition-all shadow-lg shadow-terracotta-500/25 hover:shadow-terracotta-500/40 flex items-center gap-2 active:scale-95">
                   {t('home.hero.cta_shop')} <FaArrowRight className="text-sm" />
                 </Link>
-                <Link to="/daily-deals" className="bg-white/10 hover:bg-white/20 text-white px-8 py-4 rounded-full font-bold text-lg transition-all backdrop-blur-md border border-white/20 active:scale-95">
+                <Link to="/daily-deals" className="bg-white/10 hover:bg-white/20 text-white px-6 py-3 rounded-full font-bold text-base transition-all backdrop-blur-md border border-white/20 active:scale-95">
                   {t('home.hero.cta_deals')}
                 </Link>
               </div>

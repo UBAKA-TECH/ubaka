@@ -196,7 +196,7 @@ export default function Home() {
           <div className="absolute inset-0 bg-gradient-to-br from-charcoal-700 via-charcoal-800 to-charcoal-900 dark:from-charcoal-900 dark:via-black dark:to-charcoal-900"></div>
           <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1607082349566-187342175e2f?w=1600&auto=format&fit=crop&q=80')] bg-cover bg-center opacity-20"></div>
 
-          <div className="relative mx-auto max-w-7xl px-6 py-8 md:py-10">
+          <div className="relative mx-auto max-w-7xl px-6 pt-8 pb-2 md:pt-10 md:pb-4">
             <div className="max-w-2xl">
               <span className="inline-block bg-terracotta-500/20 text-terracotta-200 px-3 py-1.5 rounded-full text-xs font-semibold mb-4 backdrop-blur-sm border border-terracotta-500/30 uppercase tracking-wider shadow-lg">
                 {t('home.hero.badge')}
@@ -227,9 +227,9 @@ export default function Home() {
 
 
         {/* Categories Section */}
-        <section className="pt-8 pb-12">
+        <section className="pt-4 pb-12">
           <div className="mx-auto max-w-7xl px-4">
-            <div className="flex items-end justify-between mb-10">
+            <div className="flex items-end justify-between mb-6">
               <div>
                 <h2 className="text-3xl font-bold text-charcoal-800 dark:text-white mb-2">{t('home.categories.title')}</h2>
                 <p className="text-charcoal-500 dark:text-charcoal-400">{t('home.categories.description')}</p>
@@ -245,7 +245,7 @@ export default function Home() {
                   <Link
                     to={`/shop?category=${encodeURIComponent(cat.name || cat.slug)}`}
                     key={cat.id || idx}
-                    className="group relative h-32 sm:h-40 rounded-2xl overflow-hidden shadow-md"
+                    className="group relative h-24 sm:h-32 rounded-2xl overflow-hidden shadow-md"
                   >
                     <img src={cat.img} alt={cat.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
                     <div className={`absolute inset-0 bg-gradient-to-t ${cat.color} opacity-60 group-hover:opacity-70 transition`}></div>

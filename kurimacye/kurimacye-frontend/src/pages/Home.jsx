@@ -1,9 +1,9 @@
 // Kuri Macye Home Page - Premium Marketplace Design
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import {
-  FaArrowRight, FaHeart, FaRegHeart, FaStar, FaShieldAlt, FaTruck, FaUndo, FaHeadset, FaPrint, FaStore, FaCheckCircle, FaSearch
+  FaArrowRight, FaHeart, FaRegHeart, FaStar, FaShieldAlt, FaTruck, FaUndo, FaHeadset, FaPrint, FaStore, FaCheckCircle
 } from "react-icons/fa";
 import { formatRwf } from "../utils/currency";
 import api from "../utils/axiosInstance";
@@ -49,15 +49,6 @@ const defaultColors = [
 export default function Home() {
   const { t, i18n } = useTranslation();
   const isRw = i18n.language === 'rw';
-  const navigate = useNavigate();
-  const [heroSearch, setHeroSearch] = useState("");
-
-  const handleHeroSearch = (e) => {
-    e.preventDefault();
-    if (heroSearch.trim()) {
-      navigate(`/shop?q=${encodeURIComponent(heroSearch)}`);
-    }
-  };
   const [featured, setFeatured] = useState([]);
   const [trending, setTrending] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -217,31 +208,12 @@ export default function Home() {
                 {t('home.hero.description')}
               </p>
               
-              <form onSubmit={handleHeroSearch} className="relative max-w-2xl mb-10 group">
-                <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none">
-                  <FaSearch className="text-charcoal-400 group-focus-within:text-terracotta-500 transition-colors text-lg" />
-                </div>
-                <input
-                  type="text"
-                  placeholder="Search for products, stores, or brands..."
-                  value={heroSearch}
-                  onChange={(e) => setHeroSearch(e.target.value)}
-                  className="block w-full pl-14 pr-32 py-5 sm:py-6 bg-white/95 dark:bg-charcoal-800/95 backdrop-blur-md border border-white/20 dark:border-charcoal-700 rounded-2xl text-charcoal-900 dark:text-white placeholder:text-charcoal-400 focus:outline-none focus:ring-4 focus:ring-terracotta-500/30 focus:border-terracotta-500 transition-all shadow-2xl text-lg"
-                />
-                <button 
-                  type="submit"
-                  className="absolute right-2 sm:right-3 top-2 sm:top-3 bottom-2 sm:bottom-3 bg-gradient-to-r from-terracotta-500 to-terracotta-600 hover:from-terracotta-600 hover:to-terracotta-700 text-white px-6 sm:px-8 rounded-xl font-bold transition-all shadow-lg shadow-terracotta-500/25 active:scale-95"
-                >
-                  Search
-                </button>
-              </form>
-
               <div className="flex flex-wrap gap-4">
-                <Link to="/shop" className="bg-white/10 hover:bg-white/20 text-white px-8 py-3 rounded-full font-bold text-base transition-all backdrop-blur-md border border-white/20 active:scale-95">
-                  {t('home.hero.cta_shop')}
+                <Link to="/shop" className="bg-gradient-to-r from-terracotta-500 to-terracotta-600 hover:from-terracotta-600 hover:to-terracotta-700 text-white px-8 py-4 rounded-full font-bold text-lg transition-all shadow-lg shadow-terracotta-500/25 hover:shadow-terracotta-500/40 flex items-center gap-2 active:scale-95">
+                  {t('home.hero.cta_shop')} <FaArrowRight className="text-sm" />
                 </Link>
-                <Link to="/daily-deals" className="bg-transparent hover:bg-white/5 text-cream-200 px-8 py-3 rounded-full font-bold text-base transition-all active:scale-95">
-                  {t('home.hero.cta_deals')} <FaArrowRight className="inline ml-1 text-sm" />
+                <Link to="/daily-deals" className="bg-white/10 hover:bg-white/20 text-white px-8 py-4 rounded-full font-bold text-lg transition-all backdrop-blur-md border border-white/20 active:scale-95">
+                  {t('home.hero.cta_deals')}
                 </Link>
               </div>
             </div>

@@ -30,12 +30,12 @@ const getRating = (rating) => {
 
 // Default category images and colors for fallback
 const categoryDefaults = {
-  'Electronics': { img: 'https://images.unsplash.com/photo-1498049794561-7780e7231661?w=300&h=300&fit=crop', color: 'from-charcoal-600 to-charcoal-700' },
-  'Fashion': { img: 'https://images.unsplash.com/photo-1445205170230-053b83016050?w=300&h=300&fit=crop', color: 'from-terracotta-400 to-terracotta-500' },
-  'Home & Living': { img: 'https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=300&h=300&fit=crop', color: 'from-sand-400 to-sand-500' },
-  'Sports': { img: 'https://images.unsplash.com/photo-1461896836934-480c9e5d4c98?w=300&h=300&fit=crop', color: 'from-sage-400 to-sage-500' },
-  'Beauty': { img: 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=300&h=300&fit=crop', color: 'from-terracotta-300 to-terracotta-400' },
-  'Accessories': { img: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=300&h=300&fit=crop', color: 'from-charcoal-500 to-charcoal-600' }
+  'Electronics': { img: 'https://images.unsplash.com/photo-1498049794561-7780e7231661?w=300&h=300&auto=format&fit=crop&q=80', color: 'from-charcoal-600 to-charcoal-700' },
+  'Fashion': { img: 'https://images.unsplash.com/photo-1445205170230-053b83016050?w=300&h=300&auto=format&fit=crop&q=80', color: 'from-terracotta-400 to-terracotta-500' },
+  'Home & Living': { img: 'https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=300&h=300&auto=format&fit=crop&q=80', color: 'from-sand-400 to-sand-500' },
+  'Sports': { img: 'https://images.unsplash.com/photo-1461896836934-480c9e5d4c98?w=300&h=300&auto=format&fit=crop&q=80', color: 'from-sage-400 to-sage-500' },
+  'Beauty': { img: 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=300&h=300&auto=format&fit=crop&q=80', color: 'from-terracotta-300 to-terracotta-400' },
+  'Accessories': { img: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=300&h=300&auto=format&fit=crop&q=80', color: 'from-charcoal-500 to-charcoal-600' }
 };
 
 const defaultColors = [
@@ -110,7 +110,7 @@ export default function Home() {
           const defaults = categoryDefaults[cat.name] || {};
           return {
             ...cat,
-            img: cat.image || defaults.img || `https://images.unsplash.com/photo-1472851294608-062f824d29cc?w=300&h=300&fit=crop`,
+            img: cat.image || defaults.img || `https://images.unsplash.com/photo-1472851294608-062f824d29cc?w=300&h=300&auto=format&fit=crop&q=80`,
             color: cat.color || defaults.color || defaultColors[idx % defaultColors.length]
           };
         });
@@ -198,7 +198,10 @@ export default function Home() {
         <section className="relative overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-br from-charcoal-700 via-charcoal-800 to-charcoal-900 dark:from-charcoal-900 dark:via-black dark:to-charcoal-900"></div>
           <img
-            src="https://images.unsplash.com/photo-1607082349566-187342175e2f?w=1600&auto=format&fit=crop&q=80"
+            src="https://images.unsplash.com/photo-1607082349566-187342175e2f?w=1200&auto=format&fit=crop&q=80"
+            srcSet="https://images.unsplash.com/photo-1607082349566-187342175e2f?w=600&auto=format&fit=crop&q=80 600w,
+                    https://images.unsplash.com/photo-1607082349566-187342175e2f?w=1200&auto=format&fit=crop&q=80 1200w"
+            sizes="(max-width: 600px) 600px, 1200px"
             alt="Marketplace background"
             fetchPriority="high"
             className="absolute inset-0 w-full h-full object-cover opacity-20 pointer-events-none"
@@ -241,7 +244,7 @@ export default function Home() {
                 <h2 className="text-xl font-bold text-charcoal-800 dark:text-white">{t('home.categories.title')}</h2>
                 <p className="text-xs text-charcoal-500 dark:text-charcoal-400">{t('home.categories.description')}</p>
               </div>
-              <Link to="/shop" className="text-terracotta-500 dark:text-terracotta-400 hover:text-terracotta-600 dark:hover:text-terracotta-300 text-sm font-semibold flex items-center gap-1">
+              <Link to="/shop" className="text-terracotta-700 dark:text-terracotta-400 hover:text-terracotta-800 dark:hover:text-terracotta-300 text-sm font-semibold flex items-center gap-1">
                 {t('home.categories.view_all')} <FaArrowRight className="text-xs" />
               </Link>
             </div>
@@ -384,7 +387,7 @@ export default function Home() {
                 <h2 className="text-3xl font-bold text-charcoal-800 dark:text-white mb-2">{t('home.featured.title')}</h2>
                 <p className="text-charcoal-500 dark:text-charcoal-400">{t('home.featured.description')}</p>
               </div>
-              <Link to="/shop?sort=featured" className="text-terracotta-500 dark:text-terracotta-400 hover:text-terracotta-600 dark:hover:text-terracotta-300 font-semibold flex items-center gap-1">
+              <Link to="/shop?sort=featured" className="text-terracotta-700 dark:text-terracotta-400 hover:text-terracotta-800 dark:hover:text-terracotta-300 font-semibold flex items-center gap-1">
                 {t('home.trending.view_all')} <FaArrowRight className="text-sm" />
               </Link>
             </div>
@@ -416,7 +419,7 @@ export default function Home() {
         <section className="py-12">
           <div className="mx-auto max-w-7xl px-4">
             <div className="relative rounded-3xl overflow-hidden bg-gradient-to-r from-terracotta-500 to-terracotta-600">
-              <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1607082349566-187342175e2f?w=1920')] bg-cover bg-center opacity-20"></div>
+              <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1607082349566-187342175e2f?w=1200&auto=format&fit=crop&q=80')] bg-cover bg-center opacity-20"></div>
               <div className="relative px-8 md:px-12 py-10 md:py-12 flex flex-col md:flex-row items-center justify-between gap-8">
                 <div className="text-center md:text-left">
                   <span className="inline-block bg-white/20 text-white px-4 py-1 rounded-full text-xs font-medium mb-3">
@@ -434,7 +437,7 @@ export default function Home() {
                 </div>
                 <div className="hidden md:block">
                   <img
-                    src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400"
+                    src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400&auto=format&fit=crop&q=80"
                     alt="Sale"
                     className="w-56 h-56 object-cover rounded-2xl shadow-2xl rotate-3 hover:rotate-0 transition-transform duration-500"
                   />
@@ -486,7 +489,7 @@ export default function Home() {
                 <h2 className="text-3xl font-bold text-charcoal-800 dark:text-white mb-2">{t('home.trending.title')}</h2>
                 <p className="text-charcoal-500 dark:text-charcoal-400">{t('home.trending.description')}</p>
               </div>
-              <Link to="/shop?sort=trending" className="text-terracotta-500 dark:text-terracotta-400 hover:text-terracotta-600 dark:hover:text-terracotta-300 font-semibold flex items-center gap-1">
+              <Link to="/shop?sort=trending" className="text-terracotta-700 dark:text-terracotta-400 hover:text-terracotta-800 dark:hover:text-terracotta-300 font-semibold flex items-center gap-1">
                 {t('home.trending.view_all')} <FaArrowRight className="text-sm" />
               </Link>
             </div>

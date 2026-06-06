@@ -94,6 +94,7 @@ function AdminChatbot({ storageKey = "adminChatMessages", title = "AI Assistant"
             onClick={clearChat}
             className="p-2 text-white/70 hover:text-white hover:bg-white/10 rounded-full transition-colors"
             title="Clear Chat"
+            aria-label="Clear Chat"
           >
             <FaTrashAlt size={14} />
           </button>
@@ -166,6 +167,7 @@ function AdminChatbot({ storageKey = "adminChatMessages", title = "AI Assistant"
               type="submit"
               disabled={loading || !question.trim()}
               className="p-3 bg-terracotta-500 text-white rounded-full hover:bg-terracotta-600 disabled:opacity-50 disabled:hover:bg-terracotta-500 transition-colors shadow-md flex-shrink-0"
+              aria-label="Send message"
             >
               <FaPaperPlane size={14} />
             </button>
@@ -183,6 +185,7 @@ function AdminChatbot({ storageKey = "adminChatMessages", title = "AI Assistant"
             : 'bg-gradient-to-br from-terracotta-500 to-terracotta-600 text-white hover:scale-110 hover:shadow-terracotta-500/50'
           }
         `}
+        aria-label={showChat ? "Close chat" : "Open chat"}
       >
         {showChat ? <FaTimes size={24} /> : <FaCommentDots size={28} />}
 

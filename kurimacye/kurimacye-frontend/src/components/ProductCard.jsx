@@ -53,7 +53,7 @@ export default function ProductCard({ product }) {
           <h3 className="font-bold text-sm sm:text-base text-charcoal-800 dark:text-cream-100 line-clamp-2 mb-1 group-hover:text-terracotta-500 dark:group-hover:text-terracotta-400 transition">{product.name}</h3>
         </Link>
         {product.seller && (
-          <Link to={`/store/${product.seller.storeSlug || product.seller.id}`} className="text-[10px] sm:text-xs text-terracotta-500 hover:text-terracotta-600 dark:text-terracotta-400 font-medium mb-1.5 flex items-center gap-1 w-fit line-clamp-1 mt-auto">
+          <Link to={`/store/${product.seller.storeSlug || product.seller.id}`} className="text-[10px] sm:text-xs text-terracotta-700 hover:text-terracotta-800 dark:text-terracotta-400 font-medium mb-1.5 flex items-center gap-1 w-fit line-clamp-1 mt-auto">
             <FaStore className="text-[10px] shrink-0"/> Sold by: {product.seller.storeName || product.seller.name}
           </Link>
         )}
@@ -62,23 +62,23 @@ export default function ProductCard({ product }) {
             <FaStar key={i} className={`${i < getRating(product.averageRating)
               ? "text-sand-400" : "text-charcoal-200 dark:text-charcoal-700"} text-[10px] sm:text-xs`} />
           ))}
-          <span className="text-[10px] sm:text-xs text-charcoal-400 ml-1">({getRating(product.averageRating).toFixed(1)})</span>
+          <span className="text-[10px] sm:text-xs text-charcoal-600 dark:text-charcoal-300 ml-1">({getRating(product.averageRating).toFixed(1)})</span>
         </div>
         <div className="flex flex-col gap-0.5">
           {product.flashSaleInfo ? (
             <div className="flex flex-col">
               <div className="flex items-center gap-1.5">
                 <span className="text-lg sm:text-xl font-bold text-terracotta-500">{formatRwf(product.flashSaleInfo.flashSalePrice)}</span>
-                <span className="text-xs text-charcoal-400 line-through">{formatRwf(product.price)}</span>
+                <span className="text-xs text-charcoal-600 dark:text-charcoal-300 line-through">{formatRwf(product.price)}</span>
               </div>
-              <span className="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-terracotta-600 bg-terracotta-50 px-1.5 py-0.5 rounded w-fit mt-0.5">Flash Sale</span>
+              <span className="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-terracotta-800 bg-terracotta-100 px-1.5 py-0.5 rounded w-fit mt-0.5">Flash Sale</span>
             </div>
           ) : (
             <span className="text-lg sm:text-xl font-bold text-charcoal-900 dark:text-white">{formatRwf(product.price)}</span>
           )}
           <Link
             to={`/product/${product.id}`}
-            className="text-terracotta-500 dark:text-terracotta-400 hover:text-terracotta-600 dark:hover:text-terracotta-300 text-[11px] sm:text-sm font-semibold mt-1 inline-block"
+            className="text-terracotta-700 dark:text-terracotta-400 hover:text-terracotta-800 dark:hover:text-terracotta-300 text-[11px] sm:text-sm font-semibold mt-1 inline-block"
             aria-label={`View details of ${product.name}`}
           >
             View →

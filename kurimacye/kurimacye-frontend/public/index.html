@@ -9,19 +9,21 @@
   <meta name="description"
     content="Kuri Macye is a premium multivendor e-commerce marketplace in Rwanda. Shop a wide range of quality goods, products, and professional services from local sellers." />
   <link rel="apple-touch-icon" href="%PUBLIC_URL%/icon.svg" />
-  <link rel="preload" href="https://images.unsplash.com/photo-1607082349566-187342175e2f?w=1600&auto=format&fit=crop&q=80" as="image" fetchpriority="high" />
+  <link rel="preload" href="https://images.unsplash.com/photo-1607082349566-187342175e2f?w=1200&auto=format&fit=crop&q=80" as="image" imagesrcset="https://images.unsplash.com/photo-1607082349566-187342175e2f?w=600&auto=format&fit=crop&q=80 600w, https://images.unsplash.com/photo-1607082349566-187342175e2f?w=1200&auto=format&fit=crop&q=80 1200w" imagesizes="(max-width: 600px) 600px, 1200px" fetchpriority="high" />
   <!--
       manifest.json provides metadata used when your web app is installed on a
       user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
     -->
   <link rel="manifest" href="%PUBLIC_URL%/manifest.json" crossorigin="use-credentials" />
 
-  <!-- Google Fonts -->
+  <!-- Google Fonts - Asynchronous loading to prevent render blocking -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap"
-    rel="stylesheet">
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" media="print" onload="this.media='all'" />
+  <noscript>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" />
+  </noscript>
 
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website">

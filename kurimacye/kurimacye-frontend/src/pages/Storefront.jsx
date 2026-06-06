@@ -54,6 +54,7 @@ export default function Storefront() {
   
   const [storeData, setStoreData] = useState(null);
   const [products, setProducts] = useState([]);
+  const [totalProducts, setTotalProducts] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -61,10 +62,11 @@ export default function Storefront() {
     const fetchStore = async () => {
       try {
         setLoading(true);
-        const { data } = await api.get(`/sellers/storefront/${slug}`);
+        const { data } = await api.get(`/sellers/storefront/${slug}?limit=100`);
         if (data.success) {
           setStoreData(data.data.seller);
           setProducts(data.data.products);
+          setTotalProducts(data.data.pagination?.total || data.data.products.length);
           document.title = `${data.data.seller.storeName || data.data.seller.name} | Kuri Macye`;
         } else {
           setError("Store not found");
@@ -152,7 +154,7 @@ export default function Storefront() {
             <div className="flex flex-wrap items-center justify-center md:justify-start gap-6 text-sm font-medium">
               <div className="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-xl backdrop-blur-sm">
                 <FaBox className="text-terracotta-400" />
-                <span>{products.length} Products</span>
+                <span>{totalProducts} Products</span>
               </div>
               <div className="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-xl backdrop-blur-sm">
                 <FaCalendarAlt className="text-sage-400" />
@@ -173,7 +175,7 @@ export default function Storefront() {
       <main className="max-w-7xl mx-auto px-4 md:px-6 py-12">
         <div className="flex items-center justify-between mb-8">
           <h2 className="text-2xl font-bold text-charcoal-800 dark:text-white">All Products</h2>
-          <span className="text-charcoal-500 dark:text-charcoal-400">{products.length} items</span>
+          <span className="text-charcoal-500 dark:text-charcoal-400">{totalProducts} items</span>
         </div>
 
         {products.length === 0 ? (

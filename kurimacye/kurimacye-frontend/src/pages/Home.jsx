@@ -244,7 +244,7 @@ export default function Home() {
                 <h2 className="text-xl font-bold text-charcoal-800 dark:text-white">{t('home.categories.title')}</h2>
                 <p className="text-xs text-charcoal-500 dark:text-charcoal-400">{t('home.categories.description')}</p>
               </div>
-              <Link to="/shop" className="text-terracotta-700 dark:text-terracotta-400 hover:text-terracotta-800 dark:hover:text-terracotta-300 text-sm font-semibold flex items-center gap-1">
+              <Link to="/shop" aria-label="View all categories" className="text-terracotta-700 dark:text-terracotta-400 hover:text-terracotta-800 dark:hover:text-terracotta-300 text-sm font-semibold flex items-center gap-1">
                 {t('home.categories.view_all')} <FaArrowRight className="text-xs" />
               </Link>
             </div>
@@ -307,7 +307,11 @@ export default function Home() {
                     </div>
                     <h3 className="font-bold text-charcoal-800 dark:text-white mb-1 group-hover:text-terracotta-500 transition-colors line-clamp-1">{seller.storeName || seller.name}</h3>
                     <p className="text-xs text-charcoal-500 dark:text-charcoal-400 mb-4 flex-1">{seller.productCount} Products</p>
-                    <Link to={`/store/${seller.storeSlug || seller.id}`} className="inline-block border border-terracotta-500/30 text-terracotta-600 dark:text-terracotta-400 px-4 py-1.5 rounded-full text-xs font-semibold hover:bg-terracotta-50 dark:hover:bg-charcoal-700 transition-colors">
+                    <Link
+                      to={`/store/${seller.storeSlug || seller.id}`}
+                      aria-label={`Visit ${seller.storeName || seller.name}'s store`}
+                      className="inline-block border border-terracotta-700/40 text-terracotta-700 dark:text-terracotta-400 px-4 py-2 rounded-full text-xs font-semibold hover:bg-terracotta-50 dark:hover:bg-charcoal-700 transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center"
+                    >
                       Visit Store
                     </Link>
                   </div>
@@ -387,7 +391,7 @@ export default function Home() {
                 <h2 className="text-3xl font-bold text-charcoal-800 dark:text-white mb-2">{t('home.featured.title')}</h2>
                 <p className="text-charcoal-500 dark:text-charcoal-400">{t('home.featured.description')}</p>
               </div>
-              <Link to="/shop?sort=featured" className="text-terracotta-700 dark:text-terracotta-400 hover:text-terracotta-800 dark:hover:text-terracotta-300 font-semibold flex items-center gap-1">
+              <Link to="/shop?sort=featured" aria-label="View all featured products" className="text-terracotta-700 dark:text-terracotta-400 hover:text-terracotta-800 dark:hover:text-terracotta-300 font-semibold flex items-center gap-1">
                 {t('home.trending.view_all')} <FaArrowRight className="text-sm" />
               </Link>
             </div>
@@ -489,7 +493,7 @@ export default function Home() {
                 <h2 className="text-3xl font-bold text-charcoal-800 dark:text-white mb-2">{t('home.trending.title')}</h2>
                 <p className="text-charcoal-500 dark:text-charcoal-400">{t('home.trending.description')}</p>
               </div>
-              <Link to="/shop?sort=trending" className="text-terracotta-700 dark:text-terracotta-400 hover:text-terracotta-800 dark:hover:text-terracotta-300 font-semibold flex items-center gap-1">
+              <Link to="/shop?sort=trending" aria-label="View all trending products" className="text-terracotta-700 dark:text-terracotta-400 hover:text-terracotta-800 dark:hover:text-terracotta-300 font-semibold flex items-center gap-1">
                 {t('home.trending.view_all')} <FaArrowRight className="text-sm" />
               </Link>
             </div>
@@ -644,7 +648,7 @@ export default function Home() {
             <div className="bg-gradient-to-r from-charcoal-800 to-charcoal-900 rounded-3xl p-8 md:p-12 relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-8 shadow-2xl">
               <div className="absolute top-0 right-0 w-64 h-64 bg-terracotta-500 rounded-full blur-[100px] opacity-20"></div>
               <div className="relative z-10 md:max-w-xl text-center md:text-left">
-                <span className="inline-block bg-terracotta-500 text-white px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest mb-4">Sell with us</span>
+                <span className="inline-block bg-terracotta-600 text-white px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest mb-4">Sell with us</span>
                 <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Grow Your Business on Kuri Macye</h2>
                 <p className="text-charcoal-300 mb-6">Join thousands of verified local merchants reaching customers nationwide. Fast onboarding, secure payments, and lowest fees.</p>
                 <div className="flex items-center gap-4 text-sm text-cream-200 mb-6 justify-center md:justify-start">
@@ -670,7 +674,7 @@ export default function Home() {
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
               {t('home.community.title')}
             </h2>
-            <p className="text-charcoal-300 mb-8 max-w-md mx-auto">
+            <p className="text-charcoal-200 mb-8 max-w-md mx-auto">
               {t('home.community.description')}
             </p>
             <form

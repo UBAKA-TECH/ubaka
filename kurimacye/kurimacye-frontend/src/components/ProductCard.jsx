@@ -53,7 +53,7 @@ export default function ProductCard({ product }) {
           <h3 className="font-bold text-sm sm:text-base text-charcoal-800 dark:text-cream-100 line-clamp-2 mb-1 group-hover:text-terracotta-500 dark:group-hover:text-terracotta-400 transition">{product.name}</h3>
         </Link>
         {product.seller && (
-          <Link to={`/store/${product.seller.storeSlug || product.seller.id}`} className="text-[10px] sm:text-xs text-terracotta-700 hover:text-terracotta-800 dark:text-terracotta-400 font-medium mb-1.5 flex items-center gap-1 w-fit line-clamp-1 mt-auto">
+          <Link to={`/store/${product.seller.storeSlug || product.seller.id}`} className="text-[10px] sm:text-xs text-terracotta-700 hover:text-terracotta-800 dark:text-terracotta-400 font-medium mb-1.5 flex items-center gap-1 w-fit line-clamp-1 mt-auto py-1 pr-1">
             <FaStore className="text-[10px] shrink-0"/> Sold by: {product.seller.storeName || product.seller.name}
           </Link>
         )}

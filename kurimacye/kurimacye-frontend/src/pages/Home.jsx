@@ -226,15 +226,15 @@ export default function Home() {
 
 
         {/* Categories Section */}
-        <section className="pt-4 pb-12">
+        <section className="pt-3 pb-8">
           <div className="mx-auto max-w-7xl px-4">
-            <div className="flex items-end justify-between mb-6">
+            <div className="flex items-center justify-between mb-3">
               <div>
-                <h2 className="text-3xl font-bold text-charcoal-800 dark:text-white mb-2">{t('home.categories.title')}</h2>
-                <p className="text-charcoal-500 dark:text-charcoal-400">{t('home.categories.description')}</p>
+                <h2 className="text-xl font-bold text-charcoal-800 dark:text-white">{t('home.categories.title')}</h2>
+                <p className="text-xs text-charcoal-500 dark:text-charcoal-400">{t('home.categories.description')}</p>
               </div>
-              <Link to="/shop" className="text-terracotta-500 dark:text-terracotta-400 hover:text-terracotta-600 dark:hover:text-terracotta-300 font-semibold flex items-center gap-1">
-                {t('home.categories.view_all')} <FaArrowRight className="text-sm" />
+              <Link to="/shop" className="text-terracotta-500 dark:text-terracotta-400 hover:text-terracotta-600 dark:hover:text-terracotta-300 text-sm font-semibold flex items-center gap-1">
+                {t('home.categories.view_all')} <FaArrowRight className="text-xs" />
               </Link>
             </div>
 
@@ -248,8 +248,8 @@ export default function Home() {
                   >
                     <img src={cat.img} alt={cat.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
                     <div className={`absolute inset-0 bg-gradient-to-t ${cat.color} opacity-60 group-hover:opacity-70 transition`}></div>
-                    <div className="absolute inset-0 flex items-end p-4">
-                      <span className="text-white font-bold text-lg drop-shadow-lg">{cat.name}</span>
+                    <div className="absolute inset-0 flex items-end p-2">
+                      <span className="text-white font-bold text-sm drop-shadow-lg">{cat.name}</span>
                     </div>
                   </Link>
                 ))}

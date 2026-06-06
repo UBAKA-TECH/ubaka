@@ -1,5 +1,5 @@
 // Kuri Macye Home Page - Premium Marketplace Design
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, lazy, Suspense } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import {
@@ -10,12 +10,14 @@ import api from "../utils/axiosInstance";
 import LandingFooter from "../components/LandingFooter";
 import Header from "../components/Header";
 import { useWishlist } from "../context/WishlistContext";
-import AIChatWidget from "../components/AdminChatBot"; // Using the generic Chatbot
-import FlashSaleBanner from "../components/FlashSaleBanner";
 import assetUrl from "../utils/assetUrl";
 import { supabase } from "../utils/supabaseClient";
 import ProductCard from "../components/ProductCard";
 import SEO from "../components/SEO";
+
+// Lazy-loaded components for better performance
+const AIChatWidget = lazy(() => import("../components/AdminChatBot"));
+const FlashSaleBanner = lazy(() => import("../components/FlashSaleBanner"));
 
 const getRating = (rating) => {
   if (!rating) return 0;
@@ -204,6 +206,8 @@ export default function Home() {
             sizes="(max-width: 600px) 600px, 1200px"
             alt="Marketplace background"
             fetchPriority="high"
+            width="1200"
+            height="400"
             className="absolute inset-0 w-full h-full object-cover opacity-20 pointer-events-none"
           />
 
@@ -249,7 +253,16 @@ export default function Home() {
               </Link>
             </div>
 
-            {categories.length > 0 ? (
+            {loading ? (
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+                {[...Array(6)].map((_, idx) => (
+                  <div
+                    key={idx}
+                    className="h-16 sm:h-20 rounded-xl bg-cream-200 dark:bg-charcoal-700 animate-pulse shadow-sm"
+                  />
+                ))}
+              </div>
+            ) : categories.length > 0 ? (
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
                 {categories.slice(0, 6).map((cat, idx) => (
                   <Link
@@ -257,7 +270,7 @@ export default function Home() {
                     key={cat.id || idx}
                     className="group relative h-16 sm:h-20 rounded-xl overflow-hidden shadow-md"
                   >
-                    <img src={cat.img} alt={cat.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                    <img src={cat.img} alt={cat.name} width="300" height="300" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
                     <div className={`absolute inset-0 bg-gradient-to-t ${cat.color} opacity-60 group-hover:opacity-70 transition`}></div>
                     <div className="absolute inset-0 flex items-end p-2">
                       <span className="text-white font-bold text-sm drop-shadow-lg">{cat.name}</span>
@@ -274,7 +287,7 @@ export default function Home() {
         </section>
 
         {/* Meet Our Verified Vendors Section */}
-        {sellers.length > 0 && (
+        {(loading || sellers.length > 0) && (
           <section className="py-8 bg-cream-50 dark:bg-charcoal-800/50 border-b border-cream-200 dark:border-charcoal-700">
             <div className="mx-auto max-w-7xl px-4">
               <div className="flex items-center justify-between mb-4">
@@ -283,40 +296,53 @@ export default function Home() {
                   <p className="text-xs text-charcoal-500 dark:text-charcoal-400">{t('home.vendors.description', 'Shop directly from top-rated local merchants')}</p>
                 </div>
               </div>
-              <div className="grid gap-4" style={{gridTemplateColumns: `repeat(${Math.min(sellers.length, 4)}, minmax(0, 200px))`}}>
-                {sellers.map((seller) => (
-                  <div key={seller.id} className="bg-white dark:bg-charcoal-800 rounded-2xl p-6 text-center shadow-sm hover:shadow-xl transition-all border border-cream-200 dark:border-charcoal-700 group flex flex-col h-full">
-                    <div
-                      className="w-28 h-28 mx-auto mb-4 rounded-full overflow-hidden border-4 border-cream-100 dark:border-charcoal-700 bg-cream-100 flex items-center justify-center text-3xl font-bold text-terracotta-500 relative shrink-0 cursor-pointer"
-                      onClick={() => seller.storeLogo && setLightboxImg(assetUrl(seller.storeLogo))}
-                      title={seller.storeLogo ? 'Click to enlarge' : ''}
-                    >
-                      {seller.storeLogo ? (
-                        <img src={assetUrl(seller.storeLogo)} alt={seller.storeName} className="w-full h-full object-cover group-hover:scale-110 transition-transform" />
-                      ) : (
-                        (seller.storeName || seller.name).charAt(0).toUpperCase()
-                      )}
-                      {seller.storeLogo && (
-                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 flex items-center justify-center transition-all">
-                          <span className="text-white text-xs opacity-0 group-hover:opacity-100 transition-opacity font-semibold">🔍</span>
-                        </div>
-                      )}
-                      <div className="absolute -bottom-1 -right-1 bg-white rounded-full p-1 shadow-sm">
-                        <FaShieldAlt className="text-blue-500 text-sm" title="Verified Seller" />
-                      </div>
+              {loading ? (
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4" style={{gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))'}}>
+                  {[...Array(4)].map((_, idx) => (
+                    <div key={idx} className="bg-white dark:bg-charcoal-800 rounded-2xl p-6 text-center shadow-sm border border-cream-200 dark:border-charcoal-700 flex flex-col h-[288px] animate-pulse">
+                      <div className="w-28 h-28 mx-auto mb-4 rounded-full bg-cream-200 dark:bg-charcoal-700 shrink-0" />
+                      <div className="h-5 bg-cream-200 dark:bg-charcoal-700 rounded w-3/4 mx-auto mb-2" />
+                      <div className="h-3 bg-cream-200 dark:bg-charcoal-700 rounded w-1/2 mx-auto mb-5" />
+                      <div className="h-8 bg-cream-200 dark:bg-charcoal-700 rounded-full w-24 mx-auto mt-auto" />
                     </div>
-                    <h3 className="font-bold text-charcoal-800 dark:text-white mb-1 group-hover:text-terracotta-500 transition-colors line-clamp-1">{seller.storeName || seller.name}</h3>
-                    <p className="text-xs text-charcoal-500 dark:text-charcoal-400 mb-4 flex-1">{seller.productCount} Products</p>
-                    <Link
-                      to={`/store/${seller.storeSlug || seller.id}`}
-                      aria-label={`Visit ${seller.storeName || seller.name}'s store`}
-                      className="inline-block border border-terracotta-700/40 text-terracotta-700 dark:text-terracotta-400 px-4 py-2 rounded-full text-xs font-semibold hover:bg-terracotta-50 dark:hover:bg-charcoal-700 transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center"
-                    >
-                      Visit Store
-                    </Link>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="grid gap-4" style={{gridTemplateColumns: `repeat(${Math.min(sellers.length, 4)}, minmax(0, 200px))`}}>
+                  {sellers.map((seller) => (
+                    <div key={seller.id} className="bg-white dark:bg-charcoal-800 rounded-2xl p-6 text-center shadow-sm hover:shadow-xl transition-all border border-cream-200 dark:border-charcoal-700 group flex flex-col h-full">
+                      <div
+                        className="w-28 h-28 mx-auto mb-4 rounded-full overflow-hidden border-4 border-cream-100 dark:border-charcoal-700 bg-cream-100 flex items-center justify-center text-3xl font-bold text-terracotta-500 relative shrink-0 cursor-pointer"
+                        onClick={() => seller.storeLogo && setLightboxImg(assetUrl(seller.storeLogo))}
+                        title={seller.storeLogo ? 'Click to enlarge' : ''}
+                      >
+                        {seller.storeLogo ? (
+                          <img src={assetUrl(seller.storeLogo)} alt={seller.storeName} width="112" height="112" className="w-full h-full object-cover group-hover:scale-110 transition-transform" />
+                        ) : (
+                          (seller.storeName || seller.name).charAt(0).toUpperCase()
+                        )}
+                        {seller.storeLogo && (
+                          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 flex items-center justify-center transition-all">
+                            <span className="text-white text-xs opacity-0 group-hover:opacity-100 transition-opacity font-semibold">🔍</span>
+                          </div>
+                        )}
+                        <div className="absolute -bottom-1 -right-1 bg-white rounded-full p-1 shadow-sm">
+                          <FaShieldAlt className="text-blue-500 text-sm" title="Verified Seller" />
+                        </div>
+                      </div>
+                      <h3 className="font-bold text-charcoal-800 dark:text-white mb-1 group-hover:text-terracotta-500 transition-colors line-clamp-1">{seller.storeName || seller.name}</h3>
+                      <p className="text-xs text-charcoal-500 dark:text-charcoal-400 mb-4 flex-1">{seller.productCount} Products</p>
+                      <Link
+                        to={`/store/${seller.storeSlug || seller.id}`}
+                        aria-label={`Visit ${seller.storeName || seller.name}'s store`}
+                        className="inline-block border border-terracotta-700/40 text-terracotta-700 dark:text-terracotta-400 px-4 py-2 rounded-full text-xs font-semibold hover:bg-terracotta-50 dark:hover:bg-charcoal-700 transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center"
+                      >
+                        Visit Store
+                      </Link>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </section>
         )}
@@ -337,51 +363,63 @@ export default function Home() {
         )}
 
         {/* Promotional Banner - Dynamic from Admin */}
-        {promoBanner && (
+        {(loading || promoBanner) && (
           <section className="py-8">
             <div className="mx-auto max-w-7xl px-4">
-              <div
-                className="relative rounded-2xl overflow-hidden min-h-[200px] flex items-center"
-                style={{
-                  background: promoBanner.backgroundImage
-                    ? `url(${promoBanner.backgroundImage}) center/cover`
-                    : `linear-gradient(135deg, ${promoBanner.gradientFrom}, ${promoBanner.gradientTo})`
-                }}
-              >
-                {/* Overlay pattern */}
-                <div className="absolute inset-0 opacity-10 bg-black"></div>
-                {/* Large decorative text */}
-                <div className="absolute right-0 top-0 bottom-0 flex items-center opacity-20 pointer-events-none overflow-hidden">
-                  <span className="text-[200px] font-black text-white whitespace-nowrap -mr-20">SALE</span>
+              {loading ? (
+                <div className="relative rounded-2xl overflow-hidden h-[200px] bg-cream-200 dark:bg-charcoal-700 animate-pulse" />
+              ) : (
+                <div
+                  className="relative rounded-2xl overflow-hidden min-h-[200px] flex items-center"
+                  style={{
+                    background: promoBanner.backgroundImage
+                      ? `url(${promoBanner.backgroundImage}) center/cover`
+                      : `linear-gradient(135deg, ${promoBanner.gradientFrom}, ${promoBanner.gradientTo})`
+                  }}
+                >
+                  {/* Overlay pattern */}
+                  <div className="absolute inset-0 opacity-10 bg-black"></div>
+                  {/* Large decorative text */}
+                  <div className="absolute right-0 top-0 bottom-0 flex items-center opacity-20 pointer-events-none overflow-hidden">
+                    <span className="text-[200px] font-black text-white whitespace-nowrap -mr-20">SALE</span>
+                  </div>
+                  {/* Content */}
+                  <div className="relative z-10 p-8 md:p-12">
+                    {(isRw ? (promoBanner.badgeRw || promoBanner.badge) : promoBanner.badge) && (
+                      <span className="inline-block bg-white/20 text-white px-4 py-1.5 rounded-full text-sm font-semibold mb-4 backdrop-blur-sm">
+                        {isRw ? (promoBanner.badgeRw || promoBanner.badge) : promoBanner.badge}
+                      </span>
+                    )}
+                    <h2 className="text-3xl md:text-5xl font-extrabold text-white mb-3">
+                      {isRw ? (promoBanner.titleRw || promoBanner.title) : promoBanner.title}
+                    </h2>
+                    {(isRw ? (promoBanner.subtitleRw || promoBanner.subtitle) : promoBanner.subtitle) && (
+                      <p className="text-white/90 text-lg mb-6 max-w-lg">
+                        {isRw ? (promoBanner.subtitleRw || promoBanner.subtitle) : promoBanner.subtitle}
+                      </p>
+                    )}
+                    <Link
+                      to={promoBanner.buttonLink || '/shop'}
+                      className="inline-block bg-white text-gray-900 px-8 py-3 rounded-full font-bold hover:bg-gray-100 transition shadow-lg"
+                    >
+                      {isRw ? (promoBanner.buttonTextRw || promoBanner.buttonText || 'Gura ubu') : (promoBanner.buttonText || 'Shop Now')}
+                    </Link>
+                  </div>
                 </div>
-                {/* Content */}
-                <div className="relative z-10 p-8 md:p-12">
-                  {(isRw ? (promoBanner.badgeRw || promoBanner.badge) : promoBanner.badge) && (
-                    <span className="inline-block bg-white/20 text-white px-4 py-1.5 rounded-full text-sm font-semibold mb-4 backdrop-blur-sm">
-                      {isRw ? (promoBanner.badgeRw || promoBanner.badge) : promoBanner.badge}
-                    </span>
-                  )}
-                  <h2 className="text-3xl md:text-5xl font-extrabold text-white mb-3">
-                    {isRw ? (promoBanner.titleRw || promoBanner.title) : promoBanner.title}
-                  </h2>
-                  {(isRw ? (promoBanner.subtitleRw || promoBanner.subtitle) : promoBanner.subtitle) && (
-                    <p className="text-white/90 text-lg mb-6 max-w-lg">
-                      {isRw ? (promoBanner.subtitleRw || promoBanner.subtitle) : promoBanner.subtitle}
-                    </p>
-                  )}
-                  <Link
-                    to={promoBanner.buttonLink || '/shop'}
-                    className="inline-block bg-white text-gray-900 px-8 py-3 rounded-full font-bold hover:bg-gray-100 transition shadow-lg"
-                  >
-                    {isRw ? (promoBanner.buttonTextRw || promoBanner.buttonText || 'Gura ubu') : (promoBanner.buttonText || 'Shop Now')}
-                  </Link>
-                </div>
-              </div>
+              )}
             </div>
           </section>
         )}
 
-        <FlashSaleBanner />
+        <Suspense fallback={
+          <section className="py-8">
+            <div className="mx-auto max-w-7xl px-4">
+              <div className="h-[120px] rounded-2xl bg-cream-200 dark:bg-charcoal-700 animate-pulse shadow-sm" />
+            </div>
+          </section>
+        }>
+          <FlashSaleBanner />
+        </Suspense>
 
         {/* Featured Products */}
         <section className="py-16 bg-white dark:bg-charcoal-800 border-y border-cream-200 dark:border-charcoal-700">
@@ -443,6 +481,8 @@ export default function Home() {
                   <img
                     src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400&auto=format&fit=crop&q=80"
                     alt="Sale"
+                    width="224"
+                    height="224"
                     className="w-56 h-56 object-cover rounded-2xl shadow-2xl rotate-3 hover:rotate-0 transition-transform duration-500"
                   />
                 </div>
@@ -541,7 +581,7 @@ export default function Home() {
                     <p className="text-charcoal-600 dark:text-cream-300 mb-6 leading-relaxed">"{testimonial.content || testimonial.text}"</p>
                     <div className="flex items-center gap-3">
                       {testimonial.avatar ? (
-                        <img src={testimonial.avatar} alt={testimonial.name} className="w-12 h-12 rounded-full object-cover" />
+                        <img src={testimonial.avatar} alt={testimonial.name} width="48" height="48" className="w-12 h-12 rounded-full object-cover" />
                       ) : (
                         <div className="w-12 h-12 rounded-full bg-gradient-to-br from-terracotta-400 to-terracotta-500 flex items-center justify-center text-white font-bold text-lg">
                           {testimonial.name?.charAt(0) || '?'}
@@ -577,6 +617,8 @@ export default function Home() {
                       <img
                         src={partner.logo}
                         alt={partner.name}
+                        width="120"
+                        height="48"
                         className="h-10 md:h-12 w-auto object-contain"
                       />
                     </a>
@@ -733,7 +775,9 @@ export default function Home() {
       </main>
 
       <LandingFooter />
-      <AIChatWidget endpoint="/chatbot/public" title="Client Support" storageKey="publicChat" />
+      <Suspense fallback={null}>
+        <AIChatWidget endpoint="/chatbot/public" title="Client Support" storageKey="publicChat" />
+      </Suspense>
     </div >
   );
 }

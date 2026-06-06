@@ -68,7 +68,7 @@ export default function LandingFooter() {
           {/* Brand Column */}
           <div>
             <Link to="/" className="flex items-center mb-6 no-underline">
-              <img src="/logo.svg" alt={footerData.siteName || "Kuri Macye"} className="h-10 w-auto object-contain" />
+              <img src="/logo.svg" alt={footerData.siteName || "Kuri Macye"} width="167" height="40" className="h-10 w-auto object-contain" />
             </Link>
 
             <p className="text-charcoal-500 dark:text-charcoal-400 mb-6 leading-relaxed">

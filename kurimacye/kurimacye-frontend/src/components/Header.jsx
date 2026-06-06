@@ -185,7 +185,7 @@ export default function Header() {
 
         {/* Logo */}
         <Link to="/" className="flex items-center gap-3 shrink-0">
-          <img src="/logo.svg" alt="Kuri Macye" className="h-8 sm:h-10 w-auto object-contain" />
+          <img src="/logo.svg" alt="Kuri Macye" width="167" height="40" className="h-8 sm:h-10 w-auto object-contain" />
         </Link>
 
 
@@ -283,7 +283,7 @@ export default function Header() {
                             onClick={() => handleSuggestionClick(item.id)}
                             className="flex items-center gap-3 px-4 py-2.5 hover:bg-charcoal-700 cursor-pointer transition-colors"
                           >
-                            <img src={assetUrl(item.image)} alt={item.name} className="w-10 h-10 rounded-lg object-cover bg-charcoal-700" />
+                            <img src={assetUrl(item.image)} alt={item.name} width="40" height="40" className="w-10 h-10 rounded-lg object-cover bg-charcoal-700" />
                             <div className="flex-1 min-w-0">
                               <div className="text-sm font-medium text-cream-200 truncate">{item.name}</div>
                               <div className="text-xs text-terracotta-400 font-semibold">{formatRwf(item.price)}</div>

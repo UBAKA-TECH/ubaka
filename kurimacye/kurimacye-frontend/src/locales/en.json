@@ -51,12 +51,12 @@
   },
   "home": {
     "hero": {
-      "badge": "✨ The future of shopping",
-      "title_part1": "Discover",
-      "title_premium": "Premium",
-      "title_part2": "Products",
-      "description": "Your trusted multi-vendor marketplace connecting independent local sellers, print specialists, and merchants. Find premium products and services in one seamless experience.",
-      "cta_shop": "Explore Now",
+      "badge": "🇷🇼 RWANDA'S PREMIER MARKETPLACE",
+      "title_part1": "Shop from",
+      "title_premium": "Trusted Local",
+      "title_part2": "Sellers",
+      "description": "Connecting you directly to Kigali's best independent stores, print specialists, and merchants. Find everything you need with fast local delivery.",
+      "cta_shop": "Start Shopping",
       "cta_deals": "View Deals"
     },
     "print": {

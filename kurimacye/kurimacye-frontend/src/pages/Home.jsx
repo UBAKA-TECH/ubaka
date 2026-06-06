@@ -192,7 +192,7 @@ export default function Home() {
 
       <main id="main-content">
         {/* Hero Section - Warm Humanised Design */}
-        <section className="relative overflow-hidden">
+        <section className="relative overflow-hidden max-h-[340px] md:max-h-[320px]">
           <div className="absolute inset-0 bg-gradient-to-br from-charcoal-700 via-charcoal-800 to-charcoal-900 dark:from-charcoal-900 dark:via-black dark:to-charcoal-900"></div>
           <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1607082349566-187342175e2f?w=1600&auto=format&fit=crop&q=80')] bg-cover bg-center opacity-20"></div>
 
@@ -220,8 +220,7 @@ export default function Home() {
           </div>
 
           {/* Decorative Elements */}
-          <div className="absolute top-20 right-10 w-72 h-72 bg-terracotta-500 rounded-full blur-[128px] opacity-30"></div>
-          <div className="absolute bottom-0 left-1/4 w-96 h-96 bg-sand-400 rounded-full blur-[128px] opacity-20"></div>
+          <div className="absolute top-10 right-10 w-48 h-48 bg-terracotta-500 rounded-full blur-[80px] opacity-25 pointer-events-none"></div>
         </section>
 
 

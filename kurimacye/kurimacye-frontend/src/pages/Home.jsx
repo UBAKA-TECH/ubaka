@@ -264,15 +264,15 @@ export default function Home() {
 
         {/* Meet Our Verified Vendors Section */}
         {sellers.length > 0 && (
-          <section className="py-16 bg-cream-50 dark:bg-charcoal-800/50 border-b border-cream-200 dark:border-charcoal-700">
+          <section className="py-8 bg-cream-50 dark:bg-charcoal-800/50 border-b border-cream-200 dark:border-charcoal-700">
             <div className="mx-auto max-w-7xl px-4">
-              <div className="flex items-end justify-between mb-10">
+              <div className="flex items-center justify-between mb-4">
                 <div>
-                  <h2 className="text-3xl font-bold text-charcoal-800 dark:text-white mb-2">{t('home.vendors.title', 'Meet Our Verified Vendors')}</h2>
-                  <p className="text-charcoal-500 dark:text-charcoal-400">{t('home.vendors.description', 'Shop directly from top-rated local merchants')}</p>
+                  <h2 className="text-xl font-bold text-charcoal-800 dark:text-white">{t('home.vendors.title', 'Meet Our Verified Vendors')}</h2>
+                  <p className="text-xs text-charcoal-500 dark:text-charcoal-400">{t('home.vendors.description', 'Shop directly from top-rated local merchants')}</p>
                 </div>
               </div>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+              <div className="grid gap-4" style={{gridTemplateColumns: `repeat(${Math.min(sellers.length, 4)}, minmax(0, 200px))`}}>
                 {sellers.map((seller) => (
                   <Link key={seller.id} to={`/store/${seller.storeSlug || seller.id}`} className="bg-white dark:bg-charcoal-800 rounded-2xl p-6 text-center shadow-sm hover:shadow-xl transition-all border border-cream-200 dark:border-charcoal-700 group flex flex-col h-full">
                     <div className="w-20 h-20 mx-auto mb-4 rounded-full overflow-hidden border-4 border-cream-100 dark:border-charcoal-700 bg-cream-100 flex items-center justify-center text-2xl font-bold text-terracotta-500 relative shrink-0">

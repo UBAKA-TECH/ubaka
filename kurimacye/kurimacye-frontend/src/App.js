@@ -13,52 +13,72 @@ import SellerLayout from "./components/SellerLayout";
 
 import { Toaster } from "react-hot-toast";
 
+// Utility to handle ChunkLoadError after new deployments
+const lazyWithRetry = (componentImport) =>
+  lazy(async () => {
+    const pageHasAlreadyBeenForceRefreshed = JSON.parse(
+      window.sessionStorage.getItem('page-has-been-force-refreshed') || 'false'
+    );
+
+    try {
+      const component = await componentImport();
+      window.sessionStorage.setItem('page-has-been-force-refreshed', 'false');
+      return component;
+    } catch (error) {
+      if (!pageHasAlreadyBeenForceRefreshed) {
+        window.sessionStorage.setItem('page-has-been-force-refreshed', 'true');
+        return window.location.reload();
+      }
+      throw error;
+    }
+  });
+
 // Lazy loaded components
-const Login = lazy(() => import("./pages/Login"));
-const Register = lazy(() => import("./pages/Register"));
-const SellerDashboard = lazy(() => import("./pages/SellerDashboard"));
-const UserDashboard = lazy(() => import("./pages/UserDashboard"));
-const AuthSuccess = lazy(() => import("./pages/AuthSuccess"));
-const ForgotPassword = lazy(() => import("./pages/ForgotPassword"));
-const Logout = lazy(() => import("./pages/Logout"));
-const Shop = lazy(() => import("./pages/Shop"));
-const ProductDetail = lazy(() => import("./pages/ProductDetail"));
-const CartPage = lazy(() => import("./pages/Cart"));
-const CheckoutPage = lazy(() => import("./pages/Checkout"));
-const TrackOrder = lazy(() => import("./pages/TrackOrder"));
-const Home = lazy(() => import("./pages/Home"));
-const Wishlist = lazy(() => import("./pages/Wishlist"));
-const About = lazy(() => import("./pages/About"));
-const Contact = lazy(() => import("./pages/Contact"));
-const Blog = lazy(() => import("./pages/Blog"));
-const BlogPost = lazy(() => import("./pages/BlogPost"));
-const FAQ = lazy(() => import("./pages/FAQ"));
-const OrderHistory = lazy(() => import("./pages/OrderHistory"));
-const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
-const TermsOfService = lazy(() => import("./pages/TermsOfService"));
-const DailyDeals = lazy(() => import("./pages/DailyDeals"));
-const SellerOrders = lazy(() => import("./pages/SellerOrders"));
-const SellerPrintOrders = lazy(() => import("./pages/SellerPrintOrders"));
-const SellerPayouts = lazy(() => import("./pages/SellerPayouts"));
-const SellerProfile = lazy(() => import("./pages/SellerProfile"));
-const SellerOrderDetails = lazy(() => import("./pages/SellerOrderDetails"));
-const SellerNotifications = lazy(() => import("./pages/SellerNotifications"));
-const OrderSuccess = lazy(() => import("./pages/OrderSuccess"));
-const GiftCards = lazy(() => import("./pages/GiftCards"));
-const Unsubscribe = lazy(() => import("./pages/Unsubscribe"));
-const SellerAbonne = lazy(() => import("./pages/SellerAbonne"));
-const SellerShifts = lazy(() => import("./pages/SellerShifts"));
-const SellerRegistration = lazy(() => import("./pages/SellerRegistration"));
-const SellerPOS = lazy(() => import("./pages/SellerPOS"));
-const SellerProducts = lazy(() => import("./pages/SellerProducts"));
-const SellerReports = lazy(() => import("./pages/SellerReports"));
-const SellerTeam = lazy(() => import("./pages/SellerTeam"));
-const SellerSettings = lazy(() => import("./pages/SellerSettings"));
-const SellerDiscounts = lazy(() => import("./pages/SellerDiscounts"));
-const SellerReviews = lazy(() => import("./pages/SellerReviews"));
-const PrintPortal = lazy(() => import("./pages/PrintPortal"));
-const Careers = lazy(() => import("./pages/Careers"));
-const Storefront = lazy(() => import("./pages/Storefront"));
+const Login = lazyWithRetry(() => import("./pages/Login"));
+const Register = lazyWithRetry(() => import("./pages/Register"));
+const SellerDashboard = lazyWithRetry(() => import("./pages/SellerDashboard"));
+const UserDashboard = lazyWithRetry(() => import("./pages/UserDashboard"));
+const AuthSuccess = lazyWithRetry(() => import("./pages/AuthSuccess"));
+const ForgotPassword = lazyWithRetry(() => import("./pages/ForgotPassword"));
+const Logout = lazyWithRetry(() => import("./pages/Logout"));
+const Shop = lazyWithRetry(() => import("./pages/Shop"));
+const ProductDetail = lazyWithRetry(() => import("./pages/ProductDetail"));
+const CartPage = lazyWithRetry(() => import("./pages/Cart"));
+const CheckoutPage = lazyWithRetry(() => import("./pages/Checkout"));
+const TrackOrder = lazyWithRetry(() => import("./pages/TrackOrder"));
+const Home = lazyWithRetry(() => import("./pages/Home"));
+const Wishlist = lazyWithRetry(() => import("./pages/Wishlist"));
+const About = lazyWithRetry(() => import("./pages/About"));
+const Contact = lazyWithRetry(() => import("./pages/Contact"));
+const Blog = lazyWithRetry(() => import("./pages/Blog"));
+const BlogPost = lazyWithRetry(() => import("./pages/BlogPost"));
+const FAQ = lazyWithRetry(() => import("./pages/FAQ"));
+const OrderHistory = lazyWithRetry(() => import("./pages/OrderHistory"));
+const PrivacyPolicy = lazyWithRetry(() => import("./pages/PrivacyPolicy"));
+const TermsOfService = lazyWithRetry(() => import("./pages/TermsOfService"));
+const DailyDeals = lazyWithRetry(() => import("./pages/DailyDeals"));
+const SellerOrders = lazyWithRetry(() => import("./pages/SellerOrders"));
+const SellerPrintOrders = lazyWithRetry(() => import("./pages/SellerPrintOrders"));
+const SellerPayouts = lazyWithRetry(() => import("./pages/SellerPayouts"));
+const SellerProfile = lazyWithRetry(() => import("./pages/SellerProfile"));
+const SellerOrderDetails = lazyWithRetry(() => import("./pages/SellerOrderDetails"));
+const SellerNotifications = lazyWithRetry(() => import("./pages/SellerNotifications"));
+const OrderSuccess = lazyWithRetry(() => import("./pages/OrderSuccess"));
+const GiftCards = lazyWithRetry(() => import("./pages/GiftCards"));
+const Unsubscribe = lazyWithRetry(() => import("./pages/Unsubscribe"));
+const SellerAbonne = lazyWithRetry(() => import("./pages/SellerAbonne"));
+const SellerShifts = lazyWithRetry(() => import("./pages/SellerShifts"));
+const SellerRegistration = lazyWithRetry(() => import("./pages/SellerRegistration"));
+const SellerPOS = lazyWithRetry(() => import("./pages/SellerPOS"));
+const SellerProducts = lazyWithRetry(() => import("./pages/SellerProducts"));
+const SellerReports = lazyWithRetry(() => import("./pages/SellerReports"));
+const SellerTeam = lazyWithRetry(() => import("./pages/SellerTeam"));
+const SellerSettings = lazyWithRetry(() => import("./pages/SellerSettings"));
+const SellerDiscounts = lazyWithRetry(() => import("./pages/SellerDiscounts"));
+const SellerReviews = lazyWithRetry(() => import("./pages/SellerReviews"));
+const PrintPortal = lazyWithRetry(() => import("./pages/PrintPortal"));
+const Careers = lazyWithRetry(() => import("./pages/Careers"));
+const Storefront = lazyWithRetry(() => import("./pages/Storefront"));
 
 const queryClient = new QueryClient({
   defaultOptions: {

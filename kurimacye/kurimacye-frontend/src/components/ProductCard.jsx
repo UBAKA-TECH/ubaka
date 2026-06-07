@@ -23,7 +23,7 @@ const StarIcon = ({ className }) => (
 );
 
 const StoreIcon = ({ className }) => (
-  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className={className || "w-4 h-4"} aria-hidden="true">
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className={className || "w-3 h-3"} aria-hidden="true">
     <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 21v-7.5a.75.75 0 0 0-.75-.75h-1.5a.75.75 0 0 0-.75.75V21m-9-9l9-9 9 9m-16.5 0h15" />
   </svg>
 );
@@ -78,7 +78,7 @@ export default function ProductCard({ product }) {
         </Link>
         {product.seller && (
           <Link to={`/store/${product.seller.storeSlug || product.seller.id}`} className="text-[10px] sm:text-xs text-terracotta-700 hover:text-terracotta-800 dark:text-terracotta-400 font-medium mb-1.5 flex items-center gap-1 w-fit line-clamp-1 mt-auto py-1 pr-1">
-            <StoreIcon className="text-[10px] shrink-0"/> Sold by: {product.seller.storeName || product.seller.name}
+            <StoreIcon className="w-3 h-3 shrink-0"/> Sold by: {product.seller.storeName || product.seller.name}
           </Link>
         )}
         <div className="flex items-center gap-1 mb-2 mt-auto">

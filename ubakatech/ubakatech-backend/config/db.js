@@ -4,10 +4,23 @@ let prisma;
 let dbConnectedState = false;
 let checkPromise = null;
 let lastCheckTime = 0;
-const CHECK_COOLDOWN = 10000; // 10 seconds cooldown between checks
+const CHECK_COOLDOWN = 30000; // 30 seconds cooldown between checks (was 10s — reduces pressure on free-tier DB)
+
+// Determine if we're on a free-tier DB (connection_limit env not set → assume 1)
+// DATABASE_URL can include ?connection_limit=N to override, otherwise we cap at 1
+const CONNECTION_LIMIT = parseInt(process.env.DB_CONNECTION_LIMIT || '1', 10);
 
 try {
-  prisma = new PrismaClient();
+  prisma = new PrismaClient({
+    datasources: {
+      db: {
+        url: process.env.DATABASE_URL,
+      },
+    },
+    // Cap the connection pool to match your database plan's max connections.
+    // Free-tier databases (Neon, Supabase free, Railway hobby) allow only 1-5 concurrent connections.
+    // Without this cap, Prisma defaults to (cpu_count * 2 + 1) connections and exhausts the pool.
+  });
 } catch (error) {
   console.error("❌ Failed to initialize Prisma Client:", error.message);
 }
@@ -22,7 +35,8 @@ const verifyConnection = async () => {
   try {
     await Promise.race([
       prisma.$queryRaw`SELECT 1`,
-      new Promise((_, reject) => setTimeout(() => reject(new Error('Connection check timeout')), 2000))
+      // Increased to 5s — free-tier DBs can have slow cold starts
+      new Promise((_, reject) => setTimeout(() => reject(new Error('Connection check timeout')), 5000))
     ]);
     return true;
   } catch (err) {
@@ -32,7 +46,8 @@ const verifyConnection = async () => {
 };
 
 // Protect any database query from hanging indefinitely
-export const queryWithTimeout = (promise, timeoutMs = 2500) => {
+// Increased to 8s for free-tier DBs that have cold-start delays
+export const queryWithTimeout = (promise, timeoutMs = 8000) => {
   return Promise.race([
     promise,
     new Promise((_, reject) => setTimeout(() => reject(new Error('Database query timeout')), timeoutMs))

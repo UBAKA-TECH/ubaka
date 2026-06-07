@@ -656,41 +656,76 @@ export const getAnalytics = async (req, res) => {
 };
 
 // ─── DASHBOARD STATS SUMMARY ────────────────────────────────────────────────
+// Cache HR stats for 60s and use a singleton lock to prevent concurrent DB queries.
+// On free-tier databases (connection_limit=1), multiple simultaneous WebSocket connections
+// would each trigger 3 COUNT queries, instantly exhausting the single connection pool slot.
+let _hrStatsCache = null;
+let _hrStatsCacheTime = 0;
+let _hrStatsFetchPromise = null;
+const HR_STATS_CACHE_TTL = 60000; // 60 seconds
 
 export const fetchHrStatsData = async () => {
-  const dbActive = await isDbConnected();
+  const now = Date.now();
 
-  if (dbActive) {
-    try {
-      const statsPromise = Promise.all([
-        prisma.employee.count(),
-        prisma.employee.count({ where: { isActive: true } }),
-        prisma.approvalRequest.count({ where: { type: 'time_off', status: 'approved' } }),
-        Promise.resolve(STATIC_JOBS.length),
-        prisma.onboardingChecklist.count({ where: { isComplete: false } })
-      ]);
-
-      const [total, active, onLeave, openPositions, pendingOnboarding] = await queryWithTimeout(statsPromise, 2500);
-      return {
-        totalEmployees: total,
-        activeEmployees: active,
-        onLeave,
-        openPositions,
-        pendingOnboarding
-      };
-    } catch (err) {
-      console.warn('[HRController] DB error in fetchHrStatsData:', err.message);
-    }
+  // Return cached result if still fresh
+  if (_hrStatsCache && now - _hrStatsCacheTime < HR_STATS_CACHE_TTL) {
+    return _hrStatsCache;
   }
 
-  // Mock fallback
-  return {
-    totalEmployees: 2,
-    activeEmployees: 2,
-    onLeave: 0,
-    openPositions: 1,
-    pendingOnboarding: MOCK_ONBOARDING.filter(t => !t.isComplete).length
-  };
+  // If a DB fetch is already in flight, reuse the same promise (singleton lock)
+  if (_hrStatsFetchPromise) {
+    return _hrStatsFetchPromise;
+  }
+
+  _hrStatsFetchPromise = (async () => {
+    const dbActive = await isDbConnected();
+
+    if (dbActive) {
+      try {
+        const statsPromise = Promise.all([
+          prisma.employee.count(),
+          prisma.employee.count({ where: { isActive: true } }),
+          prisma.approvalRequest.count({ where: { type: 'time_off', status: 'approved' } }),
+          Promise.resolve(STATIC_JOBS.length),
+          prisma.onboardingChecklist.count({ where: { isComplete: false } })
+        ]);
+
+        // Increased timeout to 8s for free-tier DB cold starts
+        const [total, active, onLeave, openPositions, pendingOnboarding] = await queryWithTimeout(statsPromise, 8000);
+        const result = {
+          totalEmployees: total,
+          activeEmployees: active,
+          onLeave,
+          openPositions,
+          pendingOnboarding
+        };
+        _hrStatsCache = result;
+        _hrStatsCacheTime = Date.now();
+        return result;
+      } catch (err) {
+        console.warn('[HRController] DB error in fetchHrStatsData:', err.message);
+      }
+    }
+
+    // Mock fallback — also cache this to avoid hammering a disconnected DB
+    const fallback = {
+      totalEmployees: 2,
+      activeEmployees: 2,
+      onLeave: 0,
+      openPositions: 1,
+      pendingOnboarding: MOCK_ONBOARDING.filter(t => !t.isComplete).length
+    };
+    // Cache fallback for a shorter period so we retry DB sooner
+    if (!_hrStatsCache) {
+      _hrStatsCache = fallback;
+      _hrStatsCacheTime = Date.now() - (HR_STATS_CACHE_TTL - 15000); // retry after 15s
+    }
+    return fallback;
+  })().finally(() => {
+    _hrStatsFetchPromise = null;
+  });
+
+  return _hrStatsFetchPromise;
 };
 
 export const getHrStats = async (req, res) => {

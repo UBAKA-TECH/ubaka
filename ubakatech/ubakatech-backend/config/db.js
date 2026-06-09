@@ -10,11 +10,39 @@ const CHECK_COOLDOWN = 30000; // 30 seconds cooldown between checks (was 10s —
 // DATABASE_URL can include ?connection_limit=N to override, otherwise we cap at 1
 const CONNECTION_LIMIT = parseInt(process.env.DB_CONNECTION_LIMIT || '1', 10);
 
+let connectionUrl = process.env.DATABASE_URL;
+if (connectionUrl) {
+  try {
+    // Normalise protocol for standard URL parser
+    const urlObj = new URL(connectionUrl.replace('postgresql://', 'http://').replace('postgres://', 'http://'));
+    let changed = false;
+    
+    if (!urlObj.searchParams.has('schema')) {
+      urlObj.searchParams.set('schema', 'ubakatech');
+      changed = true;
+    }
+    if (!urlObj.searchParams.has('sslaccept')) {
+      urlObj.searchParams.set('sslaccept', 'accept_invalid_certs');
+      changed = true;
+    }
+    if (!urlObj.searchParams.has('sslmode')) {
+      urlObj.searchParams.set('sslmode', 'require');
+      changed = true;
+    }
+    
+    if (changed) {
+      connectionUrl = urlObj.toString().replace('http://', 'postgresql://');
+    }
+  } catch (err) {
+    console.error('[Database] Failed to normalise DATABASE_URL:', err.message);
+  }
+}
+
 try {
   prisma = new PrismaClient({
     datasources: {
       db: {
-        url: process.env.DATABASE_URL,
+        url: connectionUrl,
       },
     },
     // Cap the connection pool to match your database plan's max connections.

@@ -288,11 +288,43 @@ export const getFaqs = async (req, res) => {
 
 // Database connectivity debug handler
 export const debugDb = async (req, res) => {
+  let host = 'unknown';
+  let pathName = 'unknown';
+  let user = 'unknown';
+  let queryParams = {};
+  
+  const dbUrl = process.env.DATABASE_URL || 'not set';
+  const maskedUrl = dbUrl.replace(/:([^@]+)@/, ':****@');
+  
   try {
-    const dbUrl = process.env.DATABASE_URL || 'not set';
-    // mask password in URL
-    const maskedUrl = dbUrl.replace(/:([^@]+)@/, ':****@');
-    
+    const lastAt = dbUrl.lastIndexOf('@');
+    if (lastAt !== -1) {
+      const credentialsPart = dbUrl.substring(0, lastAt);
+      const hostPart = dbUrl.substring(lastAt + 1);
+      
+      const hostUrl = new URL('http://' + hostPart);
+      host = hostUrl.host;
+      pathName = hostUrl.pathname;
+      hostUrl.searchParams.forEach((val, key) => {
+        queryParams[key] = val;
+      });
+      
+      const protocolEnd = credentialsPart.indexOf('://') + 3;
+      if (protocolEnd > 2) {
+        const userPassPart = credentialsPart.substring(protocolEnd);
+        const colonIdx = userPassPart.indexOf(':');
+        if (colonIdx !== -1) {
+          user = userPassPart.substring(0, colonIdx);
+        } else {
+          user = userPassPart;
+        }
+      }
+    }
+  } catch (parseErr) {
+    console.error('Failed to parse dbUrl details:', parseErr.message);
+  }
+
+  try {
     const result = await prisma.$queryRaw`SELECT 1`;
     const count = await prisma.service.count();
     
@@ -300,16 +332,16 @@ export const debugDb = async (req, res) => {
       success: true,
       message: 'Database check successful',
       maskedUrl,
+      dbDetails: { host, pathName, user, queryParams },
       rawQueryResult: result,
       servicesCount: count
     });
   } catch (err) {
-    const dbUrl = process.env.DATABASE_URL || 'not set';
-    const maskedUrl = dbUrl.replace(/:([^@]+)@/, ':****@');
     return res.status(500).json({
       success: false,
       message: 'Database check failed',
       maskedUrl,
+      dbDetails: { host, pathName, user, queryParams },
       error: err.message,
       stack: err.stack,
       env: process.env.NODE_ENV,

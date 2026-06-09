@@ -7,9 +7,7 @@ import {
   getServices,
   getPricing,
   getRetainers,
-  getFaqs,
-  debugDb,
-  setupDb
+  getFaqs
 } from '../controllers/publicController.js';
 
 const router = express.Router();
@@ -27,7 +25,5 @@ router.get('/services', getServices);
 router.get('/pricing', getPricing);
 router.get('/retainers', getRetainers);
 router.get('/faqs', getFaqs);
-router.get('/debug-db', debugDb);
-router.get('/setup-db', setupDb);
 
 export default router;

@@ -286,3 +286,32 @@ export const getFaqs = async (req, res) => {
   }
 };
 
+// Database connectivity debug handler
+export const debugDb = async (req, res) => {
+  try {
+    const dbUrl = process.env.DATABASE_URL || 'not set';
+    // mask password in URL
+    const maskedUrl = dbUrl.replace(/:([^@]+)@/, ':****@');
+    
+    const result = await prisma.$queryRaw`SELECT 1`;
+    const count = await prisma.service.count();
+    
+    return res.json({
+      success: true,
+      message: 'Database check successful',
+      maskedUrl,
+      rawQueryResult: result,
+      servicesCount: count
+    });
+  } catch (err) {
+    return res.status(500).json({
+      success: false,
+      message: 'Database check failed',
+      error: err.message,
+      stack: err.stack,
+      env: process.env.NODE_ENV,
+      dbLimit: process.env.DB_CONNECTION_LIMIT
+    });
+  }
+};
+

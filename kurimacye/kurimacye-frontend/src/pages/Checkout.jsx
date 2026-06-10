@@ -91,6 +91,7 @@ export default function CheckoutPage() {
   const [momoPhone, setMomoPhone] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
   const [paymentStatus, setPaymentStatus] = useState(null); // 'pending', 'success', 'failed'
+  const [fieldErrors, setFieldErrors] = useState({});
 
   // Gift Card State
   const [giftCardCode, setGiftCardCode] = useState("");
@@ -154,7 +155,43 @@ export default function CheckoutPage() {
   }, [formData.district, formData.province, formData.sector, formData.cell, totals.subtotal, totals.discount, shippingCost]);
 
   const handleInputChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+    setFieldErrors(prev => ({ ...prev, [name]: "" }));
+  };
+
+  const validateCheckoutForm = () => {
+    const errors = {};
+    const requiredFields = ["firstName", "lastName", "email", "phone", "address", "province", "district", "sector", "cell"];
+
+    requiredFields.forEach((field) => {
+      if (!String(formData[field] || "").trim()) {
+        errors[field] = "This field is required";
+      }
+    });
+
+    if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      errors.email = "Enter a valid email address";
+    }
+
+    if (formData.phone && !/^(\+?250|0)?7\d{8}$/.test(formData.phone.replace(/\s/g, ""))) {
+      errors.phone = "Enter a valid Rwanda phone number";
+    }
+
+    if (!selectedMethod) {
+      errors.shipping = "Please select a delivery method";
+    }
+
+    if (paymentMethod === "mtn_momo") {
+      if (!momoPhone.trim()) {
+        errors.momoPhone = "Mobile Money phone is required";
+      } else if (!/^(\+?250|0)?7\d{8}$/.test(momoPhone.replace(/\s/g, ""))) {
+        errors.momoPhone = "Enter a valid Mobile Money phone number";
+      }
+    }
+
+    setFieldErrors(errors);
+    return Object.keys(errors).length === 0;
   };
 
   const handleProvinceChange = (e) => {
@@ -170,6 +207,7 @@ export default function CheckoutPage() {
     setAvailableDistricts(getDistricts(province));
     setAvailableSectors([]);
     setAvailableCells([]);
+    setFieldErrors(prev => ({ ...prev, province: "", district: "", sector: "", cell: "" }));
   };
 
   const handleDistrictChange = (e) => {
@@ -183,6 +221,7 @@ export default function CheckoutPage() {
     });
     setAvailableSectors(getSectors(district));
     setAvailableCells([]);
+    setFieldErrors(prev => ({ ...prev, district: "", sector: "", cell: "" }));
   };
 
   const handleSectorChange = (e) => {
@@ -193,6 +232,7 @@ export default function CheckoutPage() {
       cell: ""
     });
     setAvailableCells(getCells(sector));
+    setFieldErrors(prev => ({ ...prev, sector: "", cell: "" }));
   };
 
   const handleCellChange = (e) => {
@@ -201,11 +241,13 @@ export default function CheckoutPage() {
       ...formData,
       cell
     });
+    setFieldErrors(prev => ({ ...prev, cell: "" }));
   };
 
   const handleMethodChange = (method) => {
     setSelectedMethod(method);
     setShippingCost(method.cost);
+    setFieldErrors(prev => ({ ...prev, shipping: "" }));
   };
 
   const handleApplyGiftCard = async (e) => {
@@ -258,12 +300,8 @@ export default function CheckoutPage() {
 
   const handlePlaceOrder = async (e) => {
     e.preventDefault();
-    if (!selectedMethod) {
-      showWarning("Please select a delivery method"); // Replaced alert
-      return;
-    }
-    if (paymentMethod === "mtn_momo" && !momoPhone) {
-      showWarning("Please enter your Mobile Money phone number"); // Replaced alert
+    if (!validateCheckoutForm()) {
+      showWarning("Please fix the highlighted checkout fields");
       return;
     }
 
@@ -417,55 +455,64 @@ export default function CheckoutPage() {
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-1">
-                      <label className="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest px-1">First Name</label>
+                      <label className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest px-1">First Name</label>
                       <input type="text" name="firstName" value={formData.firstName} onChange={handleInputChange} required className="w-full bg-gray-50 dark:bg-slate-800/50 border border-gray-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-violet-500 transition-all placeholder:text-gray-400" />
+                      {fieldErrors.firstName && <p className="text-xs text-red-500 px-1">{fieldErrors.firstName}</p>}
                     </div>
                     <div className="space-y-1">
-                      <label className="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest px-1">Last Name</label>
+                      <label className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest px-1">Last Name</label>
                       <input type="text" name="lastName" value={formData.lastName} onChange={handleInputChange} required className="w-full bg-gray-50 dark:bg-slate-800/50 border border-gray-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-violet-500 transition-all placeholder:text-gray-400" />
+                      {fieldErrors.lastName && <p className="text-xs text-red-500 px-1">{fieldErrors.lastName}</p>}
                     </div>
                     <div className="md:col-span-2 space-y-1">
-                      <label className="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest px-1">Email Address</label>
+                      <label className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest px-1">Email Address</label>
                       <input type="email" name="email" value={formData.email} onChange={handleInputChange} required className="w-full bg-gray-50 dark:bg-slate-800/50 border border-gray-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-violet-500 transition-all placeholder:text-gray-400" />
+                      {fieldErrors.email && <p className="text-xs text-red-500 px-1">{fieldErrors.email}</p>}
                     </div>
                     <div className="md:col-span-2 space-y-1">
-                      <label className="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest px-1">Phone Number</label>
+                      <label className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest px-1">Phone Number</label>
                       <input type="tel" name="phone" value={formData.phone} onChange={handleInputChange} required className="w-full bg-gray-50 dark:bg-slate-800/50 border border-gray-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-violet-500 transition-all placeholder:text-gray-400" />
+                      {fieldErrors.phone && <p className="text-xs text-red-500 px-1">{fieldErrors.phone}</p>}
                     </div>
 
                     <div className="space-y-1">
-                      <label className="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest px-1">Province</label>
+                      <label className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest px-1">Province</label>
                       <select name="province" value={formData.province} onChange={handleProvinceChange} required className="w-full bg-gray-50 dark:bg-slate-800/50 border border-gray-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-violet-500 transition-all cursor-pointer">
                         <option value="">Select Province</option>
                         {provinces.map(prov => <option key={prov} value={prov}>{prov}</option>)}
                       </select>
+                      {fieldErrors.province && <p className="text-xs text-red-500 px-1">{fieldErrors.province}</p>}
                     </div>
                     <div className="space-y-1">
-                      <label className="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest px-1">District</label>
+                      <label className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest px-1">District</label>
                       <select name="district" value={formData.district} onChange={handleDistrictChange} required disabled={!formData.province} className="w-full bg-gray-50 dark:bg-slate-800/50 border border-gray-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-violet-500 transition-all cursor-pointer disabled:opacity-50">
                         <option value="">Select District</option>
                         {availableDistricts.map(d => <option key={d} value={d}>{d}</option>)}
                       </select>
+                      {fieldErrors.district && <p className="text-xs text-red-500 px-1">{fieldErrors.district}</p>}
                     </div>
 
                     <div className="space-y-1">
-                      <label className="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest px-1">Sector</label>
+                      <label className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest px-1">Sector</label>
                       <select name="sector" value={formData.sector} onChange={handleSectorChange} required disabled={!formData.district} className="w-full bg-gray-50 dark:bg-slate-800/50 border border-gray-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-violet-500 transition-all cursor-pointer disabled:opacity-50">
                         <option value="">Select Sector</option>
                         {availableSectors.map(s => <option key={s} value={s}>{s}</option>)}
                       </select>
+                      {fieldErrors.sector && <p className="text-xs text-red-500 px-1">{fieldErrors.sector}</p>}
                     </div>
                     <div className="space-y-1">
-                      <label className="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest px-1">Cell</label>
+                      <label className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest px-1">Cell</label>
                       <select name="cell" value={formData.cell} onChange={handleCellChange} required disabled={!formData.sector} className="w-full bg-gray-50 dark:bg-slate-800/50 border border-gray-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-violet-500 transition-all cursor-pointer disabled:opacity-50">
                         <option value="">Select Cell</option>
                         {availableCells.map(c => <option key={c} value={c}>{c}</option>)}
                       </select>
+                      {fieldErrors.cell && <p className="text-xs text-red-500 px-1">{fieldErrors.cell}</p>}
                     </div>
 
                     <div className="md:col-span-2 space-y-1">
-                      <label className="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest px-1">Street Address</label>
+                      <label className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest px-1">Street Address</label>
                       <input type="text" name="address" value={formData.address} onChange={handleInputChange} required className="w-full bg-gray-50 dark:bg-slate-800/50 border border-gray-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-violet-500 transition-all placeholder:text-gray-400" placeholder="e.g. KG 123 St, Village name" />
+                      {fieldErrors.address && <p className="text-xs text-red-500 px-1">{fieldErrors.address}</p>}
                     </div>
                   </div>
 
@@ -504,6 +551,7 @@ export default function CheckoutPage() {
                         Please complete your location details to see delivery options.
                       </div>
                     )}
+                    {fieldErrors.shipping && <p className="text-xs text-red-500 px-1 mt-2">{fieldErrors.shipping}</p>}
                   </div>
                 </div>
 
@@ -540,21 +588,25 @@ export default function CheckoutPage() {
                       {paymentMethod === "mtn_momo" && (
                         <div className="px-4 pb-4 pt-0">
                           <div className="bg-white dark:bg-slate-900/50 p-3 rounded-xl border border-amber-100 dark:border-amber-900/30">
-                            <label className="text-[9px] font-bold text-amber-605 dark:text-amber-400 uppercase tracking-widest mb-1.5 block">Phone Number for payment</label>
+                            <label className="text-xs font-bold text-amber-700 dark:text-amber-400 uppercase tracking-widest mb-1.5 block">Phone Number for payment</label>
                             <div className="relative">
                               <span className="absolute left-3 top-1/2 -translate-y-1/2 text-amber-500"><FaMobileAlt className="text-sm" /></span>
                               <input
                                 type="tel"
                                 value={momoPhone}
-                                onChange={(e) => setMomoPhone(e.target.value)}
+                                onChange={(e) => {
+                                  setMomoPhone(e.target.value);
+                                  setFieldErrors(prev => ({ ...prev, momoPhone: "" }));
+                                }}
                                 placeholder="079xxxxxxx"
                                 className="w-full bg-gray-50 dark:bg-slate-800 border border-amber-200 dark:border-amber-800 rounded-xl py-2.5 pl-9 pr-4 text-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-amber-500 outline-none transition-all placeholder:text-amber-600/40 dark:placeholder:text-amber-500/30"
                               />
                             </div>
-                            <p className="text-[9px] text-amber-600/60 mt-2 flex items-center gap-1.5">
+                            <p className="text-xs text-amber-700/70 mt-2 flex items-center gap-1.5">
                               <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
                               You will receive a prompt to enter your PIN on your phone
                             </p>
+                            {fieldErrors.momoPhone && <p className="text-xs text-red-500 mt-2">{fieldErrors.momoPhone}</p>}
                           </div>
                         </div>
                       )}
@@ -684,6 +736,18 @@ export default function CheckoutPage() {
                     </div>
                   </div>
 
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 mt-5">
+                    <div className="text-xs font-semibold text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-slate-800/60 border border-gray-200 dark:border-slate-700 rounded-lg px-3 py-2 text-center">
+                      Secure payment flow
+                    </div>
+                    <div className="text-xs font-semibold text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-slate-800/60 border border-gray-200 dark:border-slate-700 rounded-lg px-3 py-2 text-center">
+                      Verified sellers only
+                    </div>
+                    <div className="text-xs font-semibold text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-slate-800/60 border border-gray-200 dark:border-slate-700 rounded-lg px-3 py-2 text-center">
+                      Support & dispute help
+                    </div>
+                  </div>
+
                   {/* Place Order Button */}
                   <button
                     type="submit"
@@ -717,7 +781,7 @@ export default function CheckoutPage() {
                     </div>
                   )}
 
-                  <p className="text-center text-[9px] font-bold text-gray-400 dark:text-slate-600 mt-6 uppercase tracking-widest leading-relaxed">
+                  <p className="text-center text-xs font-bold text-gray-500 dark:text-slate-500 mt-6 uppercase tracking-widest leading-relaxed">
                     By placing your order, you agree to our <Link to="/terms" className="text-violet-600 dark:text-violet-400 hover:underline">Terms & Conditions</Link>.
                   </p>
                 </div>

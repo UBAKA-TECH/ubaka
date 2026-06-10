@@ -144,12 +144,12 @@ export default function CartPage() {
                                         {it.customText && <div className="text-xs text-charcoal-500 dark:text-charcoal-400">Text: <span className="text-terracotta-600 dark:text-terracotta-400 font-medium">{it.customText}</span></div>}
                                         {it.cloudLink && <div className="text-xs text-charcoal-500 dark:text-charcoal-400 truncate max-w-[200px]">Cloud: <span className="text-terracotta-600 dark:text-terracotta-400 font-medium">{it.cloudLink}</span></div>}
                                         <div className="mt-3">
-                                          <label className="block text-[9px] font-bold text-charcoal-400 uppercase mb-1">{t("cart.customization_file")}</label>
+                                          <label className="block text-xs font-bold text-charcoal-500 uppercase mb-1">{t("cart.customization_file")}</label>
                                           <input
                                             type="file"
                                             accept="image/*,application/pdf"
                                             onChange={(e) => setFile(it.originalIdx, e.target.files?.[0] || null)}
-                                            className="block w-full text-[10px] text-charcoal-500 dark:text-charcoal-400 file:mr-2 file:py-1 file:px-2.5 file:rounded-full file:border-0 file:text-[9px] file:font-semibold file:bg-terracotta-50 dark:file:bg-terracotta-900/10 file:text-terracotta-600 dark:file:text-terracotta-400 hover:file:bg-terracotta-100 cursor-pointer"
+                                            className="block w-full text-xs text-charcoal-600 dark:text-charcoal-300 file:mr-2 file:py-1 file:px-2.5 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-terracotta-50 dark:file:bg-terracotta-900/10 file:text-terracotta-600 dark:file:text-terracotta-400 hover:file:bg-terracotta-100 cursor-pointer"
                                           />
                                         </div>
                                       </div>
@@ -222,8 +222,8 @@ export default function CartPage() {
                               <div className="min-w-0 flex-1 pr-6">
                                 <h3 className="font-bold text-sm text-charcoal-900 dark:text-white truncate">{it.name}</h3>
                                 <p className="text-xs font-bold text-terracotta-500 dark:text-terracotta-400 mt-1">{formatRwf(it.price)}</p>
-                                {it.customText && <div className="text-[11px] text-charcoal-500 dark:text-charcoal-400 mt-1">Text: <span className="text-terracotta-600 dark:text-terracotta-400 font-medium">{it.customText}</span></div>}
-                                {it.cloudLink && <div className="text-[11px] text-charcoal-500 dark:text-charcoal-400 truncate mt-0.5">Cloud: <span className="text-terracotta-600 dark:text-terracotta-400 font-medium">{it.cloudLink}</span></div>}
+                                {it.customText && <div className="text-xs text-charcoal-600 dark:text-charcoal-300 mt-1">Text: <span className="text-terracotta-600 dark:text-terracotta-400 font-medium">{it.customText}</span></div>}
+                                {it.cloudLink && <div className="text-xs text-charcoal-600 dark:text-charcoal-300 truncate mt-0.5">Cloud: <span className="text-terracotta-600 dark:text-terracotta-400 font-medium">{it.cloudLink}</span></div>}
                               </div>
                             </div>
 
@@ -239,18 +239,18 @@ export default function CartPage() {
                                 />
                               </div>
                               <div className="text-right">
-                                <span className="text-[10px] text-charcoal-400 block font-medium">Subtotal</span>
+                                <span className="text-xs text-charcoal-500 block font-medium">Subtotal</span>
                                 <span className="text-sm font-bold text-terracotta-500 dark:text-terracotta-400">{formatRwf(it.subtotal)}</span>
                               </div>
                             </div>
 
                             <div className="pt-2">
-                              <label className="block text-[9px] font-bold text-charcoal-400 dark:text-charcoal-500 uppercase mb-1">{t("cart.customization_file")}</label>
+                              <label className="block text-xs font-bold text-charcoal-500 dark:text-charcoal-400 uppercase mb-1">{t("cart.customization_file")}</label>
                               <input
                                 type="file"
                                 accept="image/*,application/pdf"
                                 onChange={(e) => setFile(it.originalIdx, e.target.files?.[0] || null)}
-                                className="block w-full text-[10px] text-charcoal-500 dark:text-charcoal-400 file:mr-2 file:py-1 file:px-2.5 file:rounded-full file:border-0 file:text-[9px] file:font-semibold file:bg-terracotta-50 dark:file:bg-terracotta-900/10 file:text-terracotta-600 dark:file:text-terracotta-400 hover:file:bg-terracotta-100 cursor-pointer"
+                                className="block w-full text-xs text-charcoal-600 dark:text-charcoal-300 file:mr-2 file:py-1 file:px-2.5 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-terracotta-50 dark:file:bg-terracotta-900/10 file:text-terracotta-600 dark:file:text-terracotta-400 hover:file:bg-terracotta-100 cursor-pointer"
                               />
                             </div>
                           </div>
@@ -310,7 +310,7 @@ export default function CartPage() {
                           </div>
                         )}
                         {couponMessage && (
-                          <p className={`text-[9px] mt-2 font-bold uppercase tracking-wider ${couponMessage.type === 'success' ? 'text-green-600' : 'text-red-500'}`}>
+                          <p className={`text-xs mt-2 font-bold uppercase tracking-wider ${couponMessage.type === 'success' ? 'text-green-600' : 'text-red-500'}`}>
                             {couponMessage.text}
                           </p>
                         )}

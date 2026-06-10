@@ -383,6 +383,18 @@ export default function ProductDetail() {
                   </div>
                 )}
 
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 mt-1">
+                  <div className="text-xs font-semibold text-gray-700 dark:text-gray-300 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-lg px-3 py-2 text-center">
+                    Secure checkout
+                  </div>
+                  <div className="text-xs font-semibold text-gray-700 dark:text-gray-300 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-lg px-3 py-2 text-center">
+                    Verified marketplace sellers
+                  </div>
+                  <div className="text-xs font-semibold text-gray-700 dark:text-gray-300 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-lg px-3 py-2 text-center">
+                    Support for order issues
+                  </div>
+                </div>
+
                 <div className="flex flex-col sm:flex-row gap-4 mt-4">
                   <button
                     onClick={handleAdd}

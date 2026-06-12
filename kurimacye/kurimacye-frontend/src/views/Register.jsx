@@ -117,142 +117,144 @@ function Register() {
                 </div>
 
                 {/* Form Centered Container with inner scrolling */}
-                <div className="flex-1 flex flex-col justify-center items-center px-6 sm:px-10 lg:px-16 pb-8 overflow-y-auto z-10 min-h-0">
-                    <div className="w-full max-w-md my-auto space-y-4">
-                        <div className="text-center lg:text-left">
-                            <h2 className="text-2xl sm:text-3xl font-black text-gray-900 dark:text-white tracking-tight mb-1">
-                                Create Account
-                            </h2>
-                            <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 font-medium">Join Kuri Macye to start shopping for amazing products.</p>
-                        </div>
-
-                        {error && (
-                            <div className="p-3.5 bg-red-50 dark:bg-red-900/10 border-l-4 border-red-500 rounded-r-2xl flex items-start gap-3 animate-head-shake">
-                                <FaExclamationTriangle className="text-red-500 mt-1 shrink-0" />
-                                <p className="text-xs sm:text-sm text-red-700 dark:text-red-400 font-bold leading-tight">{error}</p>
+                <div className="flex-1 overflow-y-auto z-10 min-h-0 w-full">
+                    <div className="min-h-full w-full flex flex-col justify-center items-center px-6 sm:px-10 lg:px-16 py-8">
+                        <div className="w-full max-w-md space-y-4">
+                            <div className="text-center lg:text-left">
+                                <h2 className="text-2xl sm:text-3xl font-black text-gray-900 dark:text-white tracking-tight mb-1">
+                                    Create Account
+                                </h2>
+                                <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 font-medium">Join Kuri Macye to start shopping for amazing products.</p>
                             </div>
-                        )}
 
-                        <form onSubmit={handleSubmit} className="space-y-3">
-                            <div className="space-y-3 animate-fade-in-right">
-                                <div className="space-y-1">
-                                    <label className="text-xs font-bold text-gray-700 dark:text-gray-300 ml-1">Full Name</label>
-                                    <div className="relative group">
-                                        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400 group-focus-within:text-violet-600 transition-colors">
-                                            <FaUser />
+                            {error && (
+                                <div className="p-3.5 bg-red-50 dark:bg-red-900/10 border-l-4 border-red-500 rounded-r-2xl flex items-start gap-3 animate-head-shake">
+                                    <FaExclamationTriangle className="text-red-500 mt-1 shrink-0" />
+                                    <p className="text-xs sm:text-sm text-red-700 dark:text-red-400 font-bold leading-tight">{error}</p>
+                                </div>
+                            )}
+
+                            <form onSubmit={handleSubmit} className="space-y-3">
+                                <div className="space-y-3 animate-fade-in-right">
+                                    <div className="space-y-1">
+                                        <label className="text-xs font-bold text-gray-700 dark:text-gray-300 ml-1">Full Name</label>
+                                        <div className="relative group">
+                                            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400 group-focus-within:text-violet-600 transition-colors">
+                                                <FaUser />
+                                            </div>
+                                            <input
+                                                name="name"
+                                                type="text"
+                                                required
+                                                className="block w-full pl-12 pr-4 py-2 bg-gray-50 dark:bg-slate-900 border border-gray-100 dark:border-slate-800 rounded-2xl text-gray-900 dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-violet-600/20 focus:border-violet-600 transition-all shadow-inner text-sm"
+                                                placeholder="John Doe"
+                                                value={formData.name}
+                                                onChange={handleChange}
+                                            />
                                         </div>
-                                        <input
-                                            name="name"
-                                            type="text"
-                                            required
-                                            className="block w-full pl-12 pr-4 py-2 bg-gray-50 dark:bg-slate-900 border border-gray-100 dark:border-slate-800 rounded-2xl text-gray-900 dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-violet-600/20 focus:border-violet-600 transition-all shadow-inner text-sm"
-                                            placeholder="John Doe"
-                                            value={formData.name}
-                                            onChange={handleChange}
-                                        />
+                                    </div>
+
+                                    <div className="space-y-1">
+                                        <label className="text-xs font-bold text-gray-700 dark:text-gray-300 ml-1">Email Address</label>
+                                        <div className="relative group">
+                                            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400 group-focus-within:text-violet-600 transition-colors">
+                                                <FaEnvelope />
+                                            </div>
+                                            <input
+                                                name="email"
+                                                type="email"
+                                                required
+                                                className="block w-full pl-12 pr-4 py-2 bg-gray-50 dark:bg-slate-900 border border-gray-100 dark:border-slate-800 rounded-2xl text-gray-900 dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-violet-600/20 focus:border-violet-600 transition-all shadow-inner text-sm"
+                                                placeholder="you@example.com"
+                                                value={formData.email}
+                                                onChange={handleChange}
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div className="space-y-1">
+                                        <label className="text-xs font-bold text-gray-700 dark:text-gray-300 ml-1">Password</label>
+                                        <div className="relative group">
+                                            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400 group-focus-within:text-violet-600 transition-colors">
+                                                <FaLock />
+                                            </div>
+                                            <input
+                                                name="password"
+                                                type="password"
+                                                required
+                                                className="block w-full pl-12 pr-4 py-2 bg-gray-50 dark:bg-slate-900 border border-gray-100 dark:border-slate-800 rounded-2xl text-gray-900 dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-violet-600/20 focus:border-violet-600 transition-all shadow-inner text-sm"
+                                                placeholder="••••••••"
+                                                value={formData.password}
+                                                onChange={handleChange}
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div className="space-y-1">
+                                        <label className="text-xs font-bold text-gray-700 dark:text-gray-300 ml-1">Confirm Password</label>
+                                        <div className="relative group">
+                                            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400 group-focus-within:text-violet-600 transition-colors">
+                                                <FaLock />
+                                            </div>
+                                            <input
+                                                name="confirmPassword"
+                                                type="password"
+                                                required
+                                                className="block w-full pl-12 pr-4 py-2 bg-gray-50 dark:bg-slate-900 border border-gray-100 dark:border-slate-800 rounded-2xl text-gray-900 dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-violet-600/20 focus:border-violet-600 transition-all shadow-inner text-sm"
+                                                placeholder="••••••••"
+                                                value={formData.confirmPassword}
+                                                onChange={handleChange}
+                                            />
+                                        </div>
                                     </div>
                                 </div>
 
-                                <div className="space-y-1">
-                                    <label className="text-xs font-bold text-gray-700 dark:text-gray-300 ml-1">Email Address</label>
-                                    <div className="relative group">
-                                        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400 group-focus-within:text-violet-600 transition-colors">
-                                            <FaEnvelope />
-                                        </div>
-                                        <input
-                                            name="email"
-                                            type="email"
-                                            required
-                                            className="block w-full pl-12 pr-4 py-2 bg-gray-50 dark:bg-slate-900 border border-gray-100 dark:border-slate-800 rounded-2xl text-gray-900 dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-violet-600/20 focus:border-violet-600 transition-all shadow-inner text-sm"
-                                            placeholder="you@example.com"
-                                            value={formData.email}
-                                            onChange={handleChange}
-                                        />
+                                <div className="pt-1.5">
+                                    <button
+                                        type="submit"
+                                        disabled={loading}
+                                        className="w-full py-2.5 bg-violet-600 hover:bg-violet-700 text-white rounded-2xl font-black text-sm shadow-lg shadow-violet-600/10 dark:shadow-none transition-all active:scale-[0.99] flex items-center justify-center gap-2 group"
+                                    >
+                                        {loading ? "Creating..." : "Create Account"} 
+                                        {!loading && <FaArrowRight className="group-hover:translate-x-1 transition-transform" />}
+                                    </button>
+                                </div>
+                            </form>
+
+                            <div className="mt-3">
+                                <div className="relative">
+                                    <div className="absolute inset-0 flex items-center">
+                                        <div className="w-full border-t border-gray-200 dark:border-slate-800"></div>
+                                    </div>
+                                    <div className="relative flex justify-center text-sm">
+                                        <span className="px-4 bg-white dark:bg-slate-950 text-gray-500 font-bold uppercase tracking-widest text-[9px]">Or continue with</span>
                                     </div>
                                 </div>
 
-                                <div className="space-y-1">
-                                    <label className="text-xs font-bold text-gray-700 dark:text-gray-300 ml-1">Password</label>
-                                    <div className="relative group">
-                                        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400 group-focus-within:text-violet-600 transition-colors">
-                                            <FaLock />
-                                        </div>
-                                        <input
-                                            name="password"
-                                            type="password"
-                                            required
-                                            className="block w-full pl-12 pr-4 py-2 bg-gray-50 dark:bg-slate-900 border border-gray-100 dark:border-slate-800 rounded-2xl text-gray-900 dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-violet-600/20 focus:border-violet-600 transition-all shadow-inner text-sm"
-                                            placeholder="••••••••"
-                                            value={formData.password}
-                                            onChange={handleChange}
-                                        />
-                                    </div>
-                                </div>
-
-                                <div className="space-y-1">
-                                    <label className="text-xs font-bold text-gray-700 dark:text-gray-300 ml-1">Confirm Password</label>
-                                    <div className="relative group">
-                                        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400 group-focus-within:text-violet-600 transition-colors">
-                                            <FaLock />
-                                        </div>
-                                        <input
-                                            name="confirmPassword"
-                                            type="password"
-                                            required
-                                            className="block w-full pl-12 pr-4 py-2 bg-gray-50 dark:bg-slate-900 border border-gray-100 dark:border-slate-800 rounded-2xl text-gray-900 dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-violet-600/20 focus:border-violet-600 transition-all shadow-inner text-sm"
-                                            placeholder="••••••••"
-                                            value={formData.confirmPassword}
-                                            onChange={handleChange}
-                                        />
-                                    </div>
+                                <div className="mt-2.5">
+                                    <button
+                                        onClick={handleGoogleLogin}
+                                        className="w-full flex justify-center items-center gap-3 py-2.5 px-4 border border-gray-200 dark:border-slate-800 rounded-2xl bg-white dark:bg-slate-900 text-xs font-bold text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-800 transition-all active:scale-[0.99] shadow-sm"
+                                    >
+                                        <FaGoogle className="text-red-500 text-base" />
+                                        Continue with Google
+                                    </button>
                                 </div>
                             </div>
-
-                            <div className="pt-1.5">
-                                <button
-                                    type="submit"
-                                    disabled={loading}
-                                    className="w-full py-2.5 bg-violet-600 hover:bg-violet-700 text-white rounded-2xl font-black text-sm shadow-lg shadow-violet-600/10 dark:shadow-none transition-all active:scale-[0.99] flex items-center justify-center gap-2 group"
-                                >
-                                    {loading ? "Creating..." : "Create Account"} 
-                                    {!loading && <FaArrowRight className="group-hover:translate-x-1 transition-transform" />}
-                                </button>
-                            </div>
-                        </form>
-
-                        <div className="mt-3">
-                            <div className="relative">
-                                <div className="absolute inset-0 flex items-center">
-                                    <div className="w-full border-t border-gray-200 dark:border-slate-800"></div>
-                                </div>
-                                <div className="relative flex justify-center text-sm">
-                                    <span className="px-4 bg-white dark:bg-slate-950 text-gray-500 font-bold uppercase tracking-widest text-[9px]">Or continue with</span>
-                                </div>
-                            </div>
-
-                            <div className="mt-2.5">
-                                <button
-                                    onClick={handleGoogleLogin}
-                                    className="w-full flex justify-center items-center gap-3 py-2.5 px-4 border border-gray-200 dark:border-slate-800 rounded-2xl bg-white dark:bg-slate-900 text-xs font-bold text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-800 transition-all active:scale-[0.99] shadow-sm"
-                                >
-                                    <FaGoogle className="text-red-500 text-base" />
-                                    Continue with Google
-                                </button>
-                            </div>
-                        </div>
-                        
-                        <div className="mt-4 text-center space-y-3">
-                            <p className="text-xs font-bold text-gray-600 dark:text-gray-400">
-                                Already have an account?{" "}
-                                <Link to="/login" className="font-black text-violet-600 hover:text-violet-500 transition-colors">
-                                    Sign in
-                                </Link>
-                            </p>
                             
-                            <div className="pt-3 border-t border-gray-100 dark:border-slate-800">
-                                <Link to="/become-seller" className="inline-flex items-center gap-2 px-3 py-1.5 bg-amber-50 dark:bg-amber-900/10 text-amber-700 dark:text-amber-500 rounded-full text-[10px] font-bold hover:bg-amber-100 dark:hover:bg-amber-900/20 transition-colors">
-                                    <FaStore /> Want to sell on Kuri Macye? Become a Seller
-                                </Link>
+                            <div className="mt-4 text-center space-y-3">
+                                <p className="text-xs font-bold text-gray-600 dark:text-gray-400">
+                                    Already have an account?{" "}
+                                    <Link to="/login" className="font-black text-violet-600 hover:text-violet-500 transition-colors">
+                                        Sign in
+                                    </Link>
+                                </p>
+                                
+                                <div className="pt-3 border-t border-gray-100 dark:border-slate-800">
+                                    <Link to="/become-seller" className="inline-flex items-center gap-2 px-3 py-1.5 bg-amber-50 dark:bg-amber-900/10 text-amber-700 dark:text-amber-500 rounded-full text-[10px] font-bold hover:bg-amber-100 dark:hover:bg-amber-900/20 transition-colors">
+                                        <FaStore /> Want to sell on Kuri Macye? Become a Seller
+                                    </Link>
+                                </div>
                             </div>
                         </div>
                     </div>

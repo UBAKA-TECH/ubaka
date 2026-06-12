@@ -204,9 +204,10 @@ const Landing = ({ onEnterPortal }) => {
           setProjectsList(data);
         } else {
           throw new Error('Failed to fetch projects');
-           } catch (err) {
+        }
+      } catch (err) {
         console.warn('Projects API offline. Real data enforced. Setting projects empty.', err.message);
-        setProjectsList([]);     ]);
+        setProjectsList([]);
       } finally {
         setLoadingProjects(false);
       }

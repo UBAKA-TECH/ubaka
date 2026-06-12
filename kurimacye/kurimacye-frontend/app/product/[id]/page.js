@@ -2,6 +2,10 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { buildMetadata } from "../../../lib/seo";
 import { getSiteUrl, safeFetchApi, toAbsoluteAssetUrl } from "../../../lib/api";
+import { headers } from "next/headers";
+import { isBot } from "../../../lib/bot";
+import SPAContainer from "../../SPAContainer";
+
 
 export async function generateMetadata({ params }) {
   const product = await safeFetchApi(`/products/${params.id}`, { revalidate: 60 });
@@ -22,8 +26,9 @@ export async function generateMetadata({ params }) {
   });
 }
 
-export default async function ProductDetailPage({ params }) {
-  const product = await safeFetchApi(`/products/${params.id}`, { revalidate: 60 });
+async function SSRProductDetailPage({ params }) {
+  const resolvedParams = await params;
+  const product = await safeFetchApi(`/products/${resolvedParams.id}`, { revalidate: 60 });
   if (!product) notFound();
 
   const related = (await safeFetchApi(`/products/${product.id}/related`, { revalidate: 60 })) || [];
@@ -87,3 +92,15 @@ export default async function ProductDetailPage({ params }) {
     </main>
   );
 }
+
+export default async function ProductDetailPage(props) {
+  const reqHeaders = await headers();
+  const userAgent = reqHeaders.get("user-agent") || "";
+  
+  if (isBot(userAgent)) {
+    return <SSRProductDetailPage {...props} />;
+  }
+
+  return <SPAContainer />;
+}
+

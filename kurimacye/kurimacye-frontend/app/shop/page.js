@@ -1,3 +1,6 @@
+import { headers } from "next/headers";
+import { isBot } from "../../lib/bot";
+import SPAContainer from "../SPAContainer";
 import Link from "next/link";
 import { buildMetadata } from "../../lib/seo";
 import { safeFetchApi } from "../../lib/api";
@@ -15,7 +18,7 @@ export async function generateMetadata({ searchParams }) {
   });
 }
 
-export default async function ShopPage({ searchParams }) {
+async function SSRShopPage({ searchParams }) {
   const query = new URLSearchParams();
   if (searchParams?.category) query.set("category", searchParams.category);
   if (searchParams?.search) query.set("search", searchParams.search);
@@ -71,3 +74,15 @@ export default async function ShopPage({ searchParams }) {
     </main>
   );
 }
+
+export default async function ShopPage(props) {
+  const reqHeaders = await headers();
+  const userAgent = reqHeaders.get("user-agent") || "";
+  
+  if (isBot(userAgent)) {
+    return <SSRShopPage {...props} />;
+  }
+
+  return <SPAContainer />;
+}
+

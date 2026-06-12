@@ -1,3 +1,6 @@
+import { headers } from "next/headers";
+import { isBot } from "../lib/bot";
+import SPAContainer from "./SPAContainer";
 import Link from "next/link";
 import { buildMetadata } from "../lib/seo";
 import { fetchApi, getSiteUrl, safeFetchApi } from "../lib/api";
@@ -9,7 +12,8 @@ export const metadata = buildMetadata({
   path: "/"
 });
 
-export default async function HomePage() {
+// Render the SSR homepage only when it is a bot/crawler
+async function SSRHomePage() {
   const [featuredRes, categoriesRes, blogs] = await Promise.all([
     safeFetchApi("/products/featured/list?limit=8", { revalidate: 120 }),
     safeFetchApi("/categories", { revalidate: 120 }),
@@ -53,7 +57,7 @@ export default async function HomePage() {
         <div className="mt-6 flex gap-3">
           <Link
             href="/shop"
-            className="rounded-full bg-terracotta-500 px-5 py-2.5 text-sm font-bold hover:bg-terracotta-600"
+            className="rounded-full bg-terracotta-50 px-5 py-2.5 text-sm font-bold hover:bg-terracotta-600"
           >
             Shop now
           </Link>
@@ -119,3 +123,15 @@ export default async function HomePage() {
     </main>
   );
 }
+
+export default async function HomePage() {
+  const reqHeaders = await headers();
+  const userAgent = reqHeaders.get("user-agent") || "";
+  
+  if (isBot(userAgent)) {
+    return <SSRHomePage />;
+  }
+
+  return <SPAContainer />;
+}
+

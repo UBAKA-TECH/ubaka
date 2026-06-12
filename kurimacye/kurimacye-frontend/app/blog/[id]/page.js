@@ -1,13 +1,17 @@
 import { notFound } from "next/navigation";
 import { buildMetadata } from "../../../lib/seo";
 import { getSiteUrl, safeFetchApi } from "../../../lib/api";
+import { headers } from "next/headers";
+import { isBot } from "../../../lib/bot";
+import SPAContainer from "../../SPAContainer";
 
 export async function generateMetadata({ params }) {
-  const post = await safeFetchApi(`/blogs/${params.id}`, { revalidate: 300 });
+  const resolvedParams = await params;
+  const post = await safeFetchApi(`/blogs/${resolvedParams.id}`, { revalidate: 300 });
   if (!post) {
     return buildMetadata({
       title: "Blog post not found",
-      path: `/blog/${params.id}`,
+      path: `/blog/${resolvedParams.id}`,
       noIndex: true
     });
   }
@@ -19,8 +23,9 @@ export async function generateMetadata({ params }) {
   });
 }
 
-export default async function BlogPostPage({ params }) {
-  const post = await safeFetchApi(`/blogs/${params.id}`, { revalidate: 300 });
+async function SSRBlogPostPage({ params }) {
+  const resolvedParams = await params;
+  const post = await safeFetchApi(`/blogs/${resolvedParams.id}`, { revalidate: 300 });
   if (!post) notFound();
 
   const siteUrl = getSiteUrl();
@@ -55,3 +60,15 @@ export default async function BlogPostPage({ params }) {
     </main>
   );
 }
+
+export default async function BlogPostPage(props) {
+  const reqHeaders = await headers();
+  const userAgent = reqHeaders.get("user-agent") || "";
+  
+  if (isBot(userAgent)) {
+    return <SSRBlogPostPage {...props} />;
+  }
+
+  return <SPAContainer />;
+}
+

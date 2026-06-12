@@ -1,6 +1,9 @@
 import Link from "next/link";
 import { buildMetadata } from "../../lib/seo";
 import { safeFetchApi } from "../../lib/api";
+import { headers } from "next/headers";
+import { isBot } from "../../lib/bot";
+import SPAContainer from "../SPAContainer";
 
 export const metadata = buildMetadata({
   title: "Blog",
@@ -8,7 +11,8 @@ export const metadata = buildMetadata({
   path: "/blog"
 });
 
-export default async function BlogPage() {
+
+async function SSRBlogPage() {
   const blogs = await safeFetchApi("/blogs", { revalidate: 300 });
   const posts = Array.isArray(blogs) ? blogs : [];
 
@@ -41,3 +45,15 @@ export default async function BlogPage() {
     </main>
   );
 }
+
+export default async function BlogPage() {
+  const reqHeaders = await headers();
+  const userAgent = reqHeaders.get("user-agent") || "";
+  
+  if (isBot(userAgent)) {
+    return <SSRBlogPage />;
+  }
+
+  return <SPAContainer />;
+}
+

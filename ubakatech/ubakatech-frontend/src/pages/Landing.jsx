@@ -464,7 +464,7 @@ const Landing = ({ onEnterPortal }) => {
       <div className="absolute bottom-[30%] left-[-5%] w-[35vw] h-[35vw] bg-emerald-950/10 rounded-full blur-[140px] pointer-events-none" />
 
       {/* Header Navigation */}
-      <header className="w-full max-w-7xl mx-auto px-4 md:px-8 py-5 flex flex-col sm:flex-row justify-between items-center gap-4 z-20 border-b border-gray-900/40 backdrop-blur-md">
+      <header className="sticky top-0 w-full max-w-7xl mx-auto px-4 md:px-8 py-5 flex flex-col sm:flex-row justify-between items-center gap-4 z-50 border-b border-gray-900/40 backdrop-blur-md bg-gray-950/80">
         
         {/* Brand Logo & Name */}
         <div 

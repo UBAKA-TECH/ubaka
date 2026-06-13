@@ -4,7 +4,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import api from "../utils/axiosInstance";
 import toast from "react-hot-toast";
 import assetUrl from "../utils/assetUrl";
-import { FaSearch, FaShoppingCart, FaTrash, FaPlus, FaMinus, FaMoneyBillWave, FaMobileAlt, FaBoxOpen, FaStore, FaBarcode, FaTimes, FaCheckCircle, FaWallet, FaSpinner } from "react-icons/fa";
+import { FaSearch, FaShoppingCart, FaTrash, FaPlus, FaMinus, FaMoneyBillWave, FaMobileAlt, FaBoxOpen, FaStore, FaBarcode, FaTimes, FaCheckCircle, FaWallet, FaSpinner, FaCreditCard } from "react-icons/fa";
 import Receipt from "../components/Receipt";
 
 // Beep sound for successful scan
@@ -115,6 +115,7 @@ export default function SellerPOS() {
 
     // Modals
     const [showMomoModal, setShowMomoModal] = useState(false);
+    const [showIremboModal, setShowIremboModal] = useState(false);
     const [pendingOrder, setPendingOrder] = useState(null);
 
     const [showCashConfirm, setShowCashConfirm] = useState(false);
@@ -433,6 +434,16 @@ export default function SellerPOS() {
         handleCheckout("mtn_momo", "POS_SIMULATION");
     };
 
+    const initiateIremboPayment = () => {
+        setShowIremboModal(true);
+    };
+
+    const confirmIremboPayment = async () => {
+        setShowIremboModal(false);
+        handleCheckout("irembo_pay", "POS_SIMULATION");
+    };
+
+
     const handleCheckout = async (method, phone = null, receivedAmount = null) => {
         if (cart.length === 0) return;
         setProcessing(true);
@@ -452,13 +463,17 @@ export default function SellerPOS() {
                 receivedAmount
             });
 
-            if (method === "mtn_momo" && res.data.status === "pending") {
+            if ((method === "mtn_momo" || method === "irembo_pay") && res.data.status === "pending") {
                 setPendingOrder(res.data.id);
                 return;
             }
 
             if (method === "mtn_momo" && res.data.status === "completed") {
                 toast.success("MoMo Payment Simulated Successfully");
+            }
+
+            if (method === "irembo_pay" && res.data.status === "completed") {
+                toast.success("IremboPay Payment Simulated Successfully");
             }
 
             const order = {
@@ -479,7 +494,7 @@ export default function SellerPOS() {
         } catch (err) {
             toast.error(err.response?.data?.message || "Failed to process sale");
         } finally {
-            if (method !== "mtn_momo" || (res && res.data && res.data.status !== "pending")) {
+            if ((method !== "mtn_momo" && method !== "irembo_pay") || (res && res.data && res.data.status !== "pending")) {
                 setProcessing(false);
             }
         }
@@ -1098,6 +1113,25 @@ export default function SellerPOS() {
                         </div>
                     )}
 
+                    {showIremboModal && (
+                        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+                            <div className="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-2xl max-w-md w-full animate-in fade-in zoom-in duration-200">
+                                <h2 className="text-3xl font-black text-gray-900 dark:text-white">IremboPay Payment</h2>
+                                <p className="text-gray-500 dark:text-gray-400 mt-2 font-medium">Please confirm that the IremboPay transaction has been approved</p>
+
+                                <div className="bg-violet-50 dark:bg-violet-900/20 p-6 rounded-2xl border border-violet-100 dark:border-violet-800/30 mb-8 text-center">
+                                    <p className="text-sm font-bold text-violet-600 dark:text-violet-400 uppercase tracking-widest mb-1">Total Amount Required</p>
+                                    <p className="text-4xl font-black text-gray-900 dark:text-white">RWF {calculateTotal().toLocaleString()}</p>
+                                </div>
+
+                                <div className="flex gap-4">
+                                    <button className="flex-1 py-4 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded-2xl font-bold transition-all" onClick={() => setShowIremboModal(false)}>Cancel</button>
+                                    <button className="flex-2 py-4 bg-violet-600 hover:bg-violet-750 text-white rounded-2xl font-black shadow-xl shadow-violet-500/20 transition-all active:scale-[0.98]" onClick={confirmIremboPayment}>Confirm Client Paid</button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
                     {pendingOrder && (
                         <div className="fixed inset-0 z-[60] flex flex-col items-center justify-center bg-black/80 backdrop-blur-sm text-white">
                             <div className="w-16 h-16 border-4 border-yellow-500 border-t-transparent rounded-full animate-spin mb-6"></div>
@@ -1451,7 +1485,7 @@ export default function SellerPOS() {
                                         <button
                                             onClick={initiateMomoPayment}
                                             disabled={processing || cart.length === 0}
-                                            className="flex items-center justify-center gap-2 py-3 px-4 bg-yellow-500 hover:bg-yellow-600 text-white rounded-xl font-bold shadow-lg shadow-yellow-500/20 transition-all disabled:opacity-50 disabled:grayscale"
+                                            className="flex-1 flex items-center justify-center gap-2 py-3 px-4 bg-yellow-500 hover:bg-yellow-600 text-white rounded-xl font-bold shadow-lg shadow-yellow-500/20 transition-all disabled:opacity-50 disabled:grayscale"
                                         >
                                             {processing ? (
                                                 <>
@@ -1460,6 +1494,21 @@ export default function SellerPOS() {
                                             ) : (
                                                 <>
                                                     <FaMobileAlt /> {t('pos.momo')}
+                                                </>
+                                            )}
+                                        </button>
+                                        <button
+                                            onClick={initiateIremboPayment}
+                                            disabled={processing || cart.length === 0}
+                                            className="flex-1 flex items-center justify-center gap-2 py-3 px-4 bg-violet-650 hover:bg-violet-700 text-white rounded-xl font-bold shadow-lg shadow-violet-500/20 transition-all disabled:opacity-50 disabled:grayscale"
+                                        >
+                                            {processing ? (
+                                                <>
+                                                    <FaSpinner className="animate-spin text-lg" /> Processing...
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <FaCreditCard /> IremboPay
                                                 </>
                                             )}
                                         </button>

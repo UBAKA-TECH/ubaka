@@ -93,6 +93,18 @@ export default function CheckoutPage() {
   const [paymentStatus, setPaymentStatus] = useState(null); // 'pending', 'success', 'failed'
   const [fieldErrors, setFieldErrors] = useState({});
 
+  // IremboPay specific states
+  const [showIremboSimulator, setShowIremboSimulator] = useState(false);
+  const [simulatedInvoice, setSimulatedInvoice] = useState("");
+  const [iremboPollInterval, setIremboPollInterval] = useState(null);
+
+  // Clear polling interval when component unmounts
+  useEffect(() => {
+    return () => {
+      if (iremboPollInterval) clearInterval(iremboPollInterval);
+    };
+  }, [iremboPollInterval]);
+
   // Gift Card State
   const [giftCardCode, setGiftCardCode] = useState("");
   const [appliedGiftCard, setAppliedGiftCard] = useState(null);
@@ -298,6 +310,44 @@ export default function CheckoutPage() {
   const grandTotal = Math.max(0, (totals.subtotal - (totals.discount || 0)) + shippingCost + taxData.totalTax - giftCardDiscount);
 
 
+  const loadRealIremboWidget = (invoiceNumber, orderId, publicId) => {
+    const scriptId = "irembopay-widget-script";
+    let script = document.getElementById(scriptId);
+    
+    const initializeWidget = () => {
+      if (window.IremboPay) {
+        window.IremboPay.initiate({
+          publicKey: process.env.REACT_APP_IREMBO_PAY_PUBLIC_KEY || "",
+          invoiceNumber: invoiceNumber,
+          locale: window.IremboPay.locale?.EN || "en",
+          callback: (err, response) => {
+            if (err) {
+              showError("IremboPay initialization failed.");
+              setIsProcessing(false);
+              setPaymentStatus("failed");
+            }
+          }
+        });
+      }
+    };
+
+    if (!script) {
+      script = document.createElement("script");
+      script.id = scriptId;
+      script.src = "https://irembopay.com/irembopay-widget.js";
+      script.async = true;
+      script.onload = initializeWidget;
+      script.onerror = () => {
+        showWarning("IremboPay widget script failed to load. Launching sandbox simulator...");
+        setSimulatedInvoice(invoiceNumber);
+        setShowIremboSimulator(true);
+      };
+      document.body.appendChild(script);
+    } else {
+      initializeWidget();
+    }
+  };
+
   const handlePlaceOrder = async (e) => {
     e.preventDefault();
     if (!validateCheckoutForm()) {
@@ -377,6 +427,47 @@ export default function CheckoutPage() {
             } catch (err) {
             }
           }, 3000); // Check every 3 seconds
+        }
+      } else if (paymentMethod === "irembo_pay") {
+        setPaymentStatus("awaiting_payment");
+        const payRes = await api.post("/payments/process", {
+          orderId,
+          paymentMethod: "irembo_pay"
+        });
+
+        if (payRes.data.success) {
+          const transactionId = payRes.data.data.transactionId;
+          
+          if (transactionId.startsWith("SIM-IREMBO")) {
+            setSimulatedInvoice(transactionId);
+            setShowIremboSimulator(true);
+          } else {
+            loadRealIremboWidget(transactionId, orderId, publicId);
+          }
+
+          const pollInterval = setInterval(async () => {
+            try {
+              const statusRes = await api.get(`/payments/status/${orderId}`);
+              const status = statusRes.data.status;
+
+              if (status === "completed" || status === "processing") {
+                clearInterval(pollInterval);
+                setPaymentStatus("success");
+                setShowIremboSimulator(false);
+                clearCart();
+                showSuccess("Order placed successfully!");
+                setTimeout(() => nav(`/order-success/${publicId}`), 1000);
+              } else if (status === "failed") {
+                clearInterval(pollInterval);
+                setPaymentStatus("failed");
+                setShowIremboSimulator(false);
+                setIsProcessing(false);
+                showError("Payment failed. Please try again.");
+              }
+            } catch (err) {
+            }
+          }, 3000); // Check every 3 seconds
+          setIremboPollInterval(pollInterval);
         }
       } else {
         // Other methods (e.g. Cash)
@@ -612,6 +703,26 @@ export default function CheckoutPage() {
                       )}
                     </div>
 
+                    {/* IremboPay Option */}
+                    <div
+                      onClick={() => setPaymentMethod("irembo_pay")}
+                      className={`group rounded-xl border-2 transition-all duration-200 overflow-hidden cursor-pointer ${paymentMethod === 'irembo_pay'
+                        ? 'bg-violet-50 dark:bg-violet-900/10 border-violet-500 shadow-md shadow-violet-500/5'
+                        : 'bg-white dark:bg-slate-800 border-gray-100 dark:border-slate-750 hover:border-violet-400'}`}
+                    >
+                      <div className="p-4 flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <div className={`w-4.5 h-4.5 rounded-full border-2 flex items-center justify-center transition-colors ${paymentMethod === 'irembo_pay' ? 'border-violet-500' : 'border-gray-300 dark:border-slate-650 group-hover:border-violet-400'}`}>
+                            {paymentMethod === 'irembo_pay' && <div className="w-2.5 h-2.5 bg-violet-500 rounded-full" />}
+                          </div>
+                          <span className={`text-sm font-bold transition-colors ${paymentMethod === 'irembo_pay' ? 'text-violet-900 dark:text-violet-300' : 'text-gray-700 dark:text-gray-300 group-hover:text-violet-600'}`}>Pay Online (Card / BK / MoMo)</span>
+                        </div>
+                        <div className="flex gap-1 items-center bg-violet-100 dark:bg-violet-900/40 px-2 py-0.5 rounded text-[10px] font-bold text-violet-750 dark:text-violet-400 uppercase tracking-widest">
+                          Momo / Card / Bank
+                        </div>
+                      </div>
+                    </div>
+
                     {/* Credit Card (Disabled) */}
                     <div className="group rounded-xl border-2 border-gray-100 dark:border-slate-850 p-4 flex items-center justify-between opacity-50 cursor-not-allowed">
                       <div className="flex items-center gap-3">
@@ -792,6 +903,83 @@ export default function CheckoutPage() {
           </div>
         </section>
       </main>
+
+      {/* IremboPay Simulation Modal */}
+      {showIremboSimulator && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/80 backdrop-blur-sm p-4">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl max-w-md w-full p-6 shadow-2xl border border-violet-100 dark:border-slate-800 animate-scale-up">
+            <div className="flex items-center justify-between border-b border-gray-50 dark:border-slate-850 pb-4 mb-4">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-lg bg-violet-600 flex items-center justify-center text-white font-bold text-sm">IP</div>
+                <h3 className="text-lg font-extrabold text-gray-900 dark:text-white">IremboPay Checkout</h3>
+              </div>
+              <span className="text-[10px] bg-amber-500/10 text-amber-500 px-2 py-0.5 rounded-full font-bold uppercase tracking-wider">Sandbox Mode</span>
+            </div>
+            
+            <div className="space-y-4">
+              <div className="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-xl">
+                <p className="text-xs text-gray-500 dark:text-gray-400">Merchant Account</p>
+                <p className="text-sm font-bold text-gray-900 dark:text-white">Kuri Macye Marketplace</p>
+                <div className="mt-2.5 pt-2.5 border-t border-gray-150 dark:border-slate-750 flex justify-between">
+                  <span className="text-xs text-gray-500">Invoice Number</span>
+                  <span className="text-xs font-mono font-bold text-gray-900 dark:text-white">{simulatedInvoice}</span>
+                </div>
+                <div className="mt-1 flex justify-between">
+                  <span className="text-xs text-gray-500">Amount Due</span>
+                  <span className="text-sm font-extrabold text-violet-600 dark:text-violet-400">{formatRwf(grandTotal)}</span>
+                </div>
+              </div>
+
+              <div className="space-y-2.5">
+                <p className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest px-1">Select Payment Channel</p>
+                <div className="grid grid-cols-3 gap-2">
+                  <button type="button" className="p-3 border-2 border-amber-500 bg-amber-500/5 rounded-xl flex flex-col items-center justify-center gap-1">
+                    <span className="text-xs font-bold text-amber-600 dark:text-amber-400">Mobile Money</span>
+                  </button>
+                  <button type="button" className="p-3 border border-gray-200 dark:border-slate-800 rounded-xl flex flex-col items-center justify-center gap-1 opacity-70 hover:opacity-100">
+                    <span className="text-xs font-bold text-gray-700 dark:text-gray-300">Credit Card</span>
+                  </button>
+                  <button type="button" className="p-3 border border-gray-200 dark:border-slate-800 rounded-xl flex flex-col items-center justify-center gap-1 opacity-70 hover:opacity-100">
+                    <span className="text-xs font-bold text-gray-700 dark:text-gray-300">Bank Transfer</span>
+                  </button>
+                </div>
+              </div>
+
+              <div className="border-t border-gray-50 dark:border-slate-850 pt-4 flex gap-3">
+                <button
+                  type="button"
+                  onClick={() => {
+                    clearInterval(iremboPollInterval);
+                    setShowIremboSimulator(false);
+                    setIsProcessing(false);
+                    setPaymentStatus("failed");
+                  }}
+                  className="flex-1 py-3 bg-gray-100 dark:bg-slate-800 hover:bg-gray-200 text-gray-600 dark:text-gray-300 rounded-xl text-sm font-bold transition-all"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={async () => {
+                    try {
+                      await api.post("/payments/webhook/irembopay", {
+                        invoiceNumber: simulatedInvoice,
+                        status: "SUCCESSFUL"
+                      });
+                    } catch (e) {
+                      console.error("Mock webhook fail:", e);
+                    }
+                  }}
+                  className="flex-2 py-3 bg-violet-600 hover:bg-violet-700 text-white rounded-xl text-sm font-extrabold shadow-lg shadow-violet-500/20 transition-all active:scale-[0.98] animate-pulse"
+                >
+                  Simulate Payment Success
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       <LandingFooter />
     </div>
   );

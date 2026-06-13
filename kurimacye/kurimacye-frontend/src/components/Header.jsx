@@ -23,7 +23,6 @@ import {
 import api from "../utils/axiosInstance";
 import assetUrl from "../utils/assetUrl";
 import { formatRwf } from "../utils/currency";
-import { supabase } from "../utils/supabaseClient";
 
 export default function Header() {
   const { items = [] } = useCart();
@@ -73,26 +72,6 @@ export default function Header() {
     };
 
     fetchCategories();
-
-    // Set up Real-time subscription
-    const channel = supabase
-      .channel('schema-db-changes')
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'Category'
-        },
-        () => {
-          fetchCategories();
-        }
-      )
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
   }, []);
 
   useEffect(() => {
@@ -106,25 +85,6 @@ export default function Header() {
       }
     };
     checkPrintingServices();
-
-    const channel = supabase
-      .channel('header-product-tag-changes')
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'Product'
-        },
-        () => {
-          checkPrintingServices();
-        }
-      )
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
   }, []);
 
 

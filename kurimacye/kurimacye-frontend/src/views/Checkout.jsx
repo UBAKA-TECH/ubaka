@@ -87,8 +87,7 @@ export default function CheckoutPage() {
 
   const [taxData, setTaxData] = useState({ totalTax: 0, taxes: [] });
 
-  const [paymentMethod, setPaymentMethod] = useState("mtn_momo");
-  const [momoPhone, setMomoPhone] = useState("");
+  const [paymentMethod, setPaymentMethod] = useState("irembo_pay");
   const [isProcessing, setIsProcessing] = useState(false);
   const [paymentStatus, setPaymentStatus] = useState(null); // 'pending', 'success', 'failed'
   const [fieldErrors, setFieldErrors] = useState({});
@@ -194,13 +193,7 @@ export default function CheckoutPage() {
       errors.shipping = "Please select a delivery method";
     }
 
-    if (paymentMethod === "mtn_momo") {
-      if (!momoPhone.trim()) {
-        errors.momoPhone = "Mobile Money phone is required";
-      } else if (!/^(\+?250|0)?7\d{8}$/.test(momoPhone.replace(/\s/g, ""))) {
-        errors.momoPhone = "Enter a valid Mobile Money phone number";
-      }
-    }
+
 
     setFieldErrors(errors);
     return Object.keys(errors).length === 0;
@@ -432,7 +425,8 @@ export default function CheckoutPage() {
         setPaymentStatus("awaiting_payment");
         const payRes = await api.post("/payments/process", {
           orderId,
-          paymentMethod: "irembo_pay"
+          paymentMethod: "irembo_pay",
+          phone: formData.phone
         });
 
         if (payRes.data.success) {
@@ -628,7 +622,7 @@ export default function CheckoutPage() {
                               : 'bg-white dark:bg-slate-800 border-gray-100 dark:border-slate-750 hover:border-violet-400'}`}
                           >
                             <div className="flex items-center gap-3">
-                              <div className={`w-4.5 h-4.5 rounded-full border-2 flex items-center justify-center transition-colors ${selectedMethod?.id === method.id ? 'border-violet-600' : 'border-gray-300 dark:border-slate-650 group-hover:border-violet-400'}`}>
+                              <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors ${selectedMethod?.id === method.id ? 'border-violet-600' : 'border-gray-300 dark:border-slate-650 group-hover:border-violet-400'}`}>
                                 {selectedMethod?.id === method.id && <div className="w-2.5 h-2.5 bg-violet-600 rounded-full" />}
                               </div>
                               <span className={`text-sm font-bold transition-colors ${selectedMethod?.id === method.id ? 'text-violet-900 dark:text-violet-300' : 'text-gray-700 dark:text-gray-300 group-hover:text-violet-600'}`}>{method.name}</span>
@@ -649,87 +643,42 @@ export default function CheckoutPage() {
                 {/* 2. Payment Method Card */}
                 <div className="bg-white dark:bg-slate-900 rounded-2xl p-5 sm:p-8 shadow-sm border border-gray-100 dark:border-slate-800 transition-all duration-300">
                   <div className="flex items-center gap-4 mb-6 border-b border-gray-50 dark:border-slate-800 pb-4">
-                    <div className="p-2.5 bg-amber-50 dark:bg-amber-900/10 rounded-xl text-amber-600 dark:text-amber-400">
+                    <div className="p-2.5 bg-violet-50 dark:bg-violet-900/10 rounded-xl text-violet-600 dark:text-violet-400">
                       <FaCreditCard className="text-xl" />
                     </div>
                     <div>
                       <h2 className="text-xl font-bold text-gray-900 dark:text-white">Payment Method</h2>
-                      <p className="text-gray-500 dark:text-gray-400 text-xs">Choose how you want to pay</p>
+                      <p className="text-gray-500 dark:text-gray-400 text-xs">Your payment will be processed securely</p>
                     </div>
                   </div>
 
                   <div className="space-y-3">
-                    {/* MoMo Option */}
                     <div
-                      onClick={() => setPaymentMethod("mtn_momo")}
-                      className={`group rounded-xl border-2 transition-all duration-200 overflow-hidden ${paymentMethod === 'mtn_momo'
-                        ? 'bg-amber-50 dark:bg-amber-900/10 border-amber-500 shadow-md shadow-amber-500/5'
-                        : 'bg-white dark:bg-slate-800 border-gray-100 dark:border-slate-750 hover:border-amber-400'}`}
+                      className="group p-5 rounded-xl border-2 border-violet-500 bg-violet-50/30 dark:bg-violet-950/10 shadow-sm transition-all duration-200"
                     >
-                      <div className="p-4 flex items-center justify-between cursor-pointer">
-                        <div className="flex items-center gap-3">
-                          <div className={`w-4.5 h-4.5 rounded-full border-2 flex items-center justify-center transition-colors ${paymentMethod === 'mtn_momo' ? 'border-amber-500' : 'border-gray-300 dark:border-slate-650 group-hover:border-amber-400'}`}>
-                            {paymentMethod === 'mtn_momo' && <div className="w-2.5 h-2.5 bg-amber-500 rounded-full" />}
-                          </div>
-                          <span className={`text-sm font-bold transition-colors ${paymentMethod === 'mtn_momo' ? 'text-amber-900 dark:text-amber-300' : 'text-gray-700 dark:text-gray-300 group-hover:text-amber-600'}`}>MTN Mobile Money</span>
+                      <div className="flex items-start gap-4">
+                        <div className="w-5 h-5 mt-0.5 rounded-full border-2 border-violet-500 flex items-center justify-center flex-shrink-0">
+                          <div className="w-2.5 h-2.5 bg-violet-500 rounded-full" />
                         </div>
-                        <FaMoneyBillWave className="text-amber-500 text-xl animate-pulse" />
-                      </div>
-
-                      {paymentMethod === "mtn_momo" && (
-                        <div className="px-4 pb-4 pt-0">
-                          <div className="bg-white dark:bg-slate-900/50 p-3 rounded-xl border border-amber-100 dark:border-amber-900/30">
-                            <label className="text-xs font-bold text-amber-700 dark:text-amber-400 uppercase tracking-widest mb-1.5 block">Phone Number for payment</label>
-                            <div className="relative">
-                              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-amber-500"><FaMobileAlt className="text-sm" /></span>
-                              <input
-                                type="tel"
-                                value={momoPhone}
-                                onChange={(e) => {
-                                  setMomoPhone(e.target.value);
-                                  setFieldErrors(prev => ({ ...prev, momoPhone: "" }));
-                                }}
-                                placeholder="079xxxxxxx"
-                                className="w-full bg-gray-50 dark:bg-slate-800 border border-amber-200 dark:border-amber-800 rounded-xl py-2.5 pl-9 pr-4 text-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-amber-500 outline-none transition-all placeholder:text-amber-600/40 dark:placeholder:text-amber-500/30"
-                              />
-                            </div>
-                            <p className="text-xs text-amber-700/70 mt-2 flex items-center gap-1.5">
-                              <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
-                              You will receive a prompt to enter your PIN on your phone
+                        <div className="flex-grow space-y-3">
+                          <div>
+                            <span className="text-sm font-bold text-gray-900 dark:text-white block">
+                              Pay Online Securely
+                            </span>
+                            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                              Complete payment using Mobile Money (MTN, Airtel), Credit/Debit Cards (Visa, Mastercard, Amex), or Bank Transfer.
                             </p>
-                            {fieldErrors.momoPhone && <p className="text-xs text-red-500 mt-2">{fieldErrors.momoPhone}</p>}
+                          </div>
+                          
+                          {/* Payment Channel Badges/Logos */}
+                          <div className="flex flex-wrap gap-2 pt-3 border-t border-gray-100 dark:border-slate-800/80">
+                            <span className="text-[10px] font-bold bg-amber-500/10 text-amber-600 dark:text-amber-500 px-2.5 py-1 rounded-md uppercase tracking-wider">MTN MoMo</span>
+                            <span className="text-[10px] font-bold bg-red-500/10 text-red-650 dark:text-red-550 px-2.5 py-1 rounded-md uppercase tracking-wider">Airtel Money</span>
+                            <span className="text-[10px] font-bold bg-blue-500/10 text-blue-600 dark:text-blue-400 px-2.5 py-1 rounded-md uppercase tracking-wider">Visa / Mastercard</span>
+                            <span className="text-[10px] font-bold bg-green-600/10 text-green-700 dark:text-green-500 px-2.5 py-1 rounded-md uppercase tracking-wider">BK Bank Transfer</span>
                           </div>
                         </div>
-                      )}
-                    </div>
-
-                    {/* IremboPay Option */}
-                    <div
-                      onClick={() => setPaymentMethod("irembo_pay")}
-                      className={`group rounded-xl border-2 transition-all duration-200 overflow-hidden cursor-pointer ${paymentMethod === 'irembo_pay'
-                        ? 'bg-violet-50 dark:bg-violet-900/10 border-violet-500 shadow-md shadow-violet-500/5'
-                        : 'bg-white dark:bg-slate-800 border-gray-100 dark:border-slate-750 hover:border-violet-400'}`}
-                    >
-                      <div className="p-4 flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          <div className={`w-4.5 h-4.5 rounded-full border-2 flex items-center justify-center transition-colors ${paymentMethod === 'irembo_pay' ? 'border-violet-500' : 'border-gray-300 dark:border-slate-650 group-hover:border-violet-400'}`}>
-                            {paymentMethod === 'irembo_pay' && <div className="w-2.5 h-2.5 bg-violet-500 rounded-full" />}
-                          </div>
-                          <span className={`text-sm font-bold transition-colors ${paymentMethod === 'irembo_pay' ? 'text-violet-900 dark:text-violet-300' : 'text-gray-700 dark:text-gray-300 group-hover:text-violet-600'}`}>Pay Online (Card / BK / MoMo)</span>
-                        </div>
-                        <div className="flex gap-1 items-center bg-violet-100 dark:bg-violet-900/40 px-2 py-0.5 rounded text-[10px] font-bold text-violet-750 dark:text-violet-400 uppercase tracking-widest">
-                          Momo / Card / Bank
-                        </div>
                       </div>
-                    </div>
-
-                    {/* Credit Card (Disabled) */}
-                    <div className="group rounded-xl border-2 border-gray-100 dark:border-slate-850 p-4 flex items-center justify-between opacity-50 cursor-not-allowed">
-                      <div className="flex items-center gap-3">
-                        <div className="w-4.5 h-4.5 rounded-full border-2 border-gray-300 dark:border-slate-650"></div>
-                        <span className="text-sm font-bold text-gray-400">Credit Card <span className="text-[9px] uppercase tracking-widest ml-2 bg-gray-100 dark:bg-slate-800 py-0.5 px-2 rounded">Soon</span></span>
-                      </div>
-                      <FaCreditCard className="text-gray-300 text-xl" />
                     </div>
                   </div>
                 </div>
@@ -880,8 +829,8 @@ export default function CheckoutPage() {
 
                   {paymentStatus === "awaiting_payment" && (
                     <div className="mt-4 p-4 bg-amber-50 dark:bg-amber-900/10 border-2 border-amber-500/30 rounded-xl text-center animate-pulse shadow-sm shadow-amber-500/5">
-                      <p className="font-extrabold text-amber-600 dark:text-amber-400 text-sm uppercase tracking-wider">Check your phone!</p>
-                      <p className="text-xs font-bold text-amber-900/60 dark:text-amber-100/60 mt-1 italic">Please approve the payment on {momoPhone}</p>
+                      <p className="font-extrabold text-amber-600 dark:text-amber-400 text-sm uppercase tracking-wider">Payment Initiated!</p>
+                      <p className="text-xs font-bold text-amber-900/60 dark:text-amber-100/60 mt-1 italic">Please complete the checkout process in the secure payment window.</p>
                     </div>
                   )}
 

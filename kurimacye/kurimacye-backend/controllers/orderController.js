@@ -261,23 +261,20 @@ export const createOrder = async (req, res) => {
       });
     }); // End $transaction
 
-    // 📧 Confirmation Email
-    try {
-      // Fetch child orders and merge items for the email
-      const childOrders = await prisma.order.findMany({
-        where: { parentId: order.id },
-        include: { items: true }
-      });
+    // 📧 Confirmation Email (background task to prevent checkout timeout)
+    prisma.order.findMany({
+      where: { parentId: order.id },
+      include: { items: true }
+    }).then(childOrders => {
       const allItems = [];
       childOrders.forEach(co => {
         allItems.push(...co.items);
       });
       order.items = allItems;
-
-      await sendOrderConfirmation(order);
-    } catch (emailErr) {
+      return sendOrderConfirmation(order);
+    }).catch(emailErr => {
       console.error("Failed to send order confirmation email:", emailErr);
-    }
+    });
 
     // 🎁 Gift Card Redemption
     if (giftCard && giftCard.code && giftCard.amountApplied > 0) {
@@ -387,7 +384,9 @@ export const createOrder = async (req, res) => {
               // recipient info would typically go in custom fields or user profile
             }
           });
-          await sendGiftCardEmail(newGc, req.user?.name || order.guestInfo?.name || "A friend");
+          sendGiftCardEmail(newGc, req.user?.name || order.guestInfo?.name || "A friend").catch(gcEmailErr => {
+            console.error("Failed to send gift card email:", gcEmailErr);
+          });
         }
       }
 

@@ -121,7 +121,7 @@ export const processPayment = async (req, res, next) => {
         customer: {
           name: order.guestInfo?.name || order.customerId || "Customer",
           email: order.guestInfo?.email || "",
-          phone: order.guestInfo?.phone || "",
+          phone: phone || order.guestInfo?.phone || "",
         }
       });
 

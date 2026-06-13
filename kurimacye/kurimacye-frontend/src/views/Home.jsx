@@ -9,7 +9,6 @@ import LandingFooter from "../components/LandingFooter";
 import Header from "../components/Header";
 import { useWishlist } from "../context/WishlistContext";
 import assetUrl from "../utils/assetUrl";
-import { supabase } from "../utils/supabaseClient";
 import ProductCard from "../components/ProductCard";
 import SEO from "../components/SEO";
 
@@ -243,31 +242,6 @@ export default function Home() {
     }
 
     fetchData();
-
-    // Subscribe to Product changes to update hasPrintingServices dynamically
-    const channel = supabase
-      .channel('home-product-tag-changes')
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'Product'
-        },
-        async () => {
-          try {
-            const res = await api.get('/products?tags=printing_service');
-            if (res.data && res.data.success && Array.isArray(res.data.data)) {
-              setHasPrintingServices(res.data.data.length > 0);
-            }
-          } catch (err) {}
-        }
-      )
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
   }, []);
 
   return (
